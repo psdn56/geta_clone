@@ -77,6 +77,15 @@
 
   updateDateTime(); // Initial call
   setInterval(updateDateTime, 1000); // Updates every second
+      // Visitor Count (localStorage based)
+  function updateVisitorCount() {
+    let visits = localStorage.getItem('pankajFootwearVisits');
+    visits = visits ? parseInt(visits) + 1 : 1;
+    localStorage.setItem('pankajFootwearVisits', visits);
+    document.getElementById('visitorCount').textContent =
+      "You have visited this site " + visits + " time" + (visits > 1 ? "s." : ".");
+  }
+  updateVisitorCount();
 </script>
   </footer>
 
