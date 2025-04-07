@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About Us - GETA</title>
+  <title>About Us PankajFootwear</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
@@ -58,7 +58,26 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2025 GETA. All Rights Reserved.</p>
+    <script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // Live Date & Time in Footer
+  function updateDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const formatted = now.toLocaleString(); // You can change format here
+    document.getElementById('datetime').innerHTML =
+      `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
+  }
+
+  updateDateTime(); // Initial call
+  setInterval(updateDateTime, 1000); // Updates every second
+</script>
   </footer>
 
 </body>
