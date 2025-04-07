@@ -74,15 +74,26 @@
       <p>&copy; 2025 Pankaj Footwear. All rights reserved.</p>
     </div>
   </footer>
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
 
-  <!-- Script for mobile menu toggle -->
-  <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-  </script>
+  // Live Date & Time in Footer
+  function updateDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const formatted = now.toLocaleString(); // You can change format here
+    document.getElementById('datetime').innerHTML =
+      `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
+  }
+
+  updateDateTime(); // Initial call
+  setInterval(updateDateTime, 1000); // Updates every second
+</script>
 
 </body>
 </html>
