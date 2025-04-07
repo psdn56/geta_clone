@@ -9,18 +9,23 @@
 <body class="font-sans bg-white text-gray-800">
 
   <!-- Navbar -->
-  <nav class="px-6 py-4 shadow flex justify-between items-center">
-    <div class="text-xl font-bold">Pankaj Footwear</div>
+  <nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <img src="logo.png" alt="Pankaj Footwear Logo" class="h-10 w-auto">
+      <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
+    </div>
+
     <!-- Desktop Menu -->
-    <ul class="hidden md:flex space-x-6">
+    <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
       <li><a href="men.html" class="hover:text-red-500">Men</a></li>
       <li><a href="women.html" class="hover:text-red-500">Women</a></li>
       <li><a href="#" class="hover:text-red-500">Kids</a></li>
       <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
     </ul>
+
     <!-- Mobile Menu Toggle -->
     <div class="md:hidden">
-      <button id="menuBtn" class="text-2xl">&#9776;</button>
+      <button id="menuBtn" class="text-2xl text-gray-700">&#9776;</button>
     </div>
   </nav>
 
