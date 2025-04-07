@@ -5,7 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About Us - GETA</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    header, footer {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .about-container {
+      max-width: 600px;
+      width: 90%;
+      margin: 40px auto;
+      padding: 30px 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-container h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .contact-info p {
+      font-size: 1.1em;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .platform-message {
+      font-size: 1em;
+      margin-top: 20px;
+      color: #666;
+    }
+
+    @media (max-width: 480px) {
+      .about-container h2 {
+        font-size: 1.5em;
+      }
+
+      .contact-info p {
+        font-size: 1em;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -15,7 +66,7 @@
   </header>
 
   <!-- Main About Content -->
-  <div class="about-container">
+  <main class="about-container">
     <h2>Contact Information</h2>
     <div class="contact-info">
       <p><strong>Email:</strong> support@getafootwear.com</p>
@@ -23,13 +74,33 @@
       <p><strong>Location:</strong> B NO 4, Pitampura, New Delhi, India</p>
     </div>
     <div class="platform-message" id="platformMessage"></div>
-  </div>
+  </main>
 
   <!-- Footer -->
   <footer>
     <p>&copy; 2025 GETA. All Rights Reserved.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    // JavaScript to detect platform and show a message
+    const platform = navigator.platform.toLowerCase();
+    const userAgent = navigator.userAgent.toLowerCase();
+    let message = "You're viewing this on an unknown platform.";
+
+    if (/android/.test(userAgent)) {
+      message = "You're viewing this on an Android device.";
+    } else if (/iphone|ipad|ipod/.test(userAgent)) {
+      message = "You're on an iOS device.";
+    } else if (/mac/.test(platform)) {
+      message = "You're browsing from a macOS device.";
+    } else if (/win/.test(platform)) {
+      message = "You're using a Windows device.";
+    } else if (/linux/.test(platform)) {
+      message = "You're on a Linux system.";
+    }
+
+    document.getElementById("platformMessage").innerText = message;
+  </script>
+
 </body>
 </html>
