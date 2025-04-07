@@ -6,6 +6,16 @@
   <title>Pankaj Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+  <script>
+  const slider = document.getElementById("heroSlider");
+  let index = 0;
+  const totalSlides = 3;
+
+  setInterval(() => {
+    index = (index + 1) % totalSlides;
+    slider.style.transform = `translateX(-${index * 100}%)`;
+  }, 4000); // change every 4 seconds
+</script>
 <body class="font-sans bg-white text-gray-800">
 
   <!-- Navbar -->
@@ -39,14 +49,20 @@
     <li><a href="about.html" class="hover:text-red-500">About</a></li>
   </div>
 
-  <!-- Hero Section -->
-  <section class="relative">
-    <img src="Sneaker1.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Hero Banner">
-    <div class="absolute top-1/4 left-5 sm:left-10 text-white">
-      <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
-      <button class="bg-red-600 px-5 py-2 text-sm sm:text-base text-white rounded hover:bg-red-700">Shop Now</button>
-    </div>
-  </section>
+<!-- Hero Section with Auto Image Slider -->
+<section class="relative w-full overflow-hidden">
+  <div id="heroSlider" class="flex transition-all duration-1000 ease-in-out w-[300%]">
+    <img src="Sneaker1.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Slide 1" />
+    <img src="Sneaker2.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Slide 2" />
+    <img src="Sneaker3.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Slide 3" />
+  </div>
+
+  <!-- Overlay Text -->
+  <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
+    <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
+    <button class="bg-red-600 px-5 py-2 text-sm sm:text-base text-white rounded hover:bg-red-700">Shop Now</button>
+  </div>
+</section>
 
   <!-- Featured Products -->
   <section class="px-4 sm:px-6 py-10">
