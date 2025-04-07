@@ -1,4 +1,28 @@
-// JavaScript for handling cart functionality
+// === Platform Detection ===
+window.addEventListener('DOMContentLoaded', () => {
+  const platform = navigator.platform.toLowerCase();
+  const userAgent = navigator.userAgent.toLowerCase();
+  let message = "You're viewing this on an unknown platform.";
+
+  if (/android/.test(userAgent)) {
+    message = "You're viewing this on an Android device.";
+  } else if (/iphone|ipad|ipod/.test(userAgent)) {
+    message = "You're on an iOS device.";
+  } else if (/mac/.test(platform)) {
+    message = "You're browsing from a macOS device.";
+  } else if (/win/.test(platform)) {
+    message = "You're using a Windows device.";
+  } else if (/linux/.test(platform)) {
+    message = "You're on a Linux system.";
+  }
+
+  const platformMsg = document.getElementById('platformMessage');
+  if (platformMsg) {
+    platformMsg.innerText = message;
+  }
+});
+
+// === Shopping Cart Functionality ===
 
 let cart = [];
 
@@ -22,14 +46,18 @@ function updateCart() {
 }
 
 // Function to open the cart modal
-cartIcon.addEventListener('click', function() {
-  cartModal.style.display = 'flex';
-});
+if (cartIcon && cartModal) {
+  cartIcon.addEventListener('click', function() {
+    cartModal.style.display = 'flex';
+  });
+}
 
 // Close the cart modal
-closeCartBtn.addEventListener('click', function() {
-  cartModal.style.display = 'none';
-});
+if (closeCartBtn) {
+  closeCartBtn.addEventListener('click', function() {
+    cartModal.style.display = 'none';
+  });
+}
 
 // Add product to cart
 addToCartButtons.forEach(button => {
@@ -43,8 +71,10 @@ addToCartButtons.forEach(button => {
   });
 });
 
-// Proceed to checkout (you can add your checkout functionality here)
-checkoutBtn.addEventListener('click', function() {
-  alert('Proceeding to checkout...');
-  // You can redirect to a checkout page or integrate payment here
-});
+// Proceed to checkout
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', function() {
+    alert('Proceeding to checkout...');
+    // Integrate payment/redirect here
+  });
+                         }
