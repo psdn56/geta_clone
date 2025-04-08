@@ -65,22 +65,7 @@
 
     <!-- Login Dropdown -->
     <div id="loginDropdownContainer" class="hidden md:block"></div>
-    // Toggle dropdown visibility
-<script>document.addEventListener('click', (event) => {
-  const toggleBtn = document.getElementById('loginToggleBtn');
-  const dropdown = document.getElementById('loginDropdown');
-
-  if (toggleBtn && dropdown) {
-    if (toggleBtn.contains(event.target)) {
-      dropdown.classList.toggle('invisible');
-      dropdown.classList.toggle('opacity-0');
-    } else if (!dropdown.contains(event.target)) {
-      dropdown.classList.add('invisible');
-      dropdown.classList.add('opacity-0');
-    }
-  }
-});
-</script>
+    
     <!-- Mobile Menu Toggle -->
     <div class="md:hidden">
       <button id="menuBtn" class="text-2xl text-gray-700">&#9776;</button>
