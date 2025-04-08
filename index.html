@@ -159,6 +159,30 @@
       .then(data => {
         document.getElementById('loginDropdownContainer').innerHTML = data;
       });
+    // Load login dropdown
+fetch('loginDropdown.html')
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById('loginDropdownContainer').innerHTML = data;
+
+    // AFTER loading dropdown, apply login status check
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const container = document.getElementById("loginDropdownContainer");
+
+    if (isLoggedIn) {
+      container.innerHTML = `
+        <div class="text-gray-700 font-medium space-x-2">
+          <span>Welcome!</span>
+          <button id="logoutBtn" class="text-red-500 hover:underline">Logout</button>
+        </div>`;
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.setItem("isLoggedIn", "false");
+        window.location.reload();
+      });
+    }
+    // Else the HTML stays as it was loaded (i.e., Login / Signup)
+  });
   </script>  
 </body>
 </html>
