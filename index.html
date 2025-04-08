@@ -45,8 +45,17 @@
     <!-- Images -->
     <div id="heroSlider" class="flex transition-transform duration-[3000ms] ease-in-out w-[300%] h-full">
       <img src="Sneaker1.jpeg" class="w-full h-full object-cover" alt="Slide 1" />
+      <button onclick="addToCart('Sneaker One', 760.00)" class="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+    Add to Cart
+  </button>
       <img src="Sneaker2.jpeg" class="w-full h-full object-cover" alt="Slide 2" />
+      <button onclick="addToCart('Sneaker Two', 820.00)" class="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+    Add to Cart
+  </button>
       <img src="Sneaker3.jpeg" class="w-full h-full object-cover" alt="Slide 3" />
+      <button onclick="addToCart('Sneaker Three', 1199.00)" class="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+    Add to Cart
+  </button>
     </div>
 
     <!-- Overlay Text -->
@@ -163,5 +172,21 @@
   // Initial state
   updateSlide();
 </script>
+  <script>
+  function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingItem = cart.find(item => item.name === name);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ name, price, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`${name} has been added to your cart.`);
+  }
+</script>
+
 </body>
 </html>
