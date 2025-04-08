@@ -5,47 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pankaj Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDKs -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
-    authDomain: "psdn56-493d0.firebaseapp.com",
-    projectId: "psdn56-493d0",
-    storageBucket: "psdn56-493d0.firebasestorage.app",
-    messagingSenderId: "270176732328",
-    appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Manual signup
-  window.signup = async function () {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      alert("Signup successful: " + userCredential.user.email);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  // Google Signup
-  window.googleSignup = async function () {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      alert("Signed in as: " + result.user.displayName);
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-</script>
-
 </head>
 <body class="font-sans bg-white text-gray-800">
 
