@@ -40,6 +40,36 @@
       <img src="https://via.placeholder.com/1200x400?text=Slide+3" class="w-full flex-shrink-0" />
     </div>
   </div>
+  <!-- Add this section just below the Image Slider --><!-- Featured Products -->
+  <section class="px-4 sm:px-6 py-10">
+  <h2 class="text-xl sm:text-2xl font-bold mb-6">Featured</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"><div class="border p-4 rounded">
+  <img src="Sneaker1.jpeg" alt="Product 1" class="mb-4 w-full">
+  <h3 class="text-lg font-semibold mb-1">Sneaker One</h3>
+  <p class="text-red-600 mb-3">₹760.00</p>
+  <button onclick="addToCart('Sneaker One', 760)" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full">Add to Cart</button>
+</div>
+
+<div class="border p-4 rounded">
+  <img src="S2.jpeg" alt="Product 2" class="mb-4 w-full">
+  <h3 class="text-lg font-semibold mb-1">Sneaker Two</h3>
+  <p class="text-red-600 mb-3">₹820.99</p>
+  <button onclick="addToCart('Sneaker Two', 820.99)" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full">Add to Cart</button>
+</div>
+
+<div class="border p-4 rounded">
+  <img src="Sneaker3.jpeg" alt="Product 3" class="mb-4 w-full">
+  <h3 class="text-lg font-semibold mb-1">Sneaker Three</h3>
+  <p class="text-red-600 mb-3">₹1199.00</p>
+  <button onclick="addToCart('Sneaker Three', 1199)" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full">Add to Cart</button>
+</div>
+
+  </div>
+</section><!-- Add this script to the bottom --><script>
+  function addToCart(productName, price) {
+    alert(`${productName} has been added to the cart at ₹${price}!`);
+  }
+</script>
 
   <!-- Login Modal -->
   <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
