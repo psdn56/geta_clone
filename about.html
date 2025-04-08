@@ -1,52 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dropdown Menu</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex justify-center items-start h-screen p-10">
+<!-- components/loginDropdown.html -->
+<div class="relative group">
+  <button class="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-1">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 016 16V8a4 4 0 118 0v8a4 4 0 01.879 1.804M12 20h.01" />
+    </svg>
+    Login
+    <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+    </svg>
+  </button>
 
-  <!-- Dropdown Trigger -->
-  <div class="relative group">
-    <button class="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-1">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A4 4 0 016 16V8a4 4 0 118 0v8a4 4 0 01.879 1.804M12 20h.01" />
-      </svg>
-      Login
-      <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-      </svg>
-    </button>
-
-    <!-- Dropdown Menu -->
-    <div class="absolute z-10 mt-2 w-64 bg-white shadow-lg rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
-      <div class="p-4 border-b">
-        <p class="text-gray-700">New customer? <a href="#" class="text-blue-600 font-medium hover:underline">Sign Up</a></p>
-      </div>
-      <ul class="py-2 text-gray-700">
-        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <span>👤</span> My Profile
-        </li>
-        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <span>✨</span> Flipkart Plus Zone
-        </li>
-        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <span>📦</span> Orders
-        </li>
-        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <span>❤️</span> Wishlist
-        </li>
-        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <span>🏆</span> Rewards
-        </li>
-        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">
-          <span>🎁</span> Gift Cards
-        </li>
-      </ul>
+  <div class="absolute z-10 mt-2 w-64 bg-white shadow-lg rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+    <div class="p-4 border-b">
+      <p class="text-gray-700">New customer? <a href="#" class="text-blue-600 font-medium hover:underline">Sign Up</a></p>
     </div>
+    <ul class="py-2 text-gray-700">
+      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">👤 My Profile</li>
+      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">✨ Flipkart Plus Zone</li>
+      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">📦 Orders</li>
+      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">❤️ Wishlist</li>
+      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">🏆 Rewards</li>
+      <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">🎁 Gift Cards</li>
+    </ul>
   </div>
-
-</body>
-</html>
+</div>
