@@ -77,4 +77,37 @@ if (checkoutBtn) {
     alert('Proceeding to checkout...');
     // Integrate payment/redirect here
   });
+  // script.js
+
+const slider = document.getElementById("heroSlider");
+let index = 0;
+const totalSlides = 3;
+const bubbles = document.querySelectorAll(".absolute .w-3");
+
+// Function to update the active slide and bubble
+function changeSlide(slideIndex) {
+  index = slideIndex;
+  slider.style.transform = `translateX(-${index * 100}%)`;
+
+  // Update active bubble
+  bubbles.forEach((bubble, i) => {
+    if (i === index) {
+      bubble.classList.add("bg-red-600"); // Active bubble
+      bubble.classList.remove("bg-white"); // Inactive bubbles
+    } else {
+      bubble.classList.add("bg-white");
+      bubble.classList.remove("bg-red-600");
+    }
+  });
+}
+
+// Automatically change slides every 4 seconds
+setInterval(() => {
+  index = (index + 1) % totalSlides;
+  changeSlide(index);
+}, 4000);
+
+// Initialize the first bubble as active
+changeSlide(0);
+
                          }
