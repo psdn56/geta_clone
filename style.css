@@ -11,7 +11,7 @@ body {
 
 /* Header */
 header {
-  background: #1ff27b;
+  background: #FFFFFF;
   color: black;
   padding: 10px 20px;
   display: flex;
@@ -93,8 +93,8 @@ header .cart a {
 }
 
 .product button {
-  background-color: #ff5722;
-  color: white;
+  background-color: #FFFFFF;
+  color: black;
   border: none;
   padding: 10px;
   cursor: pointer;
