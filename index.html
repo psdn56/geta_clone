@@ -20,17 +20,31 @@
       <li><a href="#" class="hover:text-red-500">Kids</a></li>
       <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
       <li><a href="about.html" class="hover:text-red-500">About</a></li>
-          <!-- Account Section Dropdown -->
+           <!-- Navbar with Account Section -->
+  <nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <img src="logo.png" alt="Logo" class="h-20 w-auto">
+      <span class="text-xl font-bold text-gray-800">Pankaj's Footwear</span>
+    </div>
+    <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
+      <li><a href="men.html" class="hover:text-red-500">Men</a></li>
+      <li><a href="women.html" class="hover:text-red-500">Women</a></li>
+      <li><a href="#" class="hover:text-red-500">Kids</a></li>
+      <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
+      <li><a href="about.html" class="hover:text-red-500">About</a></li>
+    </ul>
+
+    <!-- Account Section Dropdown -->
     <div class="relative">
       <button id="accountBtn" class="text-lg text-gray-700 hover:text-red-500">
         My Account
       </button>
       <div id="accountMenu" class="absolute right-0 mt-2 bg-white shadow-lg rounded-lg hidden z-10">
         <ul class="text-gray-700 p-2">
-          <li><a href="login.html" class="block px-4 py-2 hover:bg-gray-100">Login</a></li>
-          <li><a href="profile.html" class="block px-4 py-2 hover:bg-gray-100">Profile</a></li>
-          <li><a href="orders.html" class="block px-4 py-2 hover:bg-gray-100">Orders</a></li>
-          <li><a href="help.html" class="block px-4 py-2 hover:bg-gray-100">Help</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showSection('login')">Login</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showSection('profile')">Profile</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showSection('orders')">Orders</a></li>
+          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showSection('help')">Help</a></li>
           <li><a href="logout.html" class="block px-4 py-2 hover:bg-gray-100">Logout</a></li>
         </ul>
       </div>
@@ -53,10 +67,36 @@
         accountMenu.classList.add('hidden');
       }
     });
+
+    // Function to show and hide sections
+    function showSection(sectionId) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.add('hidden'));
+
+      // Show the selected section
+      const section = document.getElementById(sectionId);
+      section.classList.remove('hidden');
+    }
   </script>
 
-  <!-- Profile Page Content (profile.html) -->
-  <div class="profile-container px-6 py-8">
+  <!-- Section Content (Hidden initially) -->
+  <div id="login" class="section hidden px-6 py-8">
+    <h2 class="text-2xl font-semibold mb-6">Login</h2>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium">Email</label>
+        <input type="email" id="email" name="email" class="w-full p-2 border border-gray-300 rounded" required />
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium">Password</label>
+        <input type="password" id="password" name="password" class="w-full p-2 border border-gray-300 rounded" required />
+      </div>
+      <button type="submit" class="bg-blue-600 text-white p-2 rounded">Login</button>
+    </form>
+  </div>
+
+  <div id="profile" class="section hidden px-6 py-8">
     <h2 class="text-2xl font-semibold mb-6">My Profile</h2>
     <form id="profileForm" class="space-y-4">
       <div>
@@ -75,8 +115,7 @@
     </form>
   </div>
 
-  <!-- Orders Page Content (orders.html) -->
-  <div class="orders-container px-6 py-8">
+  <div id="orders" class="section hidden px-6 py-8">
     <h2 class="text-2xl font-semibold mb-6">My Orders</h2>
     <div class="order-list">
       <div class="order-item border-b pb-4 mb-4">
@@ -94,8 +133,7 @@
     </div>
   </div>
 
-  <!-- Help Page Content (help.html) -->
-  <div class="help-container px-6 py-8">
+  <div id="help" class="section hidden px-6 py-8">
     <h2 class="text-2xl font-semibold mb-6">Help & Support</h2>
     <p>If you need assistance, feel free to check our FAQs or contact our support team:</p>
     <ul class="mt-4 space-y-4">
@@ -105,10 +143,6 @@
     </ul>
     <p class="mt-4">For more help, contact us at <a href="mailto:support@example.com" class="text-blue-600">support@example.com</a>.</p>
   </div>
-    <div class="md:hidden">
-      <button id="menuBtn" class="text-2xl text-gray-700">&#9776;</button>
-    </div>
-  </nav>
 
   <!-- Mobile Menu -->
   <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
