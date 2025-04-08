@@ -21,6 +21,17 @@ window.addEventListener('DOMContentLoaded', () => {
     platformMsg.innerText = message;
   }
 });
+const firebaseConfig = {
+  apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
+  authDomain: "psdn56-493d0.firebaseapp.com",
+  projectId: "psdn56-493d0",
+  storageBucket: "psdn56-493d0.firebasestorage.app",
+  messagingSenderId: "270176732328",
+  appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 // === Shopping Cart Functionality ===
 
