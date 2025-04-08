@@ -11,7 +11,7 @@ body {
 
 /* Header */
 header {
-  background: #FFFFFF;
+  background: #D3D3D3;
   color: black;
   padding: 10px 20px;
   display: flex;
@@ -160,7 +160,7 @@ header .cart a {
 
 /* Footer */
 footer {
-  background: #1ff27b;
+  background: #D3D3D3;
   color: black;
   text-align: center;
   padding: 20px;
