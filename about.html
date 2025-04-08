@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Account Button</title>
+    <title>Interactive Account Dropdown</title>
     <link rel="stylesheet" href="account.css">
 </head>
 <body>
@@ -12,14 +12,35 @@
         <ul class="navbar">
             <li><a href="/">Home</a></li>
             <li><a href="/shop">Shop</a></li>
-            <!-- Account Button with Dropdown -->
             <li class="account-dropdown">
-                <button class="account-btn">Account</button>
+                <button class="account-btn">
+                    <span>Account</span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l4-4H2l4 4z" fill="#fff"/></svg>
+                </button>
                 <div class="dropdown-content">
-                    <a href="/profile">Profile</a>
-                    <a href="/orders">Orders</a>
-                    <a href="/help">Help</a>
-                    <a href="/about-us">About Us</a>
+                    <div class="dropdown-header">
+                        <div class="account-info">
+                            <span class="welcome-text">Hello, User!</span>
+                            <span class="account-name">John Doe</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-body">
+                        <a href="/profile">
+                            <span class="icon">👤</span> Profile
+                        </a>
+                        <a href="/orders">
+                            <span class="icon">📦</span> Orders
+                        </a>
+                        <a href="/wishlist">
+                            <span class="icon">❤️</span> Wishlist
+                        </a>
+                        <a href="/help">
+                            <span class="icon">❓</span> Help
+                        </a>
+                        <a href="/about-us">
+                            <span class="icon">ℹ️</span> About Us
+                        </a>
+                    </div>
                     <div class="auth-links">
                         <a href="/login" class="login">Login</a>
                         <a href="/logout" class="logout">Logout</a>
