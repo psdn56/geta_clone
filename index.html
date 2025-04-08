@@ -20,7 +20,91 @@
       <li><a href="#" class="hover:text-red-500">Kids</a></li>
       <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
       <li><a href="about.html" class="hover:text-red-500">About</a></li>
+          <!-- Account Section Dropdown -->
+    <div class="relative">
+      <button id="accountBtn" class="text-lg text-gray-700 hover:text-red-500">
+        My Account
+      </button>
+      <div id="accountMenu" class="absolute right-0 mt-2 bg-white shadow-lg rounded-lg hidden z-10">
+        <ul class="text-gray-700 p-2">
+          <li><a href="login.html" class="block px-4 py-2 hover:bg-gray-100">Login</a></li>
+          <li><a href="profile.html" class="block px-4 py-2 hover:bg-gray-100">Profile</a></li>
+          <li><a href="orders.html" class="block px-4 py-2 hover:bg-gray-100">Orders</a></li>
+          <li><a href="help.html" class="block px-4 py-2 hover:bg-gray-100">Help</a></li>
+          <li><a href="logout.html" class="block px-4 py-2 hover:bg-gray-100">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- JavaScript to Toggle the Account Menu -->
+  <script>
+    const accountBtn = document.getElementById('accountBtn');
+    const accountMenu = document.getElementById('accountMenu');
+
+    // Toggle the account menu when clicking the "My Account" button
+    accountBtn.addEventListener('click', function () {
+      accountMenu.classList.toggle('hidden');
+    });
+
+    // Close the dropdown if the user clicks outside
+    window.addEventListener('click', function (e) {
+      if (!accountBtn.contains(e.target) && !accountMenu.contains(e.target)) {
+        accountMenu.classList.add('hidden');
+      }
+    });
+  </script>
+
+  <!-- Profile Page Content (profile.html) -->
+  <div class="profile-container px-6 py-8">
+    <h2 class="text-2xl font-semibold mb-6">My Profile</h2>
+    <form id="profileForm" class="space-y-4">
+      <div>
+        <label for="username" class="block text-sm font-medium">Username</label>
+        <input type="text" id="username" name="username" class="w-full p-2 border border-gray-300 rounded" value="Current Username" required />
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium">Email</label>
+        <input type="email" id="email" name="email" class="w-full p-2 border border-gray-300 rounded" value="user@example.com" required />
+      </div>
+      <div>
+        <label for="phone" class="block text-sm font-medium">Phone Number</label>
+        <input type="tel" id="phone" name="phone" class="w-full p-2 border border-gray-300 rounded" value="123-456-7890" required />
+      </div>
+      <button type="submit" class="bg-green-600 text-white p-2 rounded">Save Changes</button>
+    </form>
+  </div>
+
+  <!-- Orders Page Content (orders.html) -->
+  <div class="orders-container px-6 py-8">
+    <h2 class="text-2xl font-semibold mb-6">My Orders</h2>
+    <div class="order-list">
+      <div class="order-item border-b pb-4 mb-4">
+        <h3 class="text-lg font-semibold">Order #12345</h3>
+        <p>Status: Shipped</p>
+        <p>Date: 2025-03-15</p>
+        <button class="bg-blue-600 text-white p-2 rounded">View Details</button>
+      </div>
+      <div class="order-item border-b pb-4 mb-4">
+        <h3 class="text-lg font-semibold">Order #12346</h3>
+        <p>Status: Delivered</p>
+        <p>Date: 2025-03-10</p>
+        <button class="bg-blue-600 text-white p-2 rounded">View Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Page Content (help.html) -->
+  <div class="help-container px-6 py-8">
+    <h2 class="text-2xl font-semibold mb-6">Help & Support</h2>
+    <p>If you need assistance, feel free to check our FAQs or contact our support team:</p>
+    <ul class="mt-4 space-y-4">
+      <li><strong>FAQ 1:</strong> How do I track my order?</li>
+      <li><strong>FAQ 2:</strong> How can I return a product?</li>
+      <li><strong>FAQ 3:</strong> How do I change my delivery address?</li>
     </ul>
+    <p class="mt-4">For more help, contact us at <a href="mailto:support@example.com" class="text-blue-600">support@example.com</a>.</p>
+  </div>
     <div class="md:hidden">
       <button id="menuBtn" class="text-2xl text-gray-700">&#9776;</button>
     </div>
