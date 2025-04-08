@@ -187,4 +187,20 @@ footer {
   .product {
     width: 90%;
   }
+  /* styles.css */
+
+/* Custom bubble styling */
+.custom-bubble {
+  width: 12px;
+  height: 12px;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.custom-bubble.active {
+  background-color: #f00; /* Red when active */
+}
+
+/* Add any other styles here */
+
 }
