@@ -1,5 +1,6 @@
-<div class="relative group">
-  <button class="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-1">
+<div class="relative">
+  <!-- Toggle Button -->
+  <button id="loginToggleBtn" class="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-1">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round"
         d="M5.121 17.804A4 4 0 016 16V8a4 4 0 118 0v8a4 4 0 01.879 1.804M12 20h.01" />
@@ -12,20 +13,34 @@
     </svg>
   </button>
 
-  <div class="absolute right-0 z-50 mt-2 w-72 bg-white shadow-lg rounded-lg invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300">
-    <!-- Login Form -->
-    <form class="p-4 space-y-3">
-      <input type="email" placeholder="Email" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="password" placeholder="Password" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+  <!-- Dropdown Menu -->
+  <div id="loginDropdown" class="absolute right-0 z-50 mt-2 w-72 bg-white shadow-lg rounded-lg invisible opacity-0 transition-all duration-300">
+    <!-- Email/Password Login -->
+    <form class="p-4 space-y-3" onsubmit="event.preventDefault(); signup()">
+      <input type="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <input type="password" id="password" placeholder="Password" class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required>
       <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</button>
     </form>
+
+    <!-- OR Separator -->
+    <div class="flex items-center justify-center px-4">
+      <div class="border-t w-full"></div>
+      <span class="text-xs text-gray-400 px-2">OR</span>
+      <div class="border-t w-full"></div>
+    </div>
+
+    <!-- Google Sign-In -->
+    <div class="px-4 pb-4">
+      <button onclick="googleSignup()" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded flex items-center justify-center gap-2">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+        Sign in with Google
+      </button>
+    </div>
 
     <!-- Extra Links -->
     <div class="px-4 py-2 border-t text-sm text-gray-600">
       <p>New customer? <a href="#" class="text-blue-600 hover:underline">Sign up</a></p>
       <p><a href="#" class="text-blue-600 hover:underline">Forgot password?</a></p>
-    </div>
-
     <!-- Optional Menu Items -->
     <ul class="py-2 text-gray-700 border-t text-sm">
       <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2">👤 My Profile</li>
