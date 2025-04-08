@@ -1,96 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout - Pankaj Footwear</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - Pankaj Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-white text-gray-800 font-sans">
-  <div class="max-w-xl mx-auto px-4 py-10 text-center">
-    <h1 class="text-2xl font-bold mb-6">Scan & Pay</h1>
-
-    <p class="mb-4">Use any UPI app to scan this QR code and complete your payment.</p>
-
-    <!-- QR Code Image -->
-    <img id="qrCode" class="mx-auto border p-4 rounded" alt="UPI QR Code"/>
-
-    <p class="mt-6 text-lg font-semibold text-green-600">Total Amount: ₹<span id="totalAmount">0.00</span></p>
-
-    <!-- Mobile number input -->
-    <div class="mt-6 text-left">
-      <label for="mobile" class="block font-medium mb-1">Enter your mobile number:</label>
-      <input type="tel" id="mobile" class="w-full border p-2 rounded" placeholder="e.g. 9876543210" required />
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+    <div id="cartItems" class="space-y-4"></div>
+    <div class="mt-6 text-right">
+      <p class="text-lg font-semibold">Total: ₹<span id="cartTotal">0.00</span></p>
+      <a href="checkout.html" class="inline-block mt-4 bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">Proceed to Checkout</a>
     </div>
+  </div>  <script>
+    const cartItemsContainer = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
 
-    <!-- Confirm button -->
-    <button onclick="confirmPayment()" class="mt-6 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
-      Payment Done
-    </button>
+    function renderCart() {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cartItemsContainer.innerHTML = '';
+      let total = 0;
 
-    <!-- Payment ID display -->
-    <p id="paymentId" class="mt-4 text-sm text-blue-600 font-semibold hidden"></p>
-  </div>
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
 
-  <script>
-    // Set payment amount from cart total
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price * item.quantity;
-    });
-    document.getElementById("totalAmount").textContent = total.toFixed(2);
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center border p-4 rounded";
+        div.innerHTML = `
+          <div>
+            <h2 class="text-lg font-semibold">${item.name}</h2>
+            <p>Price: ₹${item.price}</p>
+            <p>Qty: ${item.quantity}</p>
+          </div>
+          <button onclick="removeItem(${index})" class="text-red-500 hover:text-red-700">Remove</button>
+        `;
 
-    // Generate QR Code (replace with your actual UPI ID)
-    const upiLink = `upi://pay?pa=yourupiid@upi&pn=PankajFootwear&am=${total.toFixed(2)}&cu=INR`;
-    const qrURL = `https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${encodeURIComponent(upiLink)}`;
-    document.getElementById("qrCode").src = qrURL;
+        cartItemsContainer.appendChild(div);
+      });
 
-    // Confirm payment and generate Payment ID
-    function confirmPayment() {
-      const mobile = document.getElementById("mobile").value.trim();
-      const paymentIdEl = document.getElementById("paymentId");
-
-      if (!/^[6-9]\d{9}$/.test(mobile)) {
-        alert("Please enter a valid 10-digit mobile number.");
-        return;
-      }
-
-      // Generate payment ID: YYMMDD + mobile
-      const now = new Date();
-      const yy = now.getFullYear().toString().slice(2);
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-      const dd = String(now.getDate()).padStart(2, '0');
-      const paymentId = `${yy}${mm}${dd}${mobile}`;
-
-      // Show payment ID
-      paymentIdEl.textContent = `Your Payment ID is: ${paymentId}`;
-      paymentIdEl.classList.remove("hidden");
-
-      // Clear cart and redirect after 3 seconds
-      localStorage.removeItem("cart");
-      setTimeout(() => {
-        alert("Payment confirmed. Redirecting to homepage...");
-        window.location.href = "index.html";
-      }, 3000);
+      cartTotalEl.textContent = total.toFixed(2);
     }
-  </script>
-</body>
-</html>
 
-  <script>
-    document.getElementById("checkoutForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
 
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const address = document.getElementById("address").value;
-
-      alert(`Order placed successfully!\nName: ${name}\nPhone: ${phone}\nAddress: ${address}`);
-
-      localStorage.removeItem("cart");
-      window.location.href = "index.html"; // or thank you page
-    });
-  </script>
-</body>
+    renderCart();
+  </script></body>
 </html>
