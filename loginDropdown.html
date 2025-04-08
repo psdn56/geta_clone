@@ -1,46 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Dropdown</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-  <nav class="bg-white shadow p-4 flex justify-between items-center">
-    <div class="text-xl font-bold">MyShop</div>
-    <div class="relative">
-      <button id="loginBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-        Login
-      </button>
-      <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg z-50">
-        <ul class="py-2">
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">My Profile</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Orders</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Wishlist</a></li>
-        </ul>
-        <hr />
-        <div class="px-4 py-2 text-sm text-gray-600">
-          New Customer? <a href="#" class="text-blue-500 hover:underline">Sign Up</a>
-        </div>
-      </div>
+<div class="relative group">
+  <button class="text-gray-700 font-medium hover:text-red-500 px-4 py-2">
+    Login
+  </button>
+  <div class="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg hidden group-hover:block z-50">
+    <div class="px-4 py-3 border-b">
+      <p class="text-sm text-gray-700">New Customer?</p>
+      <a href="signup.html" class="text-red-500 font-medium text-sm hover:underline">Sign Up</a>
     </div>
-  </nav>
-
-  <script>
-    const loginBtn = document.getElementById('loginBtn');
-    const dropdownMenu = document.getElementById('dropdownMenu');
-
-    loginBtn.addEventListener('click', () => {
-      dropdownMenu.classList.toggle('hidden');
-    });
-
-    // Hide dropdown if clicked outside
-    document.addEventListener('click', (e) => {
-      if (!loginBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.add('hidden');
-      }
-    });
-  </script>
-</body>
-</html>
+    <a href="login.html" class="block px-4 py-2 text-sm hover:bg-gray-100">My Profile</a>
+    <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Orders</a>
+    <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Wishlist</a>
+    <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100">Logout</a>
+  </div>
+</div>
