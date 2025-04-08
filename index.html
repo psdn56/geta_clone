@@ -32,6 +32,15 @@
     </div>
   </nav>
 
+  <!-- Image Slider -->
+  <div class="relative w-full overflow-hidden mt-4">
+    <div id="slider" class="flex transition-transform duration-700 ease-in-out">
+      <img src="https://via.placeholder.com/1200x400?text=Slide+1" class="w-full flex-shrink-0" />
+      <img src="https://via.placeholder.com/1200x400?text=Slide+2" class="w-full flex-shrink-0" />
+      <img src="https://via.placeholder.com/1200x400?text=Slide+3" class="w-full flex-shrink-0" />
+    </div>
+  </div>
+
   <!-- Login Modal -->
   <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
     <div class="bg-white p-6 rounded-lg w-80 relative">
@@ -154,6 +163,16 @@
     }
 
     updateLoginUI();
+
+    // Slider JS
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('#slider img');
+    const totalSlides = slides.length;
+
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      document.getElementById('slider').style.transform = `translateX(-${currentSlide * 100}%)`;
+    }, 3000);
   </script>
 
 </body>
