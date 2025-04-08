@@ -1,79 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Pankaj Footwear</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="font-sans bg-white text-gray-800">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pankaj Footwear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+  <script>
+  const slider = document.getElementById("heroSlider");
+  let index = 0;
+  const totalSlides = 3;
 
-    <!-- Navbar -->
-    <nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <img src="PankajLogo.png" alt="Pankaj Footwear Logo" class="h-20 w-auto">
-        <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
-      </div>
+  setInterval(() => {
+    index = (index + 1) % totalSlides;
+    slider.style.transform = `translateX(-${index * 100}%)`;
+  }, 4000);
+</script>
+<body class="font-sans bg-white text-gray-800">
 
-      <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
-        <li><a href="men.html" class="hover:text-red-500">Men</a></li>
-        <li><a href="women.html" class="hover:text-red-500">Women</a></li>
-        <li><a href="#" class="hover:text-red-500">Kids</a></li>
-        <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
-        <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
-        <li><a href="about.html" class="hover:text-red-500">About</a></li>
-        <li><button onclick="openLoginModal()" class="hover:text-red-500" id="loginButton">Login</button></li>
-      </ul>
+  <!-- Navbar -->
+  <nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <img src="..." alt="Pankaj Footwear Logo" class="h-20 w-auto">
+      <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
+    </div>
+    <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
+      <li><a href="men.html" class="hover:text-red-500">Men</a></li>
+      <li><a href="women.html" class="hover:text-red-500">Women</a></li>
+      <li><a href="#" class="hover:text-red-500">Kids</a></li>
+      <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
+      <li><a href="about.html" class="hover:text-red-500">About</a></li>
+    </ul>
+    <div class="md:hidden">
+      <button id="menuBtn" class="text-2xl text-gray-700">&#9776;</button>
+    </div>
+  </nav>
 
-      <div class="md:hidden">
-        <button id="menuBtn" class="text-2xl text-gray-700">&#9776;</button>
-      </div>
-    </nav>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
+    <a href="men.html" class="block py-2 hover:text-red-500">Men</a>
+    <a href="women.html" class="block py-2 hover:text-red-500">Women</a>
+    <a href="#" class="block py-2 hover:text-red-500">Kids</a>
+    <a href="sale.html" class="block py-2 hover:text-red-500">Sale</a>
+    <li><a href="about.html" class="hover:text-red-500">About</a></li>
+  </div>
 
-    <!-- Image Slider -->
-    <section class="relative w-full overflow-hidden mt-4">
-      <div id="slider" class="flex transition-transform duration-700 ease-in-out">
-        <img src="Sneaker1.jpeg" class="w-full flex-shrink-0" />
-        <img src="Sneaker2.jpeg" class="w-full flex-shrink-0" />
-        <img src="Sneaker3.jpeg" class="w-full flex-shrink-0" />
-      </div>
-
-      <!-- Overlay Text -->
-      <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
-        <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
-        <button class="bg-red-600 px-5 py-2 text-sm sm:text-base text-white rounded hover:bg-red-700">Shop Now</button>
-      </div>
-    </section>
-
-    <!-- Overlay Text (DUPLICATE and should be removed) -->
+  <!-- Hero Slider -->
+  <section class="relative w-full overflow-hidden">
+    <div id="heroSlider" class="flex transition-all duration-1000 ease-in-out w-[300%]">
+      <img src="Sneaker1.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Slide 1" />
+      <img src="Sneaker2.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Slide 2" />
+      <img src="Sneaker3.jpeg" class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover" alt="Slide 3" />
+    </div>
     <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
       <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
       <button class="bg-red-600 px-5 py-2 text-sm sm:text-base text-white rounded hover:bg-red-700">Shop Now</button>
     </div>
-    </section>
-    <!-- WhatsApp Chat Button -->
-<a
-  href="https://wa.me/91 7704915695"
-  class="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600"
-  target="_blank"
-  aria-label="Chat on WhatsApp"
->
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-current" viewBox="0 0 24 24">
-    <path d="M20.52 3.48A11.91 11.91 0 0 0 12 0C5.37 0 0 5.37 0 12a11.88 11.88 0 0 0 1.67 6.13L0 24l6.28-1.65A11.88 11.88 0 0 0 12 24c6.63 0 12-5.37 12-12a11.91 11.91 0 0 0-3.48-8.52zm-8.52 18a9.9 9.9 0 0 1-5.1-1.4l-.36-.22-3.73 1 1-3.64-.24-.38A9.89 9.89 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.35-7.66c-.3-.15-1.77-.87-2.04-.96s-.47-.15-.66.15-.76.96-.93 1.16-.34.22-.63.07a8.03 8.03 0 0 1-2.35-1.45 8.8 8.8 0 0 1-1.62-2c-.17-.3-.02-.46.13-.6.13-.13.3-.34.45-.5.15-.17.2-.3.3-.5s.05-.37-.02-.52c-.08-.15-.66-1.58-.91-2.17-.24-.58-.48-.5-.66-.5s-.37 0-.57 0-.5.07-.76.37a3.18 3.18 0 0 0-1 2.35 5.55 5.55 0 0 0 1.17 2.9 12.77 12.77 0 0 0 4.77 4.2c.67.28 1.2.45 1.6.58a3.84 3.84 0 0 0 1.76.1c.54-.08 1.77-.72 2.02-1.41.25-.7.25-1.3.17-1.42-.09-.12-.27-.19-.57-.34z"/>
-  </svg>
-</a>
+  </section>
 
-    <!-- JavaScript -->
-    <script>
-      let currentSlide = 0;
-      const slides = document.querySelectorAll('#slider img');
-      const totalSlides = slides.length;
+  <!-- Featured Products -->
+  <section class="px-4 sm:px-6 py-10">
+    <h2 class="text-xl sm:text-2xl font-bold mb-6">Featured</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="border p-4 rounded">
+        <img src="Sneaker1.jpeg" alt="Product 1" class="mb-4 w-full">
+        <h3 class="text-lg font-semibold">Sneaker One</h3>
+        <p class="text-red-600">₹760.00</p>
+      </div>
+      <div class="border p-4 rounded">
+        <img src="S2.jpeg" alt="Product 2" class="mb-4 w-full">
+        <h3 class="text-lg font-semibold">Sneaker Two</h3>
+        <p class="text-red-600">₹820.99</p>
+      </div>
+      <div class="border p-4 rounded">
+        <img src="Sneaker3.jpeg" alt="Product 3" class="mb-4 w-full">
+        <h3 class="text-lg font-semibold">Sneaker Three</h3>
+        <p class="text-red-600">₹1199.00</p>
+      </div>
+    </div>
+  </section>
 
-      setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        document.getElementById('slider').style.transform = `translateX(-${currentSlide * 100}%)`;
-      }, 3000);
-    </script>
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 mt-10">
+    <div class="container mx-auto text-center px-4">
+      <p>&copy; 2025 Pankaj Footwear. All rights reserved.</p>
+    </div>
+    <a href="https://wa.me/917704915695?text=Hi%20Pankaj%20Footwear%20Team!"
+       class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2 z-50"
+       target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current" viewBox="0 0 24 24">...</svg>
+      <span class="hidden sm:inline">Chat with us</span>
+    </a>
+  </footer>
 
-  </body>
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  function updateDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const formatted = now.toLocaleString();
+    document.getElementById('datetime').innerHTML =
+      `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
+  }
+
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+</script>
+
+</body>
 </html>
