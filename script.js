@@ -135,3 +135,17 @@ setInterval(() => {
 changeSlide(0);
 
                          }
+fetch("https://script.google.com/macros/s/AKfy.../exec")
+  .then(res => res.json())
+  .then(data => {
+    data.forEach(item => {
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <h3>${item.Name}</h3>
+        <p>${item.Description}</p>
+        <img src="${item['Image URL']}" width="200"/>
+      `;
+      document.body.appendChild(div);
+    });
+  });
+
