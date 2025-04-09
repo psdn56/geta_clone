@@ -136,22 +136,23 @@ changeSlide(0);
 
                          }
 <div id="products"></div>
-
-<script>
+  <script>
 fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waIAaFndaZ_9uXDcj-grY15KFnU1OWQmk5M6M/exec") // your Apps Script URL
   .then(res => res.json())
   .then(data => {
+    const container = document.getElementById("imageContainer");
+    container.innerHTML = ""; // clear previous
+
     data.forEach(item => {
-      const div = document.createElement('div');
-      div.innerHTML = `
-        <h3>${item.Name}</h3>
-        <p>${item.Description}</p>
-        <img src="${item['WEB URL']}"" width="300" />
-      `;
-      document.getElementById('products').appendChild(div);
+      const img = document.createElement("img");
+      img.src = item["WEB URL"]; // your auto-converted link
+      img.alt = item["NAME"];
+      img.classList.add("rounded", "shadow-lg", "mb-4");
+      img.width = 300;
+      container.appendChild(img);
     });
   });
-</script>
+
 
     });
   });
