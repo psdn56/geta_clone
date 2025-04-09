@@ -183,6 +183,39 @@ fetch('loginDropdown.html')
     // Else the HTML stays as it was loaded (i.e., Login / Signup)
   });
   </script>
+  <!-- Product Grid from Google Sheet -->
+<div id="imageContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 py-6"></div>
 
+<script>
+  fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waIAaFndaZ_9uXDcj-grY15KFnU1OWQmk5M6M/exec")
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("imageContainer");
+      container.innerHTML = "";
+
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "border p-4 rounded shadow";
+
+        const img = document.createElement("img");
+        img.src = item["IMAGE URL"]; // ✅ correct column
+        img.alt = item["NAME"];
+        img.className = "mb-4 w-full h-64 object-cover";
+
+        const name = document.createElement("h3");
+        name.textContent = item["NAME"];
+        name.className = "text-lg font-semibold";
+
+        const price = document.createElement("p");
+        price.textContent = `₹${item["PRICE"]}`;
+        price.className = "text-red-600";
+
+        card.appendChild(img);
+        card.appendChild(name);
+        card.appendChild(price);
+        container.appendChild(card);
+      });
+    });
+</script>
 </body>
 </html>
