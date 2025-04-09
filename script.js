@@ -135,7 +135,10 @@ setInterval(() => {
 changeSlide(0);
 
                          }
-fetch("https://script.google.com/macros/s/AKfy.../exec")
+<div id="products"></div>
+
+<script>
+fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waIAaFndaZ_9uXDcj-grY15KFnU1OWQmk5M6M/exec") // your Apps Script URL
   .then(res => res.json())
   .then(data => {
     data.forEach(item => {
@@ -143,9 +146,13 @@ fetch("https://script.google.com/macros/s/AKfy.../exec")
       div.innerHTML = `
         <h3>${item.Name}</h3>
         <p>${item.Description}</p>
-        <img src="${item['Image URL']}" width="200"/>
+        <img src="${item['Direct Image Link']}" width="300" />
       `;
-      document.body.appendChild(div);
+      document.getElementById('products').appendChild(div);
+    });
+  });
+</script>
+
     });
   });
 
