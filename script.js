@@ -146,7 +146,7 @@ fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waI
       div.innerHTML = `
         <h3>${item.Name}</h3>
         <p>${item.Description}</p>
-        <img src="${item['IMAGE URL']}"" width="300" />
+        <img src="${item['WEB URL']}"" width="300" />
       `;
       document.getElementById('products').appendChild(div);
     });
