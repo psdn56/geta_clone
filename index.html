@@ -219,9 +219,9 @@ fetch('loginDropdown.html')
         container.appendChild(card);
 
         // === Slider Images ===
-        if (item["SLIDER IMG"]) {
+        if (item["WEB URL"]) {
           const sliderImg = document.createElement("img");
-          sliderImg.src = item["SLIDER IMG"];
+          sliderImg.src = item["WEB URL"];
           sliderImg.alt = "Slide Image";
           sliderImg.className = "w-full h-full object-cover flex-shrink-0";
           slider.appendChild(sliderImg);
