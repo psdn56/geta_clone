@@ -47,10 +47,9 @@
 
  <section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
   <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full" style="width: 300%;">
-    <img src="https://drive.google.com/uc?export=view&id=1I5JKp7p6JlWJ8IPFe1Yh5t7f1_2eTkx0" class="w-full h-full object-cover flex-shrink-0" alt="Slide 1" />
-    <img src="https://fcity.in/images/products/428995162/tktpq_512.jpg" class="w-full h-full object-cover flex-shrink-0" alt="Slide 2" />
-    <img src="Sneaker3.jpeg" class="w-full h-full object-cover flex-shrink-0" alt="Slide 3" />
+    <!-- Slider images will be added dynamically here -->
   </div>
+</section>
 
   <!-- Overlay Text -->
   <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
@@ -191,14 +190,18 @@ fetch('loginDropdown.html')
     .then(res => res.json())
     .then(data => {
       const container = document.getElementById("imageContainer");
+      const slider = document.getElementById("heroSlider");
+
       container.innerHTML = "";
+      slider.innerHTML = "";
 
       data.forEach(item => {
+        // === Product Cards ===
         const card = document.createElement("div");
         card.className = "border p-4 rounded shadow";
 
         const img = document.createElement("img");
-        img.src = item["WEB URL"]; // ✅ correct column
+        img.src = item["WEB URL"];
         img.alt = item["NAME"];
         img.className = "mb-4 w-full h-64 object-cover";
 
@@ -214,7 +217,26 @@ fetch('loginDropdown.html')
         card.appendChild(name);
         card.appendChild(price);
         container.appendChild(card);
+
+        // === Slider Images ===
+        if (item["SLIDER IMG"]) {
+          const sliderImg = document.createElement("img");
+          sliderImg.src = item["SLIDER IMG"];
+          sliderImg.alt = "Slide Image";
+          sliderImg.className = "w-full h-full object-cover flex-shrink-0";
+          slider.appendChild(sliderImg);
+        }
       });
+
+      // === Auto Slider ===
+      let index = 0;
+      const slides = slider.children;
+      const totalSlides = slides.length;
+
+      setInterval(() => {
+        index = (index + 1) % totalSlides;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+      }, 4000);
     });
 </script>
 </body>
