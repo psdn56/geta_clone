@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - Pankaj Footwear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4">Checkout</h2>
+    <form id="checkoutForm" class="space-y-4">
+      <input type="text" name="name" placeholder="Full Name" class="w-full border p-2 rounded" required>
+      <input type="email" name="email" placeholder="Email" class="w-full border p-2 rounded" required>
+      <input type="text" name="phone" placeholder="Phone Number" class="w-full border p-2 rounded" required>
+      <input type="text" name="pincode" placeholder="Pincode" class="w-full border p-2 rounded" required>
+      <input type="text" name="city" placeholder="City" class="w-full border p-2 rounded" required>
+      <input type="text" name="state" placeholder="State" class="w-full border p-2 rounded" required>
+      <textarea name="address" placeholder="Full Address" class="w-full border p-2 rounded" required></textarea>
+
+      <h3 class="text-lg font-semibold mt-4">Make UPI Payment</h3>
+      <p>Pay via UPI to <strong>psdn56@oksbi</strong> using your preferred UPI app.</p>
+      <p class="text-sm text-gray-500">Use this payment link: <br><a href="upi://pay?pa=psdn56@oksbi&pn=PankajFootwear&cu=INR" class="text-blue-500 underline">upi://pay?pa=psdn56@oksbi&pn=PankajFootwear</a></p>
+
+      <select name="paymentStatus" class="w-full border p-2 rounded mt-2" required>
+        <option value="">Select Payment Status</option>
+        <option value="Success">Success</option>
+        <option value="Failed">Failed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Submit Order</button>
+    </form>
+    <p id="responseMsg" class="mt-4 text-center text-sm text-gray-700"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("checkoutForm");
+    const responseMsg = document.getElementById("responseMsg");
+    const sheetURL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL"; // Replace with your deployed Apps Script URL
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        pincode: formData.get("pincode"),
+        city: formData.get("city"),
+        state: formData.get("state"),
+        address: formData.get("address"),
+        paymentStatus: formData.get("paymentStatus"),
+        items: JSON.parse(localStorage.getItem("cart") || "[]"),
+        total: JSON.parse(localStorage.getItem("cart") || "[]").reduce((sum, item) => sum + item.price * item.quantity, 0)
+      };
+
+      try {
+        const res = await fetch(sheetURL, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" }
+        });
+
+        if (res.ok) {
+          responseMsg.textContent = "Order submitted!";
+          localStorage.removeItem("cart");
+        } else {
+          responseMsg.textContent = "Error submitting order. Try again.";
+        }
+      } catch (err) {
+        responseMsg.textContent = "Connection error. Check your script URL.";
+      }
+    });
+  </script>
+</body>
+</html>
