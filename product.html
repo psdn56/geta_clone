@@ -4,6 +4,18 @@
   <meta charset="UTF-8" />
   <title>Product Details</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .star {
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: lightgray;
+    }
+    .star.selected,
+    .star:hover,
+    .star:hover ~ .star {
+      color: gold;
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-800 font-sans p-6">
   <div class="max-w-4xl mx-auto">
@@ -12,15 +24,18 @@
     <!-- Reviews Section -->
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
-      <div class="space-y-4">
-        <div class="border p-4 rounded shadow">
-          <p class="text-sm text-gray-600">"Very comfortable and stylish!"</p>
-          <p class="text-sm font-medium mt-2">– Priya</p>
+      <div id="reviewsContainer" class="space-y-4 mb-6"></div>
+      <div class="border p-4 rounded shadow">
+        <label class="block mb-1 font-medium">Your Rating:</label>
+        <div id="ratingStars" class="flex space-x-1 mb-3">
+          <span class="star" data-star="1">&#9733;</span>
+          <span class="star" data-star="2">&#9733;</span>
+          <span class="star" data-star="3">&#9733;</span>
+          <span class="star" data-star="4">&#9733;</span>
+          <span class="star" data-star="5">&#9733;</span>
         </div>
-        <div class="border p-4 rounded shadow">
-          <p class="text-sm text-gray-600">"Good value for money."</p>
-          <p class="text-sm font-medium mt-2">– Rahul</p>
-        </div>
+        <textarea id="reviewInput" rows="3" class="w-full border rounded p-2 mb-2" placeholder="Write your review..."></textarea>
+        <button id="submitReview" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Post Review</button>
       </div>
     </section>
 
@@ -52,14 +67,84 @@
     document.getElementById("productDetails").innerHTML = productHTML;
 
     document.getElementById("addToCartBtn").addEventListener("click", () => {
-      // Simple cart example using localStorage
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      cart.push({ name, price, desc, img });
+      const parsedPrice = parseFloat(price);
+      const existingIndex = cart.findIndex(item => item.name === name);
+
+      if (existingIndex !== -1) {
+        cart[existingIndex].quantity += 1;
+      } else {
+        cart.push({
+          name,
+          price: parsedPrice,
+          quantity: 1,
+          desc,
+          img
+        });
+      }
+
       localStorage.setItem("cart", JSON.stringify(cart));
       document.getElementById("cartMsg").classList.remove("hidden");
     });
 
-    // Optional: Dummy Related Products
+    // Reviews with Ratings
+    const reviewInput = document.getElementById("reviewInput");
+    const submitReview = document.getElementById("submitReview");
+    const reviewsContainer = document.getElementById("reviewsContainer");
+    const ratingStars = document.querySelectorAll(".star");
+    const reviewKey = `reviews_${name}`;
+    let selectedRating = 0;
+
+    ratingStars.forEach(star => {
+      star.addEventListener("click", () => {
+        selectedRating = parseInt(star.getAttribute("data-star"));
+        updateStarDisplay(selectedRating);
+      });
+    });
+
+    function updateStarDisplay(rating) {
+      ratingStars.forEach(star => {
+        const starValue = parseInt(star.getAttribute("data-star"));
+        if (starValue <= rating) {
+          star.classList.add("selected");
+        } else {
+          star.classList.remove("selected");
+        }
+      });
+    }
+
+    function renderStars(rating) {
+      return Array.from({ length: 5 }, (_, i) => i < rating ? "&#9733;" : "&#9734;").join("");
+    }
+
+    function loadReviews() {
+      const reviews = JSON.parse(localStorage.getItem(reviewKey) || "[]");
+      reviewsContainer.innerHTML = reviews.map(({ text, rating }) => `
+        <div class="border p-4 rounded shadow">
+          <div class="text-yellow-500 mb-1" style="font-size: 1.25rem;">${renderStars(rating)}</div>
+          <p class="text-sm text-gray-700">"${text}"</p>
+        </div>
+      `).join('');
+    }
+
+    submitReview.addEventListener("click", () => {
+      const text = reviewInput.value.trim();
+      if (text && selectedRating > 0) {
+        const reviews = JSON.parse(localStorage.getItem(reviewKey) || "[]");
+        reviews.unshift({ text, rating: selectedRating });
+        localStorage.setItem(reviewKey, JSON.stringify(reviews));
+        reviewInput.value = "";
+        selectedRating = 0;
+        updateStarDisplay(0);
+        loadReviews();
+      } else {
+        alert("Please write a review and select a rating.");
+      }
+    });
+
+    loadReviews();
+
+    // Dummy Related Products
     const relatedHTML = [
       { name: "Casual Sneakers", price: "999", img: "https://via.placeholder.com/300x200?text=Sneakers" },
       { name: "Formal Shoes", price: "1299", img: "https://via.placeholder.com/300x200?text=Formal" },
