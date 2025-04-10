@@ -136,15 +136,18 @@ fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waI
 
       // Product card
       const card = document.createElement("div");
-      card.className = "border p-4 rounded shadow";
-      card.innerHTML = `
-        <img src="${imgUrl}" alt="${item["NAME"]}" 
-             onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" 
-             class="mb-4 w-full h-64 object-cover" />
-        <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
-        <p class="text-red-600">₹${item["PRICE"]}</p>
-      `;
-      container.appendChild(card);
+card.className = "border p-4 rounded shadow cursor-pointer";
+card.innerHTML = `
+  <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${item["PRICE"]}&img=${encodeURIComponent(imgUrl)}">
+    <img src="${imgUrl}" alt="${item["NAME"]}" 
+         onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" 
+         class="mb-4 w-full h-64 object-cover" />
+    <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
+    <p class="text-red-600">₹${item["PRICE"]}</p>
+  </a>
+`;
+container.appendChild(card);
+
 
       // Slider image
       if (imgUrl) {
