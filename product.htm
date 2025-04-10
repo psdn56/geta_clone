@@ -10,22 +10,24 @@
   <div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
     <img id="productImg" src="" alt="Product" class="w-full h-96 object-cover rounded mb-6" />
     <h1 id="productName" class="text-2xl font-bold mb-4"></h1>
-    <p id="productPrice" class="text-red-600 text-xl mb-4"></p>
-    <p class="text-gray-600">This is a premium quality product from Pankaj Footwear. Experience comfort and style with every step.</p>
+    <p id="productPrice" class="text-red-600 text-xl mb-2"></p>
+    <p id="productDesc" class="text-gray-700"></p>
   </div>
 
   <script>
-    // Get URL params
+    // Get URL parameters
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
     const price = params.get("price");
     const img = params.get("img");
+    const desc = params.get("desc");
 
-    // Set values in DOM
+    // Populate data into DOM
     document.getElementById("productName").textContent = name || "Product";
     document.getElementById("productPrice").textContent = price ? `₹${price}` : "";
     document.getElementById("productImg").src = img || "https://via.placeholder.com/600x400?text=Image+Not+Found";
-    document.getElementById("productImg").alt = name;
+    document.getElementById("productImg").alt = name || "Product Image";
+    document.getElementById("productDesc").textContent = desc || "No description available.";
   </script>
 </body>
 </html>
