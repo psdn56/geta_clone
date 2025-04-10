@@ -128,43 +128,43 @@
         container.innerHTML = "";
         slider.innerHTML = "";
         dotContainer.innerHTML = "";
-
         data.forEach((item, i) => {
-          const imgUrl = item["WEB URL"];
+  const imgUrl = item["WEB URL"];
+  const name = item["NAME"];
+  const price = item["PRICE"];
 
-          // Product card
-          const card = document.createElement("div");
-          card.className = "border p-4 rounded shadow";
-          card.innerHTML = `
-  <a href="product.html?name=${encodeURIComponent(item["NAME"])}">
-    <img src="${imgUrl}" alt="${item["NAME"]}" 
-      onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" 
-      class="mb-4 w-full h-64 object-cover" />
-    <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
-    <p class="text-red-600">₹${item["PRICE"]}</p>
-  </a>
-`;
+  const card = document.createElement("div");
+  card.className = "border p-4 rounded shadow hover:shadow-lg transition";
 
-          container.appendChild(card);
+  card.innerHTML = `
+    <a href="product.html?name=${encodeURIComponent(name)}">
+      <img src="${imgUrl}" alt="${name}" 
+        onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" 
+        class="mb-4 w-full h-64 object-cover rounded" />
+      <h3 class="text-lg font-semibold">${name}</h3>
+      <p class="text-red-600">₹${price}</p>
+    </a>
+  `;
 
-          // Slider image
-          if (imgUrl) {
-            const sliderImg = document.createElement("img");
-            sliderImg.src = imgUrl;
-            sliderImg.alt = "Slide Image";
-            sliderImg.className = "w-full h-full object-cover flex-shrink-0";
-            sliderImg.onerror = () => {
-              sliderImg.src = "https://via.placeholder.com/600x400?text=No+Image";
-            };
-            slider.appendChild(sliderImg);
+  container.appendChild(card);
 
-            // Dot
-            const dot = document.createElement("span");
-            dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer";
-            dot.dataset.index = i;
-            dotContainer.appendChild(dot);
-          }
-        });
+  // Slider section (unchanged)
+  if (imgUrl) {
+    const sliderImg = document.createElement("img");
+    sliderImg.src = imgUrl;
+    sliderImg.alt = "Slide Image";
+    sliderImg.className = "w-full h-full object-cover flex-shrink-0";
+    sliderImg.onerror = () => {
+      sliderImg.src = "https://via.placeholder.com/600x400?text=No+Image";
+    };
+    slider.appendChild(sliderImg);
+
+    const dot = document.createElement("span");
+    dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer";
+    dot.dataset.index = i;
+    dotContainer.appendChild(dot);
+  }
+});
 
         // Slider logic
         let index = 0;
