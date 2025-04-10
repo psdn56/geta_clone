@@ -77,12 +77,11 @@
 
   <!-- Scripts -->
   <script>
-    // Menu toggle
     document.getElementById('menuBtn').addEventListener('click', () => {
       document.getElementById('mobileMenu').classList.toggle('hidden');
     });
 
-    // DateTime updater
+    // DateTime
     function updateDateTime() {
       const now = new Date();
       const year = now.getFullYear();
@@ -95,118 +94,102 @@
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
-    // Load login dropdown
+    // Login Dropdown
     fetch('loginDropdown.html')
       .then(res => res.text())
       .then(data => {
         const container = document.getElementById('loginDropdownContainer');
-        container.innerHTML = data;
-
         const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+        container.innerHTML = isLoggedIn ? 
+          `<div class="text-gray-700 font-medium space-x-2">
+            <span>Welcome!</span>
+            <button id="logoutBtn" class="text-red-500 hover:underline">Logout</button>
+          </div>` : data;
+
         if (isLoggedIn) {
-          container.innerHTML = `
-            <div class="text-gray-700 font-medium space-x-2">
-              <span>Welcome!</span>
-              <button id="logoutBtn" class="text-red-500 hover:underline">Logout</button>
-            </div>`;
           document.getElementById("logoutBtn").addEventListener("click", () => {
             localStorage.setItem("isLoggedIn", "false");
             window.location.reload();
           });
         }
       });
-fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waIAaFndaZ_9uXDcj-grY15KFnU1OWQmk5M6M/exec")
-  .then(res => res.json())
-  .then(data => {
-    console.log("Fetched Data:", data);
-    if (data.length > 0) {
-      console.log("Column Keys:", Object.keys(data[0]));
-    }
 
-    const container = document.getElementById("imageContainer");
-    const slider = document.getElementById("heroSlider");
-    const dotContainer = document.querySelector(".dot-container");
+    // Load Data
+    fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waIAaFndaZ_9uXDcj-grY15KFnU1OWQmk5M6M/exec")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("imageContainer");
+        const slider = document.getElementById("heroSlider");
+        const dotContainer = document.querySelector(".dot-container");
 
-    container.innerHTML = "";
-    slider.innerHTML = "";
-    dotContainer.innerHTML = "";
+        container.innerHTML = "";
+        slider.innerHTML = "";
+        dotContainer.innerHTML = "";
 
-    const name = encodeURIComponent(item["NAME"]);
-const price = encodeURIComponent(item["PRICE"]);
-const img = encodeURIComponent(item["WEB URL"]);
-const desc = encodeURIComponent(item["DESCRIPTION"] || "No description available");
+        data.forEach((item, i) => {
+          const imgUrl = item["WEB URL"];
+          const name = item["NAME"];
+          const price = item["PRICE"];
+          const imageUrl = encodeURIComponent(imgUrl);
+          const productUrl = `product.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&img=${imageUrl}`;
 
-const card = document.createElement("div");
-card.className = "border p-4 rounded shadow";
+          const card = document.createElement("div");
+          card.className = "border p-4 rounded shadow cursor-pointer";
+          card.innerHTML = `
+            <a href="${productUrl}">
+              <img src="${imgUrl}" alt="${name}" class="mb-4 w-full h-64 object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" />
+              <h3 class="text-lg font-semibold">${name}</h3>
+              <p class="text-red-600">₹${price}</p>
+            </a>`;
+          container.appendChild(card);
 
-card.innerHTML = `
-  <a href="product.html?name=${name}&price=${price}&img=${img}&desc=${desc}">
-    <img src="${item["WEB URL"]}" alt="${item["NAME"]}" 
-         onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" 
-         class="mb-4 w-full h-64 object-cover" />
-    <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
-    <p class="text-red-600">₹${item["PRICE"]}</p>
-  </a>
-`;
-container.appendChild(card);
+          const sliderImg = document.createElement("img");
+          sliderImg.src = imgUrl;
+          sliderImg.className = "w-full h-full object-cover flex-shrink-0";
+          sliderImg.onerror = () => sliderImg.src = "https://via.placeholder.com/600x400?text=No+Image";
+          slider.appendChild(sliderImg);
 
+          const dot = document.createElement("span");
+          dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer";
+          dot.dataset.index = i;
+          dotContainer.appendChild(dot);
+        });
 
+        let index = 0;
+        const slides = slider.children;
+        const dots = document.querySelectorAll(".dot");
+        const totalSlides = slides.length;
 
-      // Slider image
-      if (imgUrl) {
-        const sliderImg = document.createElement("img");
-        sliderImg.src = imgUrl;
-        sliderImg.alt = "Slide Image";
-        sliderImg.className = "w-full h-full object-cover flex-shrink-0";
-        sliderImg.onerror = () => {
-          sliderImg.src = "https://via.placeholder.com/600x400?text=No+Image";
-        };
-        slider.appendChild(sliderImg);
+        function updateSlide() {
+          slider.style.transform = `translateX(-${index * 100}%)`;
+          dots.forEach(dot => dot.classList.remove("opacity-100", "scale-110"));
+          if (dots[index]) dots[index].classList.add("opacity-100", "scale-110");
+        }
 
-        // Dot
-        const dot = document.createElement("span");
-        dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer";
-        dot.dataset.index = i;
-        dotContainer.appendChild(dot);
-      }
-    });
+        document.getElementById("nextBtn").addEventListener("click", () => {
+          index = (index + 1) % totalSlides;
+          updateSlide();
+        });
 
-    // Slider Logic
-    let index = 0;
-    const slides = slider.children;
-    const dots = document.querySelectorAll(".dot");
-    const totalSlides = slides.length;
+        document.getElementById("prevBtn").addEventListener("click", () => {
+          index = (index - 1 + totalSlides) % totalSlides;
+          updateSlide();
+        });
 
-    function updateSlide() {
-      slider.style.transform = `translateX(-${index * 100}%)`;
-      dots.forEach(dot => dot.classList.remove("opacity-100", "scale-110"));
-      if (dots[index]) dots[index].classList.add("opacity-100", "scale-110");
-    }
+        dots.forEach(dot => {
+          dot.addEventListener("click", () => {
+            index = parseInt(dot.dataset.index);
+            updateSlide();
+          });
+        });
 
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      index = (index + 1) % totalSlides;
-      updateSlide();
-    });
+        setInterval(() => {
+          index = (index + 1) % totalSlides;
+          updateSlide();
+        }, 5000);
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      index = (index - 1 + totalSlides) % totalSlides;
-      updateSlide();
-    });
-
-    dots.forEach(dot => {
-      dot.addEventListener("click", () => {
-        index = parseInt(dot.dataset.index);
         updateSlide();
       });
-    });
-
-    setInterval(() => {
-      index = (index + 1) % totalSlides;
-      updateSlide();
-    }, 5000);
-
-    updateSlide();
-  });
   </script>
 </body>
 </html>
