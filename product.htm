@@ -1,25 +1,40 @@
+<!-- product.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Product Description</title>
+  <title>Product Detail</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white text-gray-800 px-6 py-10">
-
-  <div class="max-w-xl mx-auto text-center">
-    <img id="productImage" class="w-full h-96 object-cover rounded mb-6" />
-    <h1 id="productName" class="text-2xl font-bold mb-2"></h1>
-    <p id="productPrice" class="text-red-600 text-lg font-semibold mb-4"></p>
-    <p id="productDesc" class="text-gray-700"></p>
-  </div>
+<body class="p-4">
+  <div id="productDetail" class="max-w-3xl mx-auto border p-6 rounded shadow-md"></div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById("productImage").src = urlParams.get("image");
-    document.getElementById("productName").textContent = urlParams.get("name");
-    document.getElementById("productPrice").textContent = "₹" + urlParams.get("price");
-    document.getElementById("productDesc").textContent = urlParams.get("desc");
+    const params = new URLSearchParams(window.location.search);
+    const productName = params.get("name");
+
+    fetch("https://script.google.com/macros/s/AKfycbzU_kyC3TfEjbSYX4hADptg_NBd4K1waIAaFndaZ_9uXDcj-grY15KFnU1OWQmk5M6M/exec")
+      .then(res => res.json())
+      .then(data => {
+        const product = data.find(p => p["NAME"] === productName);
+        const container = document.getElementById("productDetail");
+
+        if (product) {
+          const imgUrl = product["WEB URL"];
+          const name = product["NAME"];
+          const price = product["PRICE"];
+          const desc = product["DESCRIPTION"]; // Already formatted as HTML
+
+          container.innerHTML = `
+            <img src="${imgUrl}" alt="${name}" class="w-full h-96 object-cover mb-6 rounded" />
+            <h1 class="text-2xl font-bold mb-2">${name}</h1>
+            <p class="text-red-600 text-xl mb-4">₹${price}</p>
+            <div class="text-gray-700 text-base leading-relaxed">${desc}</div>
+          `;
+        } else {
+          container.innerHTML = "<p>Product not found.</p>";
+        }
+      });
   </script>
 </body>
 </html>
