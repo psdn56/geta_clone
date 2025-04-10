@@ -127,12 +127,10 @@
         dotContainer.innerHTML = "";
 
         data.forEach((item, i) => {
-          
-const name = item["NAME"];
+          const name = item["NAME"];
 const price = item["PRICE"];
 const desc = item["DESCRIPTION"] || "No description available.";
 const imgUrl = item["WEB URL"];
-const webUrl = item["IMAGE URL"]; // Or use another column if this is incorrect
 
 const card = document.createElement("div");
 card.className = "border p-4 rounded shadow";
@@ -140,11 +138,11 @@ card.innerHTML = `
   <a href="product.html?name=${encodeURIComponent(name)}&img=${encodeURIComponent(imgUrl)}&price=${encodeURIComponent(price)}&desc=${encodeURIComponent(desc)}">
     <img src="${imgUrl}" alt="${name}" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" class="mb-4 w-full h-64 object-cover" />
     <h3 class="text-lg font-semibold">${name}</h3>
-    <p class="text-gray-600 text-sm mb-2">${desc}</p>
     <p class="text-red-600 font-semibold">₹${price}</p>
   </a>
 `;
 container.appendChild(card);
+
 
           const sliderImg = document.createElement("img");
           sliderImg.src = imgUrl;
