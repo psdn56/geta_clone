@@ -6,28 +6,35 @@
   <title>Product Details</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
-    <img id="productImg" src="" alt="Product" class="w-full h-96 object-cover rounded mb-6" />
-    <h1 id="productName" class="text-2xl font-bold mb-4"></h1>
-    <p id="productPrice" class="text-red-600 text-xl mb-2"></p>
-    <p id="productDesc" class="text-gray-700"></p>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+  <div class="max-w-4xl mx-auto p-6">
+    <a href="index.html" class="text-blue-500 underline mb-4 inline-block">← Back to Home</a>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+      <img id="productImage" class="w-full h-auto rounded shadow" src="" alt="Product Image" />
+
+      <div>
+        <h1 id="productName" class="text-2xl font-bold mb-2"></h1>
+        <p id="productPrice" class="text-xl text-red-600 font-semibold mb-4"></p>
+        <p id="productDesc" class="text-gray-700 leading-relaxed"></p>
+      </div>
+    </div>
   </div>
 
   <script>
     // Get URL parameters
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
-    const price = params.get("price");
     const img = params.get("img");
+    const price = params.get("price");
     const desc = params.get("desc");
 
-    // Populate data into DOM
-    document.getElementById("productName").textContent = name || "Product";
-    document.getElementById("productPrice").textContent = price ? `₹${price}` : "";
-    document.getElementById("productImg").src = img || "https://via.placeholder.com/600x400?text=Image+Not+Found";
-    document.getElementById("productImg").alt = name || "Product Image";
-    document.getElementById("productDesc").textContent = desc || "No description available.";
+    // Set content
+    document.getElementById("productName").textContent = name;
+    document.getElementById("productImage").src = img;
+    document.getElementById("productPrice").textContent = `₹${price}`;
+    document.getElementById("productDesc").textContent = desc;
   </script>
 </body>
 </html>
