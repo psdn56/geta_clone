@@ -1,24 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Product Detail</title>
+  <title>Product Details</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="p-6 font-sans text-gray-800">
-  <div id="product" class="max-w-xl mx-auto bg-white shadow p-6 rounded">
-    <img id="product-img" class="w-full h-80 object-cover rounded mb-4" alt="Product Image" />
-    <h1 id="product-name" class="text-2xl font-bold mb-2"></h1>
-    <p id="product-price" class="text-red-600 text-lg font-semibold mb-4"></p>
-    <p id="product-desc" class="text-gray-700"></p>
+<body class="bg-white text-gray-800 font-sans p-6">
+  <div class="max-w-4xl mx-auto">
+    <div id="productDetails" class="grid md:grid-cols-2 gap-8 mb-10"></div>
+
+    <!-- Reviews Section -->
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
+      <div class="space-y-4">
+        <div class="border p-4 rounded shadow">
+          <p class="text-sm text-gray-600">"Very comfortable and stylish!"</p>
+          <p class="text-sm font-medium mt-2">– Priya</p>
+        </div>
+        <div class="border p-4 rounded shadow">
+          <p class="text-sm text-gray-600">"Good value for money."</p>
+          <p class="text-sm font-medium mt-2">– Rahul</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Products -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4">You May Also Like</h2>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6" id="relatedProducts"></div>
+    </section>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    document.getElementById("product-name").textContent = params.get("name");
-    document.getElementById("product-price").textContent = "₹" + params.get("price");
-    document.getElementById("product-desc").textContent = params.get("desc");
-    document.getElementById("product-img").src = params.get("img");
+    const name = params.get("name");
+    const price = params.get("price");
+    const desc = params.get("desc");
+    const img = params.get("img");
+
+    const productHTML = `
+      <img src="${img}" alt="${name}" class="w-full rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'" />
+      <div>
+        <h1 class="text-2xl font-bold mb-2">${name}</h1>
+        <p class="text-red-600 text-xl font-semibold mb-4">₹${price}</p>
+        <p class="mb-6">${desc}</p>
+        <button id="addToCartBtn" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">Add to Cart</button>
+        <p id="cartMsg" class="text-green-600 mt-4 hidden">Added to cart!</p>
+      </div>
+    `;
+
+    document.getElementById("productDetails").innerHTML = productHTML;
+
+    document.getElementById("addToCartBtn").addEventListener("click", () => {
+      // Simple cart example using localStorage
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      cart.push({ name, price, desc, img });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cartMsg").classList.remove("hidden");
+    });
+
+    // Optional: Dummy Related Products
+    const relatedHTML = [
+      { name: "Casual Sneakers", price: "999", img: "https://via.placeholder.com/300x200?text=Sneakers" },
+      { name: "Formal Shoes", price: "1299", img: "https://via.placeholder.com/300x200?text=Formal" },
+      { name: "Sporty Runners", price: "1499", img: "https://via.placeholder.com/300x200?text=Runners" }
+    ].map(item => `
+      <div class="border p-4 rounded shadow hover:shadow-lg transition">
+        <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
+        <h3 class="font-medium">${item.name}</h3>
+        <p class="text-red-600">₹${item.price}</p>
+      </div>
+    `).join("");
+
+    document.getElementById("relatedProducts").innerHTML = relatedHTML;
   </script>
 </body>
 </html>
