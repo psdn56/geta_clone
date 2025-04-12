@@ -68,11 +68,25 @@
       &copy; 2025 Pankaj Footwear. All rights reserved.
     </div>
 
-    <a href="https://wa.me/917704915695?text=Hi%20Pankaj%20Footwear%20Team!" target="_blank"
-       class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2 z-50">
-      <img src="iconwhatsapp.gif" alt="WhatsApp" class="w-6 h-6" />
-      <span class="hidden sm:inline">Chat with us</span>
+    <div class="fixed bottom-6 right-6 z-50">
+  <button id="whatsappToggle" class="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2">
+    <img src="iconwhatsapp.gif" alt="WhatsApp" class="w-6 h-6" />
+    <span class="hidden sm:inline">Chat with us</span>
+  </button>
+
+  <div id="whatsappOptions" class="hidden mt-2 space-y-2">
+    <a href="https://wa.me/917704915695?text=Hi%20I%20have%20a%20query%20about%20Orders"
+       target="_blank"
+       class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">
+      Orders Support
     </a>
+    <a href="https://wa.me/97619892263?text=Hi%20I%20have%20a%20query%20about%20Returns"
+       target="_blank"
+       class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">
+      Other Support
+    </a>
+  </div>
+</div>
     <div id="visitorCount" class="mt-2 text-sm text-gray-300"></div>
   </footer>
 
