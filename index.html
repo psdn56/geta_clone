@@ -204,6 +204,14 @@
 
         updateSlide();
       });
+    // Visitor count (Local)
+function updateVisitorCount() {
+  let count = localStorage.getItem("visitCount");
+  count = count ? parseInt(count) + 1 : 1;
+  localStorage.setItem("visitCount", count);
+  document.getElementById("visitorCount").textContent = `You have visited this site ${count} time(s).`;
+}
+updateVisitorCount();
   </script>
 </body>
 </html>
