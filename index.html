@@ -92,6 +92,10 @@
 
   <!-- Scripts -->
   <script>
+    document.getElementById("whatsappToggle").addEventListener("click", () => {
+  const options = document.getElementById("whatsappOptions");
+  options.classList.toggle("hidden");
+});
     // Toggle mobile menu
     document.getElementById('menuBtn').addEventListener('click', () => {
       document.getElementById('mobileMenu').classList.toggle('hidden');
