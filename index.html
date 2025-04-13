@@ -160,24 +160,42 @@
           heroSlider.appendChild(slideDiv);
 
           // Featured Products Section
-          const imageContainer = document.getElementById("imageContainer");
-          const productDiv = document.createElement("div");
-          productDiv.className = "bg-gray-200 p-4 rounded-lg";
-          const productImg = document.createElement("img");
-          productImg.src = imageUrl;
-          productImg.alt = imageAlt;
-          productImg.className = "w-full h-40 object-cover mb-4";
-          const productName = document.createElement("h3");
-          productName.textContent = item["NAME"];
-          productName.className = "text-lg font-bold text-gray-700";
-          const productPrice = document.createElement("p");
-          productPrice.textContent = `₹${item["PRICE"]}`;
-          productPrice.className = "text-sm text-gray-500";
-          productDiv.appendChild(productImg);
-          productDiv.appendChild(productName);
-          productDiv.appendChild(productPrice);
-          imageContainer.appendChild(productDiv);
-        });
+const imageContainer = document.getElementById("imageContainer");
+
+items.forEach(item => {
+  const productDiv = document.createElement("div");
+  productDiv.className = "bg-gray-200 p-4 rounded-lg";
+
+  // Create an anchor tag to wrap the product image and name (for the click functionality)
+  const productLink = document.createElement("a");
+  productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["IMAGE_URL"])}`;
+  productLink.className = "block"; // Ensure the link wraps the whole product div
+
+  const productImg = document.createElement("img");
+  productImg.src = item["IMAGE_URL"];
+  productImg.alt = item["NAME"];
+  productImg.className = "w-full h-40 object-cover mb-4";
+
+  const productName = document.createElement("h3");
+  productName.textContent = item["NAME"];
+  productName.className = "text-lg font-bold text-gray-700";
+
+  const productPrice = document.createElement("p");
+  productPrice.textContent = `₹${item["PRICE"]}`;
+  productPrice.className = "text-sm text-gray-500";
+
+  // Append the image, name, and price to the product link
+  productLink.appendChild(productImg);
+  productLink.appendChild(productName);
+  productLink.appendChild(productPrice);
+
+  // Append the product link to the product div
+  productDiv.appendChild(productLink);
+
+  // Append the product div to the image container
+  imageContainer.appendChild(productDiv);
+});
+
 
       })
       .catch(error => {
