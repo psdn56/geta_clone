@@ -134,107 +134,111 @@
     }
     updateVisitorCount();
 
-    // Fetch data from Google Sheets
-fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-  .then(res => res.json())
-  .then(data => {
-    const heroSlider = document.getElementById("heroSlider");
-    const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
-
-    // Ensure featured items are unique by using a Set to filter duplicates (if any)
-    const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
-      .map(name => featuredItems.find(item => item["NAME"] === name));
-
-    // Create Hero Slider and Featured Products
-    uniqueFeaturedItems.forEach((item, index) => {
-      const imageUrl = item["WEB URL"];
-      const imageAlt = item["NAME"];
-
-      // Hero Slider
-      const slideDiv = document.createElement("div");
-      slideDiv.className = "relative w-full h-full flex-shrink-0 group";
-      const img = document.createElement("img");
-      img.src = imageUrl;
-      img.alt = imageAlt;
-      img.className = "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500";
-      const overlayDiv = document.createElement("div");
-      overlayDiv.className = "absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500";
-      slideDiv.appendChild(img);
-      slideDiv.appendChild(overlayDiv);
-      heroSlider.appendChild(slideDiv);
-
-      // Featured Products Section
+    <script>
+  fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
+    .then(res => res.json())
+    .then(data => {
+      const heroSlider = document.getElementById("heroSlider");
       const imageContainer = document.getElementById("imageContainer");
+      const dotsContainer = document.querySelector(".absolute.bottom-4");
 
-      const productDiv = document.createElement("div");
-      productDiv.className = "bg-gray-200 p-4 rounded-lg";
+      const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
 
-      // Create an anchor tag to wrap the product image and name (for the click functionality)
-      const productLink = document.createElement("a");
-      productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
-      productLink.className = "block"; // Ensure the link wraps the whole product div
+      const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
+        .map(name => featuredItems.find(item => item["NAME"] === name));
 
-      const productImg = document.createElement("img");
-      productImg.src = item["WEB URL"];
-      productImg.alt = item["NAME"];
-      productImg.className = "w-full h-40 object-cover mb-4";
+      // Clear previous slider content
+      heroSlider.innerHTML = "";
+      dotsContainer.innerHTML = "";
 
-      const productName = document.createElement("h3");
-      productName.textContent = item["NAME"];
-      productName.className = "text-lg font-bold text-gray-700";
+      // Create Hero Slider and Dots
+      uniqueFeaturedItems.forEach((item, index) => {
+        const imageUrl = item["WEB URL"];
+        const imageAlt = item["NAME"];
 
-      const productPrice = document.createElement("p");
-      productPrice.textContent = `₹${item["PRICE"]}`;
-      productPrice.className = "text-sm text-gray-500";
+        // Slider item
+        const slideDiv = document.createElement("div");
+        slideDiv.className = "relative w-full h-full flex-shrink-0 group transition-transform duration-500 ease-in-out";
+        slideDiv.innerHTML = `
+          <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
+        `;
+        heroSlider.appendChild(slideDiv);
 
-      // Append the image, name, and price to the product link
-      productLink.appendChild(productImg);
-      productLink.appendChild(productName);
-      productLink.appendChild(productPrice);
+        // Dot for slider
+        const dot = document.createElement("span");
+        dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer mx-1";
+        dot.dataset.index = index;
+        dotsContainer.appendChild(dot);
 
-      // Append the product link to the product div
-      productDiv.appendChild(productLink);
+        // Featured product
+        const productDiv = document.createElement("div");
+        productDiv.className = "bg-gray-200 p-4 rounded-lg";
 
-      // Append the product div to the image container
-      imageContainer.appendChild(productDiv);
-    });
-  })
-  .catch(error => {
-    console.error("Error fetching data from Google Sheets:", error);
-  });
+        const productLink = document.createElement("a");
+        productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
+        productLink.className = "block";
 
-    // Slider navigation logic
-    let index = 0;
-    const slides = document.querySelectorAll("#heroSlider .group");
-    const dots = document.querySelectorAll(".dot");
-    const totalSlides = slides.length;
+        const productImg = document.createElement("img");
+        productImg.src = item["WEB URL"];
+        productImg.alt = item["NAME"];
+        productImg.className = "w-full h-40 object-cover mb-4";
 
-    function updateSlide() {
-      const slider = document.getElementById("heroSlider");
-      slider.style.transform = `translateX(-${index * 100}%)`;
+        const productName = document.createElement("h3");
+        productName.textContent = item["NAME"];
+        productName.className = "text-lg font-bold text-gray-700";
 
-      dots.forEach(dot => dot.classList.remove("bg-red-500"));
-      dots[index].classList.add("bg-red-500");
-    }
+        const productPrice = document.createElement("p");
+        productPrice.textContent = `₹${item["PRICE"]}`;
+        productPrice.className = "text-sm text-gray-500";
 
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      index = (index + 1) % totalSlides;
-      updateSlide();
-    });
+        productLink.appendChild(productImg);
+        productLink.appendChild(productName);
+        productLink.appendChild(productPrice);
+        productDiv.appendChild(productLink);
+        imageContainer.appendChild(productDiv);
+      });
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      index = (index - 1 + totalSlides) % totalSlides;
-      updateSlide();
-    });
+      // Slider navigation logic
+      let index = 0;
+      const slides = document.querySelectorAll("#heroSlider .group");
+      const dots = document.querySelectorAll(".dot");
 
-    dots.forEach(dot => {
-      dot.addEventListener("click", (e) => {
-        index = parseInt(e.target.getAttribute("data-index"));
+      function updateSlide() {
+        heroSlider.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach(dot => dot.classList.remove("bg-red-500"));
+        if (dots[index]) dots[index].classList.add("bg-red-500");
+      }
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        index = (index + 1) % slides.length;
         updateSlide();
       });
-    });
 
-    updateSlide();
-  </script>
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        index = (index - 1 + slides.length) % slides.length;
+        updateSlide();
+      });
+
+      dots.forEach(dot => {
+        dot.addEventListener("click", (e) => {
+          index = parseInt(e.target.dataset.index);
+          updateSlide();
+        });
+      });
+
+      updateSlide(); // initialize
+
+      // Optional: autoplay every 5s
+      // setInterval(() => {
+      //   index = (index + 1) % slides.length;
+      //   updateSlide();
+      // }, 5000);
+    })
+    .catch(error => {
+      console.error("Error fetching data from Google Sheets:", error);
+    });
+</script>
+
 </body>
 </html>
