@@ -19,8 +19,32 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-  <!-- Header -->
-  <div id="header-container"></div>
+  <!-- Header Start -->
+  <header class="bg-white shadow">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-blue-600">Pankaj Footwear</a>
+      <div class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-blue-600">Home</a>
+        <a href="men.html" class="text-blue-600 font-semibold">Men</a>
+        <a href="#" class="hover:text-blue-600">Women</a>
+        <a href="#" class="hover:text-blue-600">Kids</a>
+        <a href="#" class="hover:text-blue-600">Offers</a>
+      </div>
+      <div class="relative">
+        <button id="login-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
+        <div id="login-dropdown" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow hidden z-50"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="md:hidden px-4 py-2 bg-white shadow flex justify-around text-sm font-medium">
+    <a href="index.html">Home</a>
+    <a href="men.html" class="text-blue-600">Men</a>
+    <a href="#">Women</a>
+    <a href="#">Kids</a>
+    <a href="#">Offers</a>
+  </nav>
 
   <!-- Main Content -->
   <div class="container mx-auto px-4 py-4 flex">
@@ -49,7 +73,6 @@
 
     <!-- Product Grid Section -->
     <div class="w-3/4 pl-4">
-      <!-- Header Section -->
       <div class="flex justify-between items-center mb-6">
         <p class="text-sm">Showing 1 – 40 products of 7,684 products</p>
         <div>
@@ -62,11 +85,7 @@
           </select>
         </div>
       </div>
-
-      <!-- Product Grid -->
       <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-
-      <!-- Pagination Section -->
       <div class="flex justify-center mt-6">
         <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Previous</button>
         <span class="mx-4">Page 1 of 192</span>
@@ -75,45 +94,55 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <div id="footer-container"></div>
+  <!-- Footer Start -->
+  <footer class="bg-white mt-10 py-4 shadow-inner">
+    <div class="container mx-auto text-center text-sm text-gray-600">
+      <p>&copy; <span id="year"></span> Pankaj Footwear. All rights reserved.</p>
+      <p id="time" class="text-xs mt-1"></p>
+    </div>
+  </footer>
 
-  <!-- JS to Load Header and Footer -->
+  <!-- Scripts -->
   <script>
-    // Load header
-    fetch("header.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("header-container").innerHTML = data;
-        // Highlight Men link if present
-        const menLink = document.getElementById("men-link");
-        if (menLink) menLink.classList.add("text-blue-600", "font-bold");
-      });
+    // Load Login Dropdown
+    document.getElementById("login-btn").addEventListener("click", () => {
+      const dropdown = document.getElementById("login-dropdown");
+      if (dropdown.innerHTML === "") {
+        fetch("loginDropdown.html")
+          .then(res => res.text())
+          .then(html => {
+            dropdown.innerHTML = html;
+            dropdown.classList.toggle("hidden");
+          });
+      } else {
+        dropdown.classList.toggle("hidden");
+      }
+    });
 
-    // Load footer
-    fetch("footer.html")
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById("footer-container").innerHTML = data;
-      });
+    // Live Year and Time
+    const year = document.getElementById("year");
+    const time = document.getElementById("time");
+    year.textContent = new Date().getFullYear();
+    function updateTime() {
+      const now = new Date();
+      time.textContent = now.toLocaleString();
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
 
-    // Load products
+    // Load Products
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
       .then(res => res.json())
       .then(data => {
         const container = document.getElementById("menContainer");
         container.innerHTML = "";
-        
         const menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
-        
         menItems.forEach(item => {
           const card = document.createElement("div");
           card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
-
           const sizes = item["SIZES"]
             ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ')
             : '';
-          
           card.innerHTML = `
             <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
               <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
