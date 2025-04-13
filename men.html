@@ -3,36 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Men's Casual Shirts</title>
+  <title>Men's Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom styling for additional features */
-    .discount { color: #e74c3c; font-weight: bold; }
-    .old-price { text-decoration: line-through; color: #7f8c8d; }
-    .sizes { margin-top: 8px; }
+    .product-card:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s;
+    }
+    .discount {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .old-price {
+      text-decoration: line-through;
+      color: #7f8c8d;
+    }
+    .sizes span {
+      margin-right: 5px;
+    }
+    .filter-section {
+      border-right: 1px solid #e0e0e0;
+    }
+    .filters {
+      padding: 10px;
+    }
+    .filters h3 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    .filters ul {
+      padding-left: 0;
+    }
+    .filters ul li {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
-<body class="bg-white text-gray-800">
-  <!-- Header -->
-  <div class="container mx-auto px-4 py-4">
-    <h1 class="text-2xl font-bold text-center my-6">Men's Casual Shirts</h1>
-    
-    <!-- Product Count & Sorting -->
-    <div class="flex justify-between items-center mb-6">
-      <p class="text-sm">Showing 1 – 40 products of 7,684 products</p>
-      <div>
-        <label for="sort" class="text-sm mr-2">Sort By:</label>
-        <select id="sort" class="p-2 border rounded">
-          <option value="popularity">Popularity</option>
-          <option value="low-high">Price -- Low to High</option>
-          <option value="high-low">Price -- High to Low</option>
-          <option value="newest">Newest First</option>
-        </select>
+<body class="bg-gray-50 text-gray-800">
+  <div class="container mx-auto px-4 py-4 flex">
+    <!-- Filter Section -->
+    <div class="filter-section w-1/4">
+      <div class="filters">
+        <h3>Filters</h3>
+        <div class="mb-4">
+          <h4 class="font-semibold">Brand</h4>
+          <ul>
+            <li><input type="checkbox" id="brand1"> <label for="brand1">Brand 1</label></li>
+            <li><input type="checkbox" id="brand2"> <label for="brand2">Brand 2</label></li>
+            <li><input type="checkbox" id="brand3"> <label for="brand3">Brand 3</label></li>
+          </ul>
+        </div>
+        <div class="mb-4">
+          <h4 class="font-semibold">Price Range</h4>
+          <ul>
+            <li><input type="checkbox" id="price1"> <label for="price1">₹500 - ₹1000</label></li>
+            <li><input type="checkbox" id="price2"> <label for="price2">₹1001 - ₹3000</label></li>
+            <li><input type="checkbox" id="price3"> <label for="price3">₹3001 - ₹5000</label></li>
+          </ul>
+        </div>
       </div>
     </div>
-    
-    <!-- Product Grid -->
-    <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4"></div>
+
+    <!-- Product Grid Section -->
+    <div class="w-3/4 pl-4">
+      <!-- Header Section -->
+      <div class="flex justify-between items-center mb-6">
+        <p class="text-sm">Showing 1 – 40 products of 7,684 products</p>
+        <div>
+          <label for="sort" class="text-sm mr-2">Sort By:</label>
+          <select id="sort" class="p-2 border rounded">
+            <option value="popularity">Popularity</option>
+            <option value="low-high">Price -- Low to High</option>
+            <option value="high-low">Price -- High to Low</option>
+            <option value="newest">Newest First</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+
+      <!-- Pagination Section -->
+      <div class="flex justify-center mt-6">
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Previous</button>
+        <span class="mx-4">Page 1 of 192</span>
+        <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Next</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -46,8 +104,8 @@
         
         menItems.forEach(item => {
           const card = document.createElement("div");
-          card.className = "border p-4 rounded shadow hover:shadow-lg transition";
-          
+          card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
+
           // Dynamically generate the sizes array
           const sizes = item["SIZES"] ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ') : '';
           
