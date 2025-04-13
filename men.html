@@ -74,7 +74,7 @@
     <!-- Product Grid Section -->
     <div class="w-3/4 pl-4">
       <div class="flex justify-between items-center mb-6">
-        <p class="text-sm">Showing 1 – 40 products of 7,684 products</p>
+        <p id="productCount" class="text-sm"></p>
         <div>
           <label for="sort" class="text-sm mr-2">Sort By:</label>
           <select id="sort" class="p-2 border rounded">
@@ -132,33 +132,42 @@
 
     // Load Products
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById("menContainer");
-        container.innerHTML = "";
-        const menItems = data.filter(item =>
-  item["CATEGORY"] &&
-  item["CATEGORY"].trim().toLowerCase() === "men"
-);
-        menItems.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
-          const sizes = item["SIZES"]
-            ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ')
-            : '';
-          card.innerHTML = `
-            <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
-              <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
-              <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
-              <p class="text-red-600">₹${item["PRICE"]}</p>
-              <p class="old-price">₹${item["OLD PRICE"] || ""}</p>
-              <p class="discount">${item["DISCOUNT"] || ""}</p>
-              <div class="sizes">${sizes}</div>
-            </a>
-          `;
-          container.appendChild(card);
-        });
-      });
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("menContainer");
+    const productCount = document.getElementById("productCount");
+    container.innerHTML = "";
+    
+    const menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
+
+    // Update dynamic product count
+    productCount.textContent = `Showing ${menItems.length > 0 ? `1 – ${menItems.length}` : 0} products of ${menItems.length} products`;
+
+    // Show fallback if no products
+    if (menItems.length === 0) {
+      container.innerHTML = `<p class="text-center text-gray-600 col-span-full">No men's products available.</p>`;
+      return;
+    }
+
+    menItems.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
+
+      const sizes = item["SIZES"] ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ') : '';
+      
+      card.innerHTML = `
+        <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
+          <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+          <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
+          <p class="text-red-600">₹${item["PRICE"]}</p>
+          <p class="old-price">₹${item["OLD PRICE"] || ""}</p>
+          <p class="discount">${item["DISCOUNT"] || ""}</p>
+          <div class="sizes">${sizes}</div>
+        </a>
+      `;
+      container.appendChild(card);
+    });
+  });
   </script>
 </body>
 </html>
