@@ -136,37 +136,26 @@
         }
       });
 
-    // Google Sheets data fetch and rendering
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById("imageContainer");
-        const slider = document.getElementById("heroSlider");
-        const dotContainer = document.querySelector(".dot-container");
+  .then(res => res.json())
+  .then(data => {
+    const featuredContainer = document.getElementById("featuredContainer");
+    const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
 
-        container.innerHTML = "";
-        slider.innerHTML = "";
-        dotContainer.innerHTML = "";
-        data.forEach((item, i) => {
-  const imgUrl = item["WEB URL"];
-  const name = item["NAME"];
-  const price = item["PRICE"];
+    featuredItems.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "border p-4 rounded shadow";
+      card.innerHTML = `
+        <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
+          <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover mb-4">
+          <h3 class="text-lg font-bold">${item["NAME"]}</h3>
+          <p class="text-red-600 font-semibold">₹${item["PRICE"]}</p>
+        </a>
+      `;
+      featuredContainer.appendChild(card);
+    });
+  });
 
-  const card = document.createElement("div");
-  card.className = "border p-4 rounded shadow hover:shadow-lg transition";
-
-  card.innerHTML = `
-  <a href="product.html?name=${encodeURIComponent(name)}&price=${encodeURIComponent(price)}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(imgUrl)}">
-    <img src="${imgUrl}" alt="${name}" 
-      onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'" 
-      class="mb-4 w-full h-64 object-cover rounded" />
-    <h3 class="text-lg font-semibold">${name}</h3>
-    <p class="text-red-600">₹${price}</p>
-  </a>
-`;
-
-
-  container.appendChild(card);
 
   // Slider section (unchanged)
   if (imgUrl) {
