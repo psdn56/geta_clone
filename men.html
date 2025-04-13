@@ -1,46 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Men's Footwear</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Men's Footwear - Pankaj Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .product-card:hover {
-      transform: scale(1.05);
-      transition: transform 0.3s;
-    }
-    .discount {
-      color: #e74c3c;
-      font-weight: bold;
-    }
-    .old-price {
-      text-decoration: line-through;
-      color: #7f8c8d;
-    }
-    .sizes span {
-      margin-right: 5px;
-    }
-    .filter-section {
-      border-right: 1px solid #e0e0e0;
-    }
-    .filters {
-      padding: 10px;
-    }
-    .filters h3 {
-      margin-bottom: 15px;
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-    .filters ul {
-      padding-left: 0;
-    }
-    .filters ul li {
-      margin-bottom: 10px;
-    }
+    .product-card:hover { transform: scale(1.05); transition: transform 0.3s; }
+    .discount { color: #e74c3c; font-weight: bold; }
+    .old-price { text-decoration: line-through; color: #7f8c8d; }
+    .sizes span { margin-right: 5px; }
+    .filter-section { border-right: 1px solid #e0e0e0; }
+    .filters { padding: 10px; }
+    .filters h3 { margin-bottom: 15px; font-size: 1.1rem; font-weight: bold; }
+    .filters ul { padding-left: 0; }
+    .filters ul li { margin-bottom: 10px; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <div id="header-container"></div>
+
+  <!-- Main Content -->
   <div class="container mx-auto px-4 py-4 flex">
     <!-- Filter Section -->
     <div class="filter-section w-1/4">
@@ -93,7 +75,29 @@
     </div>
   </div>
 
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <!-- JS to Load Header and Footer -->
   <script>
+    // Load header
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header-container").innerHTML = data;
+        // Highlight Men link if present
+        const menLink = document.getElementById("men-link");
+        if (menLink) menLink.classList.add("text-blue-600", "font-bold");
+      });
+
+    // Load footer
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("footer-container").innerHTML = data;
+      });
+
+    // Load products
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
       .then(res => res.json())
       .then(data => {
@@ -106,10 +110,10 @@
           const card = document.createElement("div");
           card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
 
-          // Dynamically generate the sizes array
-          const sizes = item["SIZES"] ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ') : '';
+          const sizes = item["SIZES"]
+            ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ')
+            : '';
           
-          // Generate card content
           card.innerHTML = `
             <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
               <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
