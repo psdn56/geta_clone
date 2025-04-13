@@ -1,71 +1,37 @@
+<!-- men.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pankaj Footwear- Men</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Men's Footwear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <div class="logo">
-      <img src="file_0000000017c851f69c0ce5cb4295c407_conversation_id=67f3ea63-213c-800d-b6cc-d9eec79743bb&message_id=44192361-25c0-4ad6-9b92-8b81f038541b.png" alt="GETA Logo" />
-    </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="women.html">Women</a></li>
-        <li><a href="sale.html">Sale</a></li>
-        <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
-        <li><a href="about.html">About Us</a></li>
-      </ul>
-    </nav>
-  </header>
+<body class="bg-white text-gray-800">
+  <h1 class="text-2xl font-bold text-center my-6">Men's Footwear</h1>
+  <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4"></div>
 
-  <section class="hero">
-    <h1>Men's Collection</h1>
-    <div class="products">
-      <div class="product">
-        <img src="men1.jpg" alt="Classic Loafer">
-        <h3>Classic Loafer</h3>
-        <p>₹899.00</p>
-        <button class="add-to-cart">Add to Cart</button>
-      </div>
-      <div class="product">
-        <img src="men2.jpg" alt="Men’s Sneakers">
-        <h3>Men’s Sneakers</h3>
-        <p>₹799.00</p>
-        <button class="add-to-cart">Add to Cart</button>
-      </div>
-    </div>
-  </section>
-
-      <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-6 mt-10">
-    <div class="container mx-auto text-center px-4">
-      <p>&copy; 2025 Pankaj Footwear. All rights reserved.</p>
-    </div>
-  </footer>
-    <script>
-  // Mobile menu toggle
-  const menuBtn = document.getElementById('menuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  menuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-
-  // Live Date & Time in Footer
-  function updateDateTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const formatted = now.toLocaleString(); // You can change format here
-    document.getElementById('datetime').innerHTML =
-      `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
-  }
-
-  updateDateTime(); // Initial call
-  setInterval(updateDateTime, 1000); // Updates every second
-</script>
-   
+  <script>
+    fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("menContainer");
+        container.innerHTML = "";
+        
+        const menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
+        
+        menItems.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "border p-4 rounded shadow hover:shadow-lg transition";
+          card.innerHTML = `
+            <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
+              <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+              <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
+              <p class="text-red-600">₹${item["PRICE"]}</p>
+            </a>
+          `;
+          container.appendChild(card);
+        });
+      });
+  </script>
 </body>
 </html>
