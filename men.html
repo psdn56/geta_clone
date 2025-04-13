@@ -104,57 +104,54 @@
 
   <!-- Scripts -->
   <script>
-    // Load Login Dropdown
-    document.getElementById("login-btn").addEventListener("click", () => {
-      const dropdown = document.getElementById("login-dropdown");
-      if (dropdown.innerHTML === "") {
-        fetch("loginDropdown.html")
-          .then(res => res.text())
-          .then(html => {
-            dropdown.innerHTML = html;
-            dropdown.classList.toggle("hidden");
-          });
-      } else {
-        dropdown.classList.toggle("hidden");
-      }
-    });
-
-    // Live Year and Time
-    const year = document.getElementById("year");
-    const time = document.getElementById("time");
-    year.textContent = new Date().getFullYear();
-    function updateTime() {
-      const now = new Date();
-      time.textContent = now.toLocaleString();
+  // Load Login Dropdown
+  document.getElementById("login-btn").addEventListener("click", () => {
+    const dropdown = document.getElementById("login-dropdown");
+    if (dropdown.innerHTML === "") {
+      fetch("loginDropdown.html")
+        .then(res => res.text())
+        .then(html => {
+          dropdown.innerHTML = html;
+          dropdown.classList.toggle("hidden");
+        });
+    } else {
+      dropdown.classList.toggle("hidden");
     }
-    setInterval(updateTime, 1000);
-    updateTime();
+  });
 
-    // Load Products
-    fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-  .then(res => res.json())
-  .then(data => {
-    const container = document.getElementById("menContainer");
-    const productCount = document.getElementById("productCount");
+  // Live Year and Time
+  const year = document.getElementById("year");
+  const time = document.getElementById("time");
+  year.textContent = new Date().getFullYear();
+  function updateTime() {
+    const now = new Date();
+    time.textContent = now.toLocaleString();
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // Pagination
+  const itemsPerPage = 16;
+  let currentPage = 1;
+  let menItems = [];
+
+  const container = document.getElementById("menContainer");
+  const productCount = document.getElementById("productCount");
+  const pageIndicator = document.querySelector(".mx-4");
+  const prevBtn = document.querySelector("button:nth-of-type(1)");
+  const nextBtn = document.querySelector("button:nth-of-type(2)");
+
+  function renderPage(page) {
     container.innerHTML = "";
-    
-    const menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
 
-    // Update dynamic product count
-    productCount.textContent = `Showing ${menItems.length > 0 ? `1 – ${menItems.length}` : 0} products of ${menItems.length} products`;
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const currentItems = menItems.slice(start, end);
 
-    // Show fallback if no products
-    if (menItems.length === 0) {
-      container.innerHTML = `<p class="text-center text-gray-600 col-span-full">No men's products available.</p>`;
-      return;
-    }
-
-    menItems.forEach(item => {
+    currentItems.forEach(item => {
       const card = document.createElement("div");
       card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
-
       const sizes = item["SIZES"] ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ') : '';
-      
       card.innerHTML = `
         <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
           <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
@@ -167,7 +164,44 @@
       `;
       container.appendChild(card);
     });
+
+    const totalPages = Math.ceil(menItems.length / itemsPerPage);
+    pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+    productCount.textContent = `Showing ${currentItems.length > 0 ? `${start + 1} – ${Math.min(end, menItems.length)}` : 0} of ${menItems.length} products`;
+
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages;
+    prevBtn.classList.toggle("opacity-50", currentPage === 1);
+    nextBtn.classList.toggle("opacity-50", currentPage === totalPages);
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderPage(currentPage);
+    }
   });
-  </script>
+
+  nextBtn.addEventListener("click", () => {
+    const totalPages = Math.ceil(menItems.length / itemsPerPage);
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderPage(currentPage);
+    }
+  });
+
+  // Load Products from Google Sheet
+  fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
+    .then(res => res.json())
+    .then(data => {
+      menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
+      if (menItems.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-600 col-span-full">No men's products available.</p>`;
+        return;
+      }
+      renderPage(currentPage);
+    });
+</script>
+
 </body>
 </html>
