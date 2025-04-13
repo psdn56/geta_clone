@@ -186,39 +186,62 @@
           imageContainer.appendChild(productDiv);
         });
 
-        // === Slider logic ===
-        let index = 0;
-        const slides = document.querySelectorAll("#heroSlider .group");
-        const dots = document.querySelectorAll(".dot");
+        // Slider logic
+let index = 0;
+const slides = document.querySelectorAll("#heroSlider .group");
+const dots = document.querySelectorAll(".dot");
 
-        function updateSlide() {
-          heroSlider.style.transform = `translateX(-${index * 100}%)`;
-          dots.forEach(dot => dot.classList.remove("bg-red-500"));
-          if (dots[index]) dots[index].classList.add("bg-red-500");
-        }
+// Function to update the slider
+function updateSlide() {
+  heroSlider.style.transform = `translateX(-${index * 100}%)`;
+  dots.forEach(dot => dot.classList.remove("bg-red-500"));
+  if (dots[index]) dots[index].classList.add("bg-red-500");
+}
 
-        document.getElementById("nextBtn").addEventListener("click", () => {
-          index = (index + 1) % slides.length;
-          updateSlide();
-        });
+// Auto-Slide Functionality
+let autoSlideInterval;
 
-        document.getElementById("prevBtn").addEventListener("click", () => {
-          index = (index - 1 + slides.length) % slides.length;
-          updateSlide();
-        });
+// Function to start the auto-sliding
+function startAutoSlide() {
+  autoSlideInterval = setInterval(() => {
+    index = (index + 1) % slides.length;  // Go to the next slide
+    updateSlide();
+  }, 5000); // Change slide every 5 seconds
+}
 
-        dots.forEach(dot => {
-          dot.addEventListener("click", (e) => {
-            index = parseInt(e.target.dataset.index);
-            updateSlide();
-          });
-        });
+// Function to stop auto-slide when the user interacts
+function stopAutoSlide() {
+  clearInterval(autoSlideInterval);
+}
 
-        updateSlide();
-      })
-      .catch(error => {
-        console.error("Error fetching data from Google Sheets:", error);
-      });
+// Manual Navigation: Next Button
+document.getElementById("nextBtn").addEventListener("click", () => {
+  index = (index + 1) % slides.length;  // Move to next slide
+  updateSlide();
+  stopAutoSlide();  // Stop auto-sliding when user clicks
+  startAutoSlide(); // Restart auto-sliding after user clicks
+});
+
+// Manual Navigation: Previous Button
+document.getElementById("prevBtn").addEventListener("click", () => {
+  index = (index - 1 + slides.length) % slides.length;  // Move to previous slide
+  updateSlide();
+  stopAutoSlide();  // Stop auto-sliding when user clicks
+  startAutoSlide(); // Restart auto-sliding after user clicks
+});
+
+// Dot Navigation
+dots.forEach(dot => {
+  dot.addEventListener("click", (e) => {
+    index = parseInt(e.target.dataset.index);  // Get the index of the clicked dot
+    updateSlide();
+    stopAutoSlide();  // Stop auto-sliding when user clicks a dot
+    startAutoSlide(); // Restart auto-sliding after user clicks
+  });
+});
+
+// Start auto-sliding when the page loads
+startAutoSlide();
   </script>
 
 </body>
