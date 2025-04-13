@@ -40,18 +40,17 @@
   </div>
 
   <!-- Hero Slider -->
-<section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
-  <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
-    <!-- Slides will be added here dynamically -->
-  </div>
-  <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
-    <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
-  </div>
-  <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
-  <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
-  <div class="dot-container absolute bottom-4 w-full flex justify-center space-x-2 z-10"></div>
-</section>
-
+  <section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
+    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
+      <!-- Slides will be added here dynamically -->
+    </div>
+    <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
+      <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
+    </div>
+    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
+    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
+    <div class="dot-container absolute bottom-4 w-full flex justify-center space-x-2 z-10"></div>
+  </section>
 
   <!-- Featured Products -->
   <section class="px-4 sm:px-6 py-10">
@@ -122,106 +121,105 @@
         }
       });
 
-   <script>
-  fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-    .then(res => res.json())
-    .then(data => {
-      const heroSlider = document.getElementById("heroSlider");
-      const imageContainer = document.getElementById("imageContainer");
-      const dotsContainer = document.querySelector(".dot-container");
+    // Fetch Data from Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
+      .then(res => res.json())
+      .then(data => {
+        const heroSlider = document.getElementById("heroSlider");
+        const imageContainer = document.getElementById("imageContainer");
+        const dotsContainer = document.querySelector(".dot-container");
 
-      const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
+        const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
 
-      const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
-        .map(name => featuredItems.find(item => item["NAME"] === name));
+        const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
+          .map(name => featuredItems.find(item => item["NAME"] === name));
 
-      // Clear previous content
-      heroSlider.innerHTML = "";
-      imageContainer.innerHTML = "";
-      dotsContainer.innerHTML = "";
+        // Clear previous content
+        heroSlider.innerHTML = "";
+        imageContainer.innerHTML = "";
+        dotsContainer.innerHTML = "";
 
-      uniqueFeaturedItems.forEach((item, index) => {
-        const imageUrl = item["WEB URL"];
-        const imageAlt = item["NAME"];
+        uniqueFeaturedItems.forEach((item, index) => {
+          const imageUrl = item["WEB URL"];
+          const imageAlt = item["NAME"];
 
-        // === Hero Slider ===
-        const slideDiv = document.createElement("div");
-        slideDiv.className = "relative w-full h-full flex-shrink-0 group transition-transform duration-500 ease-in-out";
-        slideDiv.innerHTML = `
-          <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-          <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
-        `;
-        heroSlider.appendChild(slideDiv);
+          // === Hero Slider ===
+          const slideDiv = document.createElement("div");
+          slideDiv.className = "relative w-full h-full flex-shrink-0 group transition-transform duration-500 ease-in-out";
+          slideDiv.innerHTML = `
+            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
+          `;
+          heroSlider.appendChild(slideDiv);
 
-        // === Dots ===
-        const dot = document.createElement("span");
-        dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer mx-1";
-        dot.dataset.index = index;
-        dotsContainer.appendChild(dot);
+          // === Dots ===
+          const dot = document.createElement("span");
+          dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer mx-1";
+          dot.dataset.index = index;
+          dotsContainer.appendChild(dot);
 
-        // === Featured Products Section ===
-        const productDiv = document.createElement("div");
-        productDiv.className = "bg-gray-200 p-4 rounded-lg";
+          // === Featured Products Section ===
+          const productDiv = document.createElement("div");
+          productDiv.className = "bg-gray-200 p-4 rounded-lg";
 
-        const productLink = document.createElement("a");
-        productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
-        productLink.className = "block";
+          const productLink = document.createElement("a");
+          productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
+          productLink.className = "block";
 
-        const productImg = document.createElement("img");
-        productImg.src = imageUrl;
-        productImg.alt = imageAlt;
-        productImg.className = "w-full h-40 object-cover mb-4";
+          const productImg = document.createElement("img");
+          productImg.src = imageUrl;
+          productImg.alt = imageAlt;
+          productImg.className = "w-full h-40 object-cover mb-4";
 
-        const productName = document.createElement("h3");
-        productName.textContent = item["NAME"];
-        productName.className = "text-lg font-bold text-gray-700";
+          const productName = document.createElement("h3");
+          productName.textContent = item["NAME"];
+          productName.className = "text-lg font-bold text-gray-700";
 
-        const productPrice = document.createElement("p");
-        productPrice.textContent = `₹${item["PRICE"]}`;
-        productPrice.className = "text-sm text-gray-500";
+          const productPrice = document.createElement("p");
+          productPrice.textContent = `₹${item["PRICE"]}`;
+          productPrice.className = "text-sm text-gray-500";
 
-        productLink.appendChild(productImg);
-        productLink.appendChild(productName);
-        productLink.appendChild(productPrice);
-        productDiv.appendChild(productLink);
-        imageContainer.appendChild(productDiv);
-      });
+          productLink.appendChild(productImg);
+          productLink.appendChild(productName);
+          productLink.appendChild(productPrice);
+          productDiv.appendChild(productLink);
+          imageContainer.appendChild(productDiv);
+        });
 
-      // === Slider logic ===
-      let index = 0;
-      const slides = document.querySelectorAll("#heroSlider .group");
-      const dots = document.querySelectorAll(".dot");
+        // === Slider logic ===
+        let index = 0;
+        const slides = document.querySelectorAll("#heroSlider .group");
+        const dots = document.querySelectorAll(".dot");
 
-      function updateSlide() {
-        heroSlider.style.transform = `translateX(-${index * 100}%)`;
-        dots.forEach(dot => dot.classList.remove("bg-red-500"));
-        if (dots[index]) dots[index].classList.add("bg-red-500");
-      }
+        function updateSlide() {
+          heroSlider.style.transform = `translateX(-${index * 100}%)`;
+          dots.forEach(dot => dot.classList.remove("bg-red-500"));
+          if (dots[index]) dots[index].classList.add("bg-red-500");
+        }
 
-      document.getElementById("nextBtn").addEventListener("click", () => {
-        index = (index + 1) % slides.length;
-        updateSlide();
-      });
-
-      document.getElementById("prevBtn").addEventListener("click", () => {
-        index = (index - 1 + slides.length) % slides.length;
-        updateSlide();
-      });
-
-      dots.forEach(dot => {
-        dot.addEventListener("click", (e) => {
-          index = parseInt(e.target.dataset.index);
+        document.getElementById("nextBtn").addEventListener("click", () => {
+          index = (index + 1) % slides.length;
           updateSlide();
         });
+
+        document.getElementById("prevBtn").addEventListener("click", () => {
+          index = (index - 1 + slides.length) % slides.length;
+          updateSlide();
+        });
+
+        dots.forEach(dot => {
+          dot.addEventListener("click", (e) => {
+            index = parseInt(e.target.dataset.index);
+            updateSlide();
+          });
+        });
+
+        updateSlide();
+      })
+      .catch(error => {
+        console.error("Error fetching data from Google Sheets:", error);
       });
-
-      updateSlide();
-    })
-    .catch(error => {
-      console.error("Error fetching data from Google Sheets:", error);
-    });
-</script>
-
+  </script>
 
 </body>
 </html>
