@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Product Details</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    <style>
     .star {
       cursor: pointer;
       font-size: 1.5rem;
@@ -16,6 +18,33 @@
       color: gold;
     }
   </style>
+    .product-card:hover { transform: scale(1.05); transition: transform 0.3s; }
+    .discount { color: #e74c3c; font-weight: bold; }
+    .old-price { text-decoration: line-through; color: #7f8c8d; }
+    .sizes span { margin-right: 5px; }
+    .filter-section { border-right: 1px solid #e0e0e0; }
+    .filters { padding: 10px; }
+    .filters h3 { margin-bottom: 15px; font-size: 1.1rem; font-weight: bold; }
+    .filters ul { padding-left: 0; }
+    .filters ul li { margin-bottom: 10px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header Start -->
+  <header class="bg-white shadow">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-blue-600">Pankaj Footwear</a>
+      <div class="hidden md:flex space-x-6">
+        <a href="index.html" class="hover:text-blue-600">Home</a>
+        <a href="men.html" class="text-blue-600 font-semibold">Men</a>
+        <a href="#" class="hover:text-blue-600">Women</a>
+        <a href="#" class="hover:text-blue-600">Kids</a>
+        <a href="#" class="hover:text-blue-600">Offers</a>
+      </div>
+      <div class="relative">
+        <button id="login-btn" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
+        <div id="login-dropdown" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow hidden z-50"></div>
 </head>
 <body class="bg-white text-gray-800 font-sans p-6">
   <div class="max-w-4xl mx-auto">
