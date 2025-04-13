@@ -135,71 +135,73 @@
     updateVisitorCount();
 
     // Fetch data from Google Sheets
-    fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-      .then(res => res.json())
-      .then(data => {
-        const heroSlider = document.getElementById("heroSlider");
-        const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
+fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
+  .then(res => res.json())
+  .then(data => {
+    const heroSlider = document.getElementById("heroSlider");
+    const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
 
-        // Create Hero Slider and Featured Products
-        featuredItems.forEach((item, index) => {
-          const imageUrl = item["WEB URL"];
-          const imageAlt = item["NAME"];
+    // Ensure featured items are unique by using a Set to filter duplicates (if any)
+    const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
+      .map(name => featuredItems.find(item => item["NAME"] === name));
 
-          // Hero Slider
-          const slideDiv = document.createElement("div");
-          slideDiv.className = "relative w-full h-full flex-shrink-0 group";
-          const img = document.createElement("img");
-          img.src = imageUrl;
-          img.alt = imageAlt;
-          img.className = "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500";
-          const overlayDiv = document.createElement("div");
-          overlayDiv.className = "absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500";
-          slideDiv.appendChild(img);
-          slideDiv.appendChild(overlayDiv);
-          heroSlider.appendChild(slideDiv);
+    // Create Hero Slider and Featured Products
+    uniqueFeaturedItems.forEach((item, index) => {
+      const imageUrl = item["WEB URL"];
+      const imageAlt = item["NAME"];
 
-          // Featured Products Section
-          const imageContainer = document.getElementById("imageContainer");
+      // Hero Slider
+      const slideDiv = document.createElement("div");
+      slideDiv.className = "relative w-full h-full flex-shrink-0 group";
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = imageAlt;
+      img.className = "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500";
+      const overlayDiv = document.createElement("div");
+      overlayDiv.className = "absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500";
+      slideDiv.appendChild(img);
+      slideDiv.appendChild(overlayDiv);
+      heroSlider.appendChild(slideDiv);
 
-          featuredItems.forEach(item => {
-            const productDiv = document.createElement("div");
-            productDiv.className = "bg-gray-200 p-4 rounded-lg";
+      // Featured Products Section
+      const imageContainer = document.getElementById("imageContainer");
 
-            // Create an anchor tag to wrap the product image and name (for the click functionality)
-            const productLink = document.createElement("a");
-            productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["IMAGE_URL"])}`;
-            productLink.className = "block"; // Ensure the link wraps the whole product div
+      const productDiv = document.createElement("div");
+      productDiv.className = "bg-gray-200 p-4 rounded-lg";
 
-            const productImg = document.createElement("img");
-            productImg.src = item["IMAGE_URL"];
-            productImg.alt = item["NAME"];
-            productImg.className = "w-full h-40 object-cover mb-4";
+      // Create an anchor tag to wrap the product image and name (for the click functionality)
+      const productLink = document.createElement("a");
+      productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["IMAGE_URL"])}`;
+      productLink.className = "block"; // Ensure the link wraps the whole product div
 
-            const productName = document.createElement("h3");
-            productName.textContent = item["NAME"];
-            productName.className = "text-lg font-bold text-gray-700";
+      const productImg = document.createElement("img");
+      productImg.src = item["IMAGE_URL"];
+      productImg.alt = item["NAME"];
+      productImg.className = "w-full h-40 object-cover mb-4";
 
-            const productPrice = document.createElement("p");
-            productPrice.textContent = `₹${item["PRICE"]}`;
-            productPrice.className = "text-sm text-gray-500";
+      const productName = document.createElement("h3");
+      productName.textContent = item["NAME"];
+      productName.className = "text-lg font-bold text-gray-700";
 
-            // Append the image, name, and price to the product link
-            productLink.appendChild(productImg);
-            productLink.appendChild(productName);
-            productLink.appendChild(productPrice);
+      const productPrice = document.createElement("p");
+      productPrice.textContent = `₹${item["PRICE"]}`;
+      productPrice.className = "text-sm text-gray-500";
 
-            // Append the product link to the product div
-            productDiv.appendChild(productLink);
+      // Append the image, name, and price to the product link
+      productLink.appendChild(productImg);
+      productLink.appendChild(productName);
+      productLink.appendChild(productPrice);
 
-            // Append the product div to the image container
-            imageContainer.appendChild(productDiv);
-          });
-        });
-      })
-      .catch(error => {
-        console.error("Error fetching data from Google Sheets:", error);
-      });
+      // Append the product link to the product div
+      productDiv.appendChild(productLink);
+
+      // Append the product div to the image container
+      imageContainer.appendChild(productDiv);
+    });
+  })
+  .catch(error => {
+    console.error("Error fetching data from Google Sheets:", error);
+  });
 
     // Slider navigation logic
     let index = 0;
