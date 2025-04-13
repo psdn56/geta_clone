@@ -40,23 +40,33 @@
   </div>
 
   <!-- Hero Slider -->
-  <section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
-    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
-      <img src="https://via.placeholder.com/1200x500?text=Slide+1" class="w-full h-full object-cover flex-shrink-0" />
-      <img src="https://via.placeholder.com/1200x500?text=Slide+2" class="w-full h-full object-cover flex-shrink-0" />
-      <img src="https://via.placeholder.com/1200x500?text=Slide+3" class="w-full h-full object-cover flex-shrink-0" />
+<section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
+  <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
+    <div class="relative w-full h-full flex-shrink-0 group">
+      <img src="https://via.placeholder.com/1200x500?text=Slide+1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
     </div>
-    <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
-      <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
+    <div class="relative w-full h-full flex-shrink-0 group">
+      <img src="https://via.placeholder.com/1200x500?text=Slide+2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
     </div>
-    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
-    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
-    <div class="absolute bottom-4 w-full flex justify-center space-x-2 z-10">
-      <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="0"></span>
-      <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="1"></span>
-      <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="2"></span>
+    <div class="relative w-full h-full flex-shrink-0 group">
+      <img src="https://via.placeholder.com/1200x500?text=Slide+3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
     </div>
-  </section>
+  </div>
+  <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
+    <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
+  </div>
+  <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
+  <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
+  <div class="absolute bottom-4 w-full flex justify-center space-x-2 z-10">
+    <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="0"></span>
+    <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="1"></span>
+    <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="2"></span>
+  </div>
+</section>
+
 
   <!-- Featured Products -->
   <section class="px-4 sm:px-6 py-10">
