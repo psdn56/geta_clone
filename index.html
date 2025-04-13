@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pankaj footwear</title>
+  <title>Pankaj Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="description" content="Shop stylish footwear for men, women, and kids. Comfort, quality, and style in every step." />
   <meta property="og:title" content="Footwear" />
@@ -18,17 +18,14 @@
       <img src="your-logo.png" alt="Pankaj Footwear Logo" class="h-20 w-auto">
       <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
     </div>
-
     <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
       <li><a href="men.html" class="hover:text-red-500">Men</a></li>
       <li><a href="women.html" class="hover:text-red-500">Women</a></li>
-      <li><a href="#" class="hover:text-red-500">Kids</a></li>
+      <li><a href="kids.html" class="hover:text-red-500">Kids</a></li>
       <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
       <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
     </ul>
-
     <div id="loginDropdownContainer" class="hidden md:block"></div>
-
     <div class="md:hidden">
       <button id="menuBtn" class="text-2xl text-gray-700" aria-label="Open Menu">&#9776;</button>
     </div>
@@ -38,22 +35,27 @@
   <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
     <a href="men.html" class="block py-2 hover:text-red-500">Men</a>
     <a href="women.html" class="block py-2 hover:text-red-500">Women</a>
-    <a href="#" class="block py-2 hover:text-red-500">Kids</a>
+    <a href="kids.html" class="block py-2 hover:text-red-500">Kids</a>
     <a href="sale.html" class="block py-2 hover:text-red-500">Sale</a>
   </div>
 
   <!-- Hero Slider -->
   <section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
-    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full"></div>
-
+    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
+      <img src="https://via.placeholder.com/1200x500?text=Slide+1" class="w-full h-full object-cover flex-shrink-0" />
+      <img src="https://via.placeholder.com/1200x500?text=Slide+2" class="w-full h-full object-cover flex-shrink-0" />
+      <img src="https://via.placeholder.com/1200x500?text=Slide+3" class="w-full h-full object-cover flex-shrink-0" />
+    </div>
     <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
       <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
     </div>
-
     <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
     <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
-
-    <div class="absolute bottom-4 w-full flex justify-center space-x-2 z-10 dot-container"></div>
+    <div class="absolute bottom-4 w-full flex justify-center space-x-2 z-10">
+      <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="0"></span>
+      <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="1"></span>
+      <span class="dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer" data-index="2"></span>
+    </div>
   </section>
 
   <!-- Featured Products -->
@@ -69,52 +71,41 @@
     </div>
 
     <div class="fixed bottom-6 right-6 z-50">
-  <button id="whatsappToggle" class="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2">
-    <img src="iconwhatsapp.gif" alt="WhatsApp" class="w-6 h-6" />
-    <span class="hidden sm:inline">Chat with us</span>
-  </button>
-
-  <div id="whatsappOptions" class="hidden mt-2 space-y-2">
-    <a href="https://wa.me/917704915695?text=Hi%20I%20have%20a%20query%20about%20Orders"
-       target="_blank"
-       class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">
-      Orders Support
-    </a>
-    <a href="https://wa.me/97619892263?text=Hi%20I%20have%20a%20query%20about%20Returns"
-       target="_blank"
-       class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">
-      Other Support
-    </a>
-  </div>
-</div>
+      <button id="whatsappToggle" class="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2">
+        <img src="iconwhatsapp.gif" alt="WhatsApp" class="w-6 h-6" />
+        <span class="hidden sm:inline">Chat with us</span>
+      </button>
+      <div id="whatsappOptions" class="hidden mt-2 space-y-2">
+        <a href="https://wa.me/917704915695?text=Hi%20I%20have%20a%20query%20about%20Orders" target="_blank" class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">Orders Support</a>
+        <a href="https://wa.me/97619892263?text=Hi%20I%20have%20a%20query%20about%20Returns" target="_blank" class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">Other Support</a>
+      </div>
+    </div>
     <div id="visitorCount" class="mt-2 text-sm text-gray-300"></div>
   </footer>
 
   <!-- Scripts -->
   <script>
-    document.getElementById("whatsappToggle").addEventListener("click", () => {
-  const options = document.getElementById("whatsappOptions");
-  options.classList.toggle("hidden");
-});
-    // Toggle mobile menu
+    // Mobile Menu
     document.getElementById('menuBtn').addEventListener('click', () => {
       document.getElementById('mobileMenu').classList.toggle('hidden');
     });
 
-    // Update DateTime in footer
+    // WhatsApp Toggle
+    document.getElementById("whatsappToggle").addEventListener("click", () => {
+      document.getElementById("whatsappOptions").classList.toggle("hidden");
+    });
+
+    // DateTime
     function updateDateTime() {
       const now = new Date();
       const year = now.getFullYear();
       const formatted = now.toLocaleString();
-      const datetimeEl = document.getElementById('datetime');
-      if (datetimeEl) {
-        datetimeEl.innerHTML = `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
-      }
+      document.getElementById('datetime').innerHTML = `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
     }
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
-    // Login dropdown simulation
+    // Login Dropdown
     fetch('loginDropdown.html')
       .then(res => res.text())
       .then(data => {
@@ -136,89 +127,71 @@
         }
       });
 
+    // Visitor Counter
+    function updateVisitorCount() {
+      let count = localStorage.getItem("visitCount");
+      count = count ? parseInt(count) + 1 : 1;
+      localStorage.setItem("visitCount", count);
+      document.getElementById("visitorCount").textContent = `You have visited this site ${count} time(s).`;
+    }
+    updateVisitorCount();
+
+    // Fetch Featured Products
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
-  .then(res => res.json())
-  .then(data => {
-    const featuredContainer = document.getElementById("featuredContainer");
-    const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
+      .then(res => res.json())
+      .then(data => {
+        const imageContainer = document.getElementById("imageContainer");
+        const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
+        featuredItems.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "border p-4 rounded shadow";
+          card.innerHTML = `
+            <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
+              <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover mb-4">
+              <h3 class="text-lg font-bold">${item["NAME"]}</h3>
+              <p class="text-red-600 font-semibold">₹${item["PRICE"]}</p>
+            </a>
+          `;
+          imageContainer.appendChild(card);
+        });
+      });
 
-    featuredItems.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "border p-4 rounded shadow";
-      card.innerHTML = `
-        <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
-          <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover mb-4">
-          <h3 class="text-lg font-bold">${item["NAME"]}</h3>
-          <p class="text-red-600 font-semibold">₹${item["PRICE"]}</p>
-        </a>
-      `;
-      featuredContainer.appendChild(card);
+    // Hero Slider Logic
+    let index = 0;
+    const slider = document.getElementById("heroSlider");
+    const slides = slider.children;
+    const dots = document.querySelectorAll(".dot");
+    const totalSlides = slides.length;
+
+    function updateSlide() {
+      slider.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach(dot => dot.classList.remove("opacity-100", "scale-110"));
+      if (dots[index]) dots[index].classList.add("opacity-100", "scale-110");
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      index = (index + 1) % totalSlides;
+      updateSlide();
     });
-  });
 
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      index = (index - 1 + totalSlides) % totalSlides;
+      updateSlide();
+    });
 
-  // Slider section (unchanged)
-  if (imgUrl) {
-    const sliderImg = document.createElement("img");
-    sliderImg.src = imgUrl;
-    sliderImg.alt = "Slide Image";
-    sliderImg.className = "w-full h-full object-cover flex-shrink-0";
-    sliderImg.onerror = () => {
-      sliderImg.src = "https://via.placeholder.com/600x400?text=No+Image";
-    };
-    slider.appendChild(sliderImg);
-
-    const dot = document.createElement("span");
-    dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer";
-    dot.dataset.index = i;
-    dotContainer.appendChild(dot);
-  }
-});
-
-        // Slider logic
-        let index = 0;
-        const slides = slider.children;
-        const dots = document.querySelectorAll(".dot");
-        const totalSlides = slides.length;
-
-        function updateSlide() {
-          slider.style.transform = `translateX(-${index * 100}%)`;
-          dots.forEach(dot => dot.classList.remove("opacity-100", "scale-110"));
-          if (dots[index]) dots[index].classList.add("opacity-100", "scale-110");
-        }
-
-        document.getElementById("nextBtn").addEventListener("click", () => {
-          index = (index + 1) % totalSlides;
-          updateSlide();
-        });
-
-        document.getElementById("prevBtn").addEventListener("click", () => {
-          index = (index - 1 + totalSlides) % totalSlides;
-          updateSlide();
-        });
-
-        dots.forEach(dot => {
-          dot.addEventListener("click", () => {
-            index = parseInt(dot.dataset.index);
-            updateSlide();
-          });
-        });
-
-        setInterval(() => {
-          index = (index + 1) % totalSlides;
-          updateSlide();
-        }, 5000);
-
+    dots.forEach(dot => {
+      dot.addEventListener("click", () => {
+        index = parseInt(dot.dataset.index);
         updateSlide();
       });
-    // Visitor count (Local)
-function updateVisitorCount() {
-  let count = localStorage.getItem("visitCount");
-  count = count ? parseInt(count) + 1 : 1;
-  localStorage.setItem("visitCount", count);
-  document.getElementById("visitorCount").textContent = `You have visited this site ${count} time(s).`;
-}
-updateVisitorCount();
+    });
+
+    setInterval(() => {
+      index = (index + 1) % totalSlides;
+      updateSlide();
+    }, 5000);
+
+    updateSlide();
   </script>
 </body>
 </html>
