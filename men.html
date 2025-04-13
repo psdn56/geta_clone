@@ -1,14 +1,39 @@
-<!-- men.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Men's Footwear</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Men's Casual Shirts</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styling for additional features */
+    .discount { color: #e74c3c; font-weight: bold; }
+    .old-price { text-decoration: line-through; color: #7f8c8d; }
+    .sizes { margin-top: 8px; }
+  </style>
 </head>
 <body class="bg-white text-gray-800">
-  <h1 class="text-2xl font-bold text-center my-6">Men's Footwear</h1>
-  <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4"></div>
+  <!-- Header -->
+  <div class="container mx-auto px-4 py-4">
+    <h1 class="text-2xl font-bold text-center my-6">Men's Casual Shirts</h1>
+    
+    <!-- Product Count & Sorting -->
+    <div class="flex justify-between items-center mb-6">
+      <p class="text-sm">Showing 1 – 40 products of 7,684 products</p>
+      <div>
+        <label for="sort" class="text-sm mr-2">Sort By:</label>
+        <select id="sort" class="p-2 border rounded">
+          <option value="popularity">Popularity</option>
+          <option value="low-high">Price -- Low to High</option>
+          <option value="high-low">Price -- High to Low</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Product Grid -->
+    <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4"></div>
+  </div>
 
   <script>
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
@@ -22,11 +47,19 @@
         menItems.forEach(item => {
           const card = document.createElement("div");
           card.className = "border p-4 rounded shadow hover:shadow-lg transition";
+          
+          // Dynamically generate the sizes array
+          const sizes = item["SIZES"] ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ') : '';
+          
+          // Generate card content
           card.innerHTML = `
             <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
               <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
               <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
               <p class="text-red-600">₹${item["PRICE"]}</p>
+              <p class="old-price">₹${item["OLD PRICE"] || ""}</p>
+              <p class="discount">${item["DISCOUNT"] || ""}</p>
+              <div class="sizes">${sizes}</div>
             </a>
           `;
           container.appendChild(card);
