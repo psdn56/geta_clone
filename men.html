@@ -136,7 +136,10 @@
       .then(data => {
         const container = document.getElementById("menContainer");
         container.innerHTML = "";
-        const menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
+        const menItems = data.filter(item =>
+  item["CATEGORY"] &&
+  item["CATEGORY"].trim().toLowerCase() === "men"
+);
         menItems.forEach(item => {
           const card = document.createElement("div");
           card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
