@@ -122,13 +122,6 @@
         }
       });
 
-    // Visitor Counter
-    function updateVisitorCount() {
-      let count = localStorage.getItem("visitCount");
-      count = count ? parseInt(count) + 1 : 1;
-      localStorage.setItem("visitCount", count);
-      document.getElementById("visitorCount").textContent = `You have visited this site ${count} time(s).`;
-    }
    <script>
   fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
     .then(res => res.json())
