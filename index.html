@@ -171,11 +171,11 @@ fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8Qx
 
       // Create an anchor tag to wrap the product image and name (for the click functionality)
       const productLink = document.createElement("a");
-      productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["IMAGE_URL"])}`;
+      productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
       productLink.className = "block"; // Ensure the link wraps the whole product div
 
       const productImg = document.createElement("img");
-      productImg.src = item["IMAGE_URL"];
+      productImg.src = item["WEB URL"];
       productImg.alt = item["NAME"];
       productImg.className = "w-full h-40 object-cover mb-4";
 
