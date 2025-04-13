@@ -99,40 +99,20 @@
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
-    // Login Dropdown
-    fetch('loginDropdown.html')
-      .then(res => res.text())
-      .then(data => {
-        const container = document.getElementById('loginDropdownContainer');
-        const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-        if (isLoggedIn) {
-          container.innerHTML = `
-            <div class="text-gray-700 font-medium space-x-2">
-              <span>Welcome!</span>
-              <button id="logoutBtn" class="text-red-500 hover:underline">Logout</button>
-            </div>
-          `;
-          document.getElementById("logoutBtn").addEventListener("click", () => {
-            localStorage.setItem("isLoggedIn", "false");
-            window.location.reload();
-          });
-        } else {
-          container.innerHTML = data;
-        }
-      });
-
     // Fetch Data from Google Sheets
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
       .then(res => res.json())
       .then(data => {
+        console.log(data); // Log the data to check if it’s correctly fetched
         const heroSlider = document.getElementById("heroSlider");
         const imageContainer = document.getElementById("imageContainer");
         const dotsContainer = document.querySelector(".dot-container");
 
         const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
 
-        const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
-          .map(name => featuredItems.find(item => item["NAME"] === name));
+        const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"]))).map(name =>
+          featuredItems.find(item => item["NAME"] === name)
+        );
 
         // Clear previous content
         heroSlider.innerHTML = "";
@@ -142,6 +122,11 @@
         uniqueFeaturedItems.forEach((item, index) => {
           const imageUrl = item["WEB URL"];
           const imageAlt = item["NAME"];
+
+          if (!imageUrl) {
+            console.error('Missing image URL for item:', item); // Log error if image URL is missing
+            return;
+          }
 
           // === Hero Slider ===
           const slideDiv = document.createElement("div");
@@ -186,62 +171,54 @@
           imageContainer.appendChild(productDiv);
         });
 
-        // Slider logic
-let index = 0;
-const slides = document.querySelectorAll("#heroSlider .group");
-const dots = document.querySelectorAll(".dot");
+        // Slider logic (same as before)
+        let index = 0;
+        const slides = document.querySelectorAll("#heroSlider .group");
+        const dots = document.querySelectorAll(".dot");
 
-// Function to update the slider
-function updateSlide() {
-  heroSlider.style.transform = `translateX(-${index * 100}%)`;
-  dots.forEach(dot => dot.classList.remove("bg-red-500"));
-  if (dots[index]) dots[index].classList.add("bg-red-500");
-}
+        function updateSlide() {
+          heroSlider.style.transform = `translateX(-${index * 100}%)`;
+          dots.forEach(dot => dot.classList.remove("bg-red-500"));
+          if (dots[index]) dots[index].classList.add("bg-red-500");
+        }
 
-// Auto-Slide Functionality
-let autoSlideInterval;
+        let autoSlideInterval;
+        function startAutoSlide() {
+          autoSlideInterval = setInterval(() => {
+            index = (index + 1) % slides.length;
+            updateSlide();
+          }, 5000);
+        }
 
-// Function to start the auto-sliding
-function startAutoSlide() {
-  autoSlideInterval = setInterval(() => {
-    index = (index + 1) % slides.length;  // Go to the next slide
-    updateSlide();
-  }, 5000); // Change slide every 5 seconds
-}
+        function stopAutoSlide() {
+          clearInterval(autoSlideInterval);
+        }
 
-// Function to stop auto-slide when the user interacts
-function stopAutoSlide() {
-  clearInterval(autoSlideInterval);
-}
+        document.getElementById("nextBtn").addEventListener("click", () => {
+          index = (index + 1) % slides.length;
+          updateSlide();
+          stopAutoSlide();
+          startAutoSlide();
+        });
 
-// Manual Navigation: Next Button
-document.getElementById("nextBtn").addEventListener("click", () => {
-  index = (index + 1) % slides.length;  // Move to next slide
-  updateSlide();
-  stopAutoSlide();  // Stop auto-sliding when user clicks
-  startAutoSlide(); // Restart auto-sliding after user clicks
-});
+        document.getElementById("prevBtn").addEventListener("click", () => {
+          index = (index - 1 + slides.length) % slides.length;
+          updateSlide();
+          stopAutoSlide();
+          startAutoSlide();
+        });
 
-// Manual Navigation: Previous Button
-document.getElementById("prevBtn").addEventListener("click", () => {
-  index = (index - 1 + slides.length) % slides.length;  // Move to previous slide
-  updateSlide();
-  stopAutoSlide();  // Stop auto-sliding when user clicks
-  startAutoSlide(); // Restart auto-sliding after user clicks
-});
+        dots.forEach(dot => {
+          dot.addEventListener("click", (e) => {
+            index = parseInt(e.target.dataset.index);
+            updateSlide();
+            stopAutoSlide();
+            startAutoSlide();
+          });
+        });
 
-// Dot Navigation
-dots.forEach(dot => {
-  dot.addEventListener("click", (e) => {
-    index = parseInt(e.target.dataset.index);  // Get the index of the clicked dot
-    updateSlide();
-    stopAutoSlide();  // Stop auto-sliding when user clicks a dot
-    startAutoSlide(); // Restart auto-sliding after user clicks
-  });
-});
-
-// Start auto-sliding when the page loads
-startAutoSlide();
+        startAutoSlide();
+      });
   </script>
 
 </body>
