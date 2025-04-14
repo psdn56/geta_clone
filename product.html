@@ -71,84 +71,81 @@
   </div>
 
   <script>
-  const params = new URLSearchParams(window.location.search);
-  const currentName = params.get("name");
-  const currentPrice = parseFloat(params.get("price"));
-  const currentOldPrice = parseFloat(params.get("oldPrice"));
-  const currentDesc = params.get("desc");
-  const currentImg = params.get("img");
+    const params = new URLSearchParams(window.location.search);
+    const currentName = params.get("name");
+    const currentPrice = parseFloat(params.get("price")?.replace(/,/g, "") || 0);
+    const currentOldPrice = parseFloat(params.get("oldPrice")?.replace(/,/g, "") || 0);
+    const currentDesc = params.get("desc");
+    const currentImg = params.get("img");
 
-  // Load current product info
-  if (currentName && currentPrice && currentImg) {
-    let discountHTML = "";
-    if (!isNaN(currentOldPrice) && currentOldPrice > currentPrice) {
-      const discountPercent = Math.round(((currentOldPrice - currentPrice) / currentOldPrice) * 100);
-      discountHTML = `
-        <p class="text-lg mb-4">
-          <span class="old-price mr-2">₹${currentOldPrice.toFixed(2)}</span>
-          <span class="text-red-600 font-semibold">₹${currentPrice.toFixed(2)}</span>
-          <span class="ml-2 discount">(${discountPercent}% OFF)</span>
-        </p>
+    // Load current product info
+    if (currentName && currentPrice && currentImg) {
+      let discountHTML = "";
+      if (!isNaN(currentOldPrice) && currentOldPrice > currentPrice) {
+        const discountPercent = Math.round(((currentOldPrice - currentPrice) / currentOldPrice) * 100);
+        discountHTML = `
+          <p class="text-red-600 text-2xl font-bold mb-1">₹${currentPrice.toLocaleString("en-IN")}</p>
+          <p class="discount mb-1">Discount: ${discountPercent}%</p>
+          <p class="old-price">₹${currentOldPrice.toLocaleString("en-IN")}</p>
+        `;
+      } else {
+        discountHTML = `<p class="text-red-600 text-2xl font-bold mb-4">₹${currentPrice.toLocaleString("en-IN")}</p>`;
+      }
+
+      document.getElementById("productDetails").innerHTML = `
+        <img src="${currentImg}" alt="${currentName}" class="w-full h-96 object-cover rounded shadow">
+        <div>
+          <h1 class="text-2xl font-semibold mb-2">${currentName}</h1>
+          <p class="mb-4">${currentDesc || ""}</p>
+          ${discountHTML}
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mt-4">Add to Cart</button>
+        </div>
       `;
-    } else {
-      discountHTML = `<p class="text-lg mb-4 text-red-600 font-semibold">₹${currentPrice.toFixed(2)}</p>`;
     }
 
-    document.getElementById("productDetails").innerHTML = `
-      <img src="${currentImg}" alt="${currentName}" class="w-full h-96 object-cover rounded shadow">
-      <div>
-        <h1 class="text-2xl font-semibold mb-2">${currentName}</h1>
-        <p class="mb-2">${currentDesc || ""}</p>
-        ${discountHTML}
-        <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Add to Cart</button>
-      </div>
-    `;
-  }
+    // Load related products
+    const sheetURL = "https://spreadsheets.google.com/feeds/list/1FAbcKDkDUTjM3s78xyUn0G7U5LiNKOxBC-3f92PPGXc/od6/public/values?alt=json";
 
-  const sheetURL = "https://spreadsheets.google.com/feeds/list/1FAbcKDkDUTjM3s78xyUn0G7U5LiNKOxBC-3f92PPGXc/od6/public/values?alt=json";
+    fetch(sheetURL)
+      .then(response => response.json())
+      .then(data => {
+        const products = data.feed.entry.map(entry => {
+          const price = parseFloat(entry.gsx$price.$t.replace(/,/g, ""));
+          const oldPrice = parseFloat(entry.gsx$oldprice.$t.replace(/,/g, ""));
 
-  fetch(sheetURL)
-    .then(response => response.json())
-    .then(data => {
-      const products = data.feed.entry.map(entry => {
-        return {
-          name: entry.gsx$name.$t,
-          price: parseFloat(entry.gsx$price.$t),
-          oldPrice: parseFloat(entry.gsx$oldprice?.$t || 0),
-          img: entry.gsx$imageurl.$t,
-          desc: entry.gsx$description.$t
-        };
+          return {
+            name: entry.gsx$name.$t,
+            price,
+            oldPrice,
+            img: entry.gsx$imageurl.$t,
+            desc: entry.gsx$description.$t
+          };
+        });
+
+        const filteredProducts = products.filter(product => product.name !== currentName);
+
+        const relatedHTML = filteredProducts.map(item => {
+          const hasDiscount = !isNaN(item.oldPrice) && item.oldPrice > item.price;
+          const discount = hasDiscount ? Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100) : 0;
+
+          return `
+            <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
+              <div class="border p-4 rounded shadow hover:shadow-lg transition product-card">
+                <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
+                <h3 class="font-medium">${item.name}</h3>
+                <p class="text-red-600 font-semibold">₹${item.price.toLocaleString("en-IN")}</p>
+                ${hasDiscount ? `<p class="discount">Discount: ${discount}%</p><p class="old-price">₹${item.oldPrice.toLocaleString("en-IN")}</p>` : ""}
+              </div>
+            </a>
+          `;
+        }).join("");
+
+        document.getElementById("relatedProducts").innerHTML = relatedHTML;
+      })
+      .catch(error => {
+        console.error("Error loading products:", error);
+        document.getElementById("relatedProducts").innerHTML = "<p>Error loading related products.</p>";
       });
-
-      const filteredProducts = products.filter(product => product.name !== currentName);
-
-      const relatedHTML = filteredProducts.map(item => {
-        const hasDiscount = !isNaN(item.oldPrice) && item.oldPrice > item.price;
-        const discountPercent = hasDiscount ? Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100) : 0;
-
-        return `
-          <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
-            <div class="border p-4 rounded shadow hover:shadow-lg transition product-card">
-              <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
-              <h3 class="font-medium">${item.name}</h3>
-              <p>
-                ${hasDiscount
-                  ? `<span class="old-price mr-2">₹${item.oldPrice.toFixed(2)}</span>
-                     <span class="text-red-600 font-semibold">₹${item.price.toFixed(2)}</span>
-                     <span class="ml-2 discount">(${discountPercent}% OFF)</span>`
-                  : `<span class="text-red-600 font-semibold">₹${item.price.toFixed(2)}</span>`}
-              </p>
-            </div>
-          </a>
-        `;
-      }).join("");
-
-      document.getElementById("relatedProducts").innerHTML = relatedHTML;
-    })
-    .catch(error => {
-      console.error("Error loading products:", error);
-      document.getElementById("relatedProducts").innerHTML = "<p>Error loading related products.</p>";
-    });
-</script>
+  </script>
 </body>
 </html>
