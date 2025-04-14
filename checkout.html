@@ -103,13 +103,13 @@
 
       try {
         const res = await fetch(sheetURL, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json"
-          }
-           mode: "cors"
-        });
+  method: "POST",
+  body: JSON.stringify(data),
+  headers: {
+    "Content-Type": "application/json"
+  },
+  mode: "cors"  // Add a comma before 'mode'
+});
 
         if (res.ok) {
           responseMsg.textContent = "✅ Order submitted successfully!";
