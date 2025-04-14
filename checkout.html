@@ -66,8 +66,20 @@
     });
   </script>
 
-  <!-- Submit Form to Google Sheets -->
+  <!-- Function to Generate Order ID -->
   <script>
+    // Function to generate Order ID
+    function generateOrderId(phone) {
+      const now = new Date();
+      const year = now.getFullYear().toString().slice(-2); // Last 2 digits of year
+      const day = String(now.getDate()).padStart(2, '0'); // Day (2 digits)
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Month (2 digits)
+      const time = now.toTimeString().slice(0, 8).replace(":", "").replace(":", ""); // HHMMSS
+      const last4PhoneDigits = phone.slice(-4); // Last 4 digits of phone number
+
+      return `OID${year}${day}${month}${last4PhoneDigits}${time}`;
+    }
+
     const form = document.getElementById("checkoutForm");
     const responseMsg = document.getElementById("responseMsg");
     const sheetURL = "https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec"; // Your deployed Apps Script URL
@@ -76,19 +88,28 @@
       e.preventDefault();
 
       const formData = new FormData(form);
+      const phone = formData.get("phone");
+
+      // Generate the Order ID
+      const orderId = generateOrderId(phone);
+
+      // Combine the address fields
       const address = `${formData.get("floor")}, ${formData.get("street")}, ${formData.get("area")}`;
 
       const data = {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        phone: formData.get("phone"),
-        pincode: formData.get("pincode"),
-        city: formData.get("city"),
-        state: formData.get("state"),
-        address: address,
-        paymentStatus: formData.get("paymentStatus"),
-        items: JSON.parse(localStorage.getItem("cart") || "[]"),
-        total: JSON.parse(localStorage.getItem("cart") || "[]").reduce((sum, item) => sum + item.price * item.quantity, 0)
+        "Timestamp": new Date().toLocaleString(),
+        "Order ID": orderId,
+        "Name": formData.get("name"),
+        "Email": formData.get("email"),
+        "Phone": formData.get("phone"),
+        "Pincode": formData.get("pincode"),
+        "City": formData.get("city"),
+        "State": formData.get("state"),
+        "Floor/Flat No.": formData.get("floor"),
+        "Street Name": formData.get("street"),
+        "Area/Landmark": formData.get("area"),
+        "Item Purchased": JSON.stringify(localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")).map(item => `${item.name} x${item.quantity}`) : []),
+        "Total": JSON.parse(localStorage.getItem("cart") || "[]").reduce((sum, item) => sum + item.price * item.quantity, 0)
       };
 
       try {
