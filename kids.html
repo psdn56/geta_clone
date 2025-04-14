@@ -156,7 +156,7 @@
     <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
     <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
     <p class="text-red-600">₹${item["PRICE"]}</p>
-    ${item["DISCOUNT"] ? `<p class="discount">Discount: ${item["DISCOUNT"]}%</p>` : ""}
+    ${item["DISCOUNT"] ? `<p class="discount">Discount: ${parseFloat(item["DISCOUNT"]) * 100}%</p>` : ""}
     <p class="old-price">${item["OLD PRICE"] ? `₹${item["OLD PRICE"]}` : ""}</p>
     <div class="sizes">${sizes}</div>
   </a>
