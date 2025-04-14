@@ -73,22 +73,26 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const currentName = params.get("name");
-    const currentPrice = params.get("price");
-    const currentOldPrice = params.get("oldPrice");
+    const currentPrice = parseFloat(params.get("price")?.replace(/,/g, "") || 0);
+    const currentOldPrice = parseFloat(params.get("oldPrice")?.replace(/,/g, "") || 0);
     const currentDesc = params.get("desc");
     const currentImg = params.get("img");
 
     // Load current product info
     if (currentName && currentPrice && currentImg) {
+      const discount = (!isNaN(currentOldPrice) && currentOldPrice > currentPrice)
+        ? ` <span class="ml-2 discount">(${Math.round(((currentOldPrice - currentPrice) / currentOldPrice) * 100)}% OFF)</span>`
+        : "";
+
       document.getElementById("productDetails").innerHTML = `
         <img src="${currentImg}" alt="${currentName}" class="w-full h-96 object-cover rounded shadow">
         <div>
           <h1 class="text-2xl font-semibold mb-2">${currentName}</h1>
           <p class="mb-2">${currentDesc || ""}</p>
           <p class="text-lg mb-4">
-            <span class="old-price mr-2">₹${currentOldPrice}</span>
-            <span class="text-red-600 font-semibold">₹${currentPrice}</span>
-            <span class="ml-2 discount">(${Math.round(((currentOldPrice - currentPrice) / currentOldPrice) * 100)}% OFF)</span>
+            ${!isNaN(currentOldPrice) && currentOldPrice > currentPrice ? `<span class="old-price mr-2">₹${currentOldPrice.toLocaleString("en-IN")}</span>` : ""}
+            <span class="text-red-600 font-semibold">₹${currentPrice.toLocaleString("en-IN")}</span>
+            ${discount}
           </p>
           <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Add to Cart</button>
         </div>
@@ -100,29 +104,39 @@
     fetch(sheetURL)
       .then(response => response.json())
       .then(data => {
-        const products = data.feed.entry.map(entry => ({
-          name: entry.gsx$name.$t,
-          price: parseFloat(entry.gsx$price.$t),
-          oldPrice: parseFloat(entry.gsx$oldprice.$t),
-          img: entry.gsx$imageurl.$t,
-          desc: entry.gsx$description.$t
-        }));
+        const products = data.feed.entry.map(entry => {
+          const price = parseFloat(entry.gsx$price.$t.replace(/,/g, ""));
+          const oldPrice = parseFloat(entry.gsx$oldprice.$t.replace(/,/g, ""));
+
+          return {
+            name: entry.gsx$name.$t,
+            price,
+            oldPrice,
+            img: entry.gsx$imageurl.$t,
+            desc: entry.gsx$description.$t
+          };
+        });
 
         const filteredProducts = products.filter(product => product.name !== currentName);
 
-        const relatedHTML = filteredProducts.map(item => `
-          <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
-            <div class="border p-4 rounded shadow hover:shadow-lg transition">
-              <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
-              <h3 class="font-medium">${item.name}</h3>
-              <p>
-                <span class="old-price mr-2">₹${item.oldPrice}</span>
-                <span class="text-red-600 font-semibold">₹${item.price}</span>
-                <span class="ml-2 discount">(${Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)}% OFF)</span>
-              </p>
-            </div>
-          </a>
-        `).join("");
+        const relatedHTML = filteredProducts.map(item => {
+          const hasDiscount = !isNaN(item.oldPrice) && item.oldPrice > item.price;
+          const discount = hasDiscount ? Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100) : 0;
+
+          return `
+            <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
+              <div class="border p-4 rounded shadow hover:shadow-lg transition">
+                <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
+                <h3 class="font-medium">${item.name}</h3>
+                <p>
+                  ${hasDiscount ? `<span class="old-price mr-2">₹${item.oldPrice.toLocaleString("en-IN")}</span>` : ""}
+                  <span class="text-red-600 font-semibold">₹${item.price.toLocaleString("en-IN")}</span>
+                  ${hasDiscount ? `<span class="ml-2 discount">(${discount}% OFF)</span>` : ""}
+                </p>
+              </div>
+            </a>
+          `;
+        }).join("");
 
         document.getElementById("relatedProducts").innerHTML = relatedHTML;
       })
