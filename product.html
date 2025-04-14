@@ -41,7 +41,7 @@
   </header>
 
   <div class="max-w-4xl mx-auto">
-    <div id="productDetails" class="grid md:grid-cols-2 gap-8 mb-10"></div>
+    <div id="productDetails" class="grid md:grid-cols-1 gap-8 mb-10"></div>
 
     <!-- Reviews -->
     <section class="mb-10">
@@ -75,6 +75,7 @@
     const currentOldPrice = parseFloat(params.get("oldPrice")?.replace(/,/g, "") || 0);
     const currentDesc = params.get("desc");
     const currentImg = params.get("img");
+    const otherImages = params.get("otherImages");
 
     if (currentName && currentPrice && currentImg) {
       let discountHTML = "";
@@ -89,9 +90,25 @@
         discountHTML = `<p class="text-red-600 text-2xl font-bold mb-4">₹${currentPrice.toLocaleString("en-IN")}</p>`;
       }
 
+      let otherImagesHTML = "";
+      if (otherImages) {
+        const imageList = otherImages.split(",");
+        otherImagesHTML = imageList.map((imgUrl) => `
+          <img src="${imgUrl.trim()}" class="thumbnail w-20 h-20 object-cover rounded cursor-pointer border-2 border-transparent hover:border-blue-500" onclick="document.getElementById('mainImage').src='${imgUrl.trim()}'" />
+        `).join("");
+      }
+
       document.getElementById("productDetails").innerHTML = `
-        <img src="${currentImg}" alt="${currentName}" class="w-full h-96 object-cover rounded shadow">
-        <div>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto max-h-96 w-full md:w-24">
+            <img src="${currentImg}" class="thumbnail w-20 h-20 object-cover border-2 border-blue-500 rounded cursor-pointer" onclick="document.getElementById('mainImage').src='${currentImg}'" />
+            ${otherImagesHTML}
+          </div>
+          <div class="flex-1">
+            <img id="mainImage" src="${currentImg}" alt="${currentName}" class="w-full h-96 object-cover rounded shadow" />
+          </div>
+        </div>
+        <div class="mt-4">
           <h1 class="text-2xl font-semibold mb-2">${currentName}</h1>
           <p class="mb-4">${currentDesc || ""}</p>
           ${discountHTML}
@@ -108,12 +125,11 @@
         const products = data.feed.entry.map(entry => {
           const price = parseFloat(entry.gsx$price.$t.replace(/,/g, ""));
           const oldPrice = parseFloat(entry.gsx$oldprice.$t.replace(/,/g, ""));
-          const discount = entry.gsx$discount?.$t || "";
           return {
             name: entry.gsx$name.$t,
             price,
             oldPrice,
-            discount,
+            discount: entry.gsx$discount?.$t || "",
             desc: entry.gsx$description.$t,
             category: entry.gsx$category.$t,
             weburl: entry.gsx$weburl.$t,
@@ -132,7 +148,7 @@
             : "";
 
           return `
-            <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
+            <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}&otherImages=${encodeURIComponent(item.otherImages)}">
               <div class="border p-4 rounded shadow hover:shadow-lg transition product-card">
                 <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
                 <h3 class="font-medium">${item.name}</h3>
