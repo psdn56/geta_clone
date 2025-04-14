@@ -153,7 +153,6 @@
       card.className = "product-card border p-4 rounded shadow hover:shadow-lg transition cursor-pointer";
       const sizes = item["SIZES"] ? item["SIZES"].split(",").map(size => `<span class="px-2 py-1 border rounded text-xs">${size.trim()}</span>`).join(' ') : '';
       card.innerHTML = `
-        card.innerHTML = `
   <a href="product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}">
     <img src="${item["WEB URL"]}" alt="${item["NAME"]}" class="w-full h-64 object-cover rounded mb-4" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
     <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
