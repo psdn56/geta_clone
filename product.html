@@ -78,7 +78,7 @@
     const imageList = rawImg.split(/[,|\n|\s]+/).filter(url => url.trim() !== "");
     const currentImg = imageList[0] || "";
 
-    const cartKey = "pankaj_cart";
+    const cartKey = "cart.html";
 
     function getCart() {
       return JSON.parse(localStorage.getItem(cartKey)) || [];
