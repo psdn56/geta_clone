@@ -74,11 +74,56 @@
     const currentPrice = parseFloat(params.get("price")?.replace(/,/g, "") || 0);
     const currentOldPrice = parseFloat(params.get("oldPrice")?.replace(/,/g, "") || 0);
     const currentDesc = params.get("desc");
-
     const rawImg = params.get("img") || "";
     const imageList = rawImg.split(/[,|\n|\s]+/).filter(url => url.trim() !== "");
     const currentImg = imageList[0] || "";
-    const otherImages = imageList.slice(1).join(",");
+
+    const cartKey = "pankaj_cart";
+
+    function getCart() {
+      return JSON.parse(localStorage.getItem(cartKey)) || [];
+    }
+
+    function addToCart(product) {
+      const cart = getCart();
+      if (!cart.some(p => p.name === product.name)) {
+        cart.push(product);
+        localStorage.setItem(cartKey, JSON.stringify(cart));
+      }
+    }
+
+    function isInCart(name) {
+      const cart = getCart();
+      return cart.some(item => item.name === name);
+    }
+
+    function setupAddToCartButton() {
+      const button = document.querySelector(".add-to-cart-btn");
+      if (!button) return;
+
+      const product = {
+        name: currentName,
+        price: currentPrice,
+        oldPrice: currentOldPrice,
+        desc: currentDesc,
+        img: currentImg
+      };
+
+      if (isInCart(currentName)) {
+        button.textContent = "Added to Cart";
+        button.classList.remove("bg-blue-600", "hover:bg-blue-700");
+        button.classList.add("bg-yellow-300", "text-black");
+      }
+
+      button.addEventListener("click", () => {
+        if (!isInCart(currentName)) {
+          addToCart(product);
+          button.textContent = "Added to Cart";
+          button.classList.remove("bg-blue-600", "hover:bg-blue-700");
+          button.classList.add("bg-yellow-300", "text-black");
+        }
+      });
+    }
 
     if (currentName && currentPrice && currentImg) {
       let discountHTML = "";
@@ -114,7 +159,7 @@
           <h1 class="text-2xl font-semibold mb-2">${currentName}</h1>
           <p class="mb-4">${currentDesc || ""}</p>
           ${discountHTML}
-          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mt-4">Add to Cart</button>
+          <button class="add-to-cart-btn bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mt-4">Add to Cart</button>
         </div>
       `;
     }
@@ -142,7 +187,6 @@
 
         const related = products.filter(p => p.name.trim().toLowerCase() !== currentName?.trim().toLowerCase());
 
-
         const relatedHTML = related.map(item => {
           const allImages = item.img.split(/[,|\n|\s]+/).filter(url => url.trim() !== "");
           const firstImage = allImages[0] || "";
@@ -166,11 +210,16 @@
         }).join("");
 
         document.getElementById("relatedProducts").innerHTML = relatedHTML;
+        setupAddToCartButton(); // initialize cart button after rendering
       })
       .catch(err => {
         console.error("Error loading products:", err);
         document.getElementById("relatedProducts").innerHTML = "<p>Error loading related products.</p>";
       });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      setupAddToCartButton();
+    });
   </script>
 </body>
 </html>
