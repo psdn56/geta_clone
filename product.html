@@ -19,17 +19,10 @@
     .product-card:hover { transform: scale(1.05); transition: transform 0.3s; }
     .discount { color: #e74c3c; font-weight: bold; }
     .old-price { text-decoration: line-through; color: #7f8c8d; }
-    .sizes span { margin-right: 5px; }
-    .filter-section { border-right: 1px solid #e0e0e0; }
-    .filters { padding: 10px; }
-    .filters h3 { margin-bottom: 15px; font-size: 1.1rem; font-weight: bold; }
-    .filters ul { padding-left: 0; }
-    .filters ul li { margin-bottom: 10px; }
   </style>
 </head>
 
 <body class="bg-white text-gray-800 font-sans p-6">
-
   <!-- Header -->
   <header class="bg-white shadow mb-6">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -81,7 +74,7 @@
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
     const price = parseFloat(params.get("price"));
-    const oldPrice = parseFloat(params.get("oldPrice")); // 👈 NEW
+    const oldPrice = parseFloat(params.get("oldPrice")) || 0;
     const desc = decodeURIComponent(params.get("desc") || "");
     const img = params.get("img");
 
@@ -90,7 +83,7 @@
       <div>
         <h1 class="text-2xl font-bold mb-2">${name}</h1>
         ${
-          oldPrice && oldPrice > price
+          oldPrice > price
             ? `<p class="text-xl mb-4">
                 <span class="old-price mr-2">₹${oldPrice}</span>
                 <span class="text-red-600 font-semibold">₹${price}</span>
@@ -113,7 +106,7 @@
       if (existingIndex !== -1) {
         cart[existingIndex].quantity += 1;
       } else {
-        cart.push({ name, price, quantity: 1, desc, img });
+        cart.push({ name, price, oldPrice, quantity: 1, desc, img });
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
@@ -138,11 +131,7 @@
     function updateStarDisplay(rating) {
       ratingStars.forEach(star => {
         const starValue = parseInt(star.getAttribute("data-star"));
-        if (starValue <= rating) {
-          star.classList.add("selected");
-        } else {
-          star.classList.remove("selected");
-        }
+        star.classList.toggle("selected", starValue <= rating);
       });
     }
 
@@ -177,17 +166,36 @@
 
     loadReviews();
 
-    // Related Products
+    // Related Products (oldPrice added)
     const relatedHTML = [
-      { name: "Casual Sneakers", price: "999", img: "https://via.placeholder.com/300x200?text=Sneakers" },
-      { name: "Formal Shoes", price: "1299", img: "https://via.placeholder.com/300x200?text=Formal" },
-      { name: "Sporty Runners", price: "1499", img: "https://via.placeholder.com/300x200?text=Runners" }
+      {
+        name: "Casual Sneakers",
+        price: "999",
+        oldPrice: "1499",
+        img: "https://via.placeholder.com/300x200?text=Sneakers"
+      },
+      {
+        name: "Formal Shoes",
+        price: "1299",
+        oldPrice: "1599",
+        img: "https://via.placeholder.com/300x200?text=Formal"
+      },
+      {
+        name: "Sporty Runners",
+        price: "1499",
+        oldPrice: "1899",
+        img: "https://via.placeholder.com/300x200?text=Runners"
+      }
     ].map(item => `
-      <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&desc=${encodeURIComponent("Great choice of " + item.name)}&img=${encodeURIComponent(item.img)}">
+      <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent("Great choice of " + item.name)}&img=${encodeURIComponent(item.img)}">
         <div class="border p-4 rounded shadow hover:shadow-lg transition">
           <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
           <h3 class="font-medium">${item.name}</h3>
-          <p class="text-red-600">₹${item.price}</p>
+          <p>
+            <span class="old-price mr-2">₹${item.oldPrice}</span>
+            <span class="text-red-600 font-semibold">₹${item.price}</span>
+            <span class="ml-2 discount">(${Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)}% OFF)</span>
+          </p>
         </div>
       </a>
     `).join("");
