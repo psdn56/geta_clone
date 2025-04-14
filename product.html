@@ -71,136 +71,49 @@
   </div>
 
   <script>
+    // Fetching the current product details from URL
     const params = new URLSearchParams(window.location.search);
-    const name = params.get("name");
-    const price = parseFloat(params.get("price"));
-    const oldPrice = parseFloat(params.get("oldPrice")) || 0;
-    const desc = decodeURIComponent(params.get("desc") || "");
-    const img = params.get("img");
+    const currentProductName = params.get("name");
 
-    const productHTML = `
-      <img src="${img}" alt="${name}" class="w-full rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'" />
-      <div>
-        <h1 class="text-2xl font-bold mb-2">${name}</h1>
-        ${
-          oldPrice > price
-            ? `<p class="text-xl mb-4">
-                <span class="old-price mr-2">₹${oldPrice}</span>
-                <span class="text-red-600 font-semibold">₹${price}</span>
-                <span class="ml-2 discount">(${Math.round(((oldPrice - price) / oldPrice) * 100)}% OFF)</span>
-              </p>`
-            : `<p class="text-red-600 text-xl font-semibold mb-4">₹${price}</p>`
-        }
-        <p class="mb-6">${desc}</p>
-        <button id="addToCartBtn" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">Add to Cart</button>
-        <p id="cartMsg" class="text-green-600 mt-4 hidden">Added to cart!</p>
-      </div>
-    `;
+    // Google Sheets API URL
+    const sheetURL = "https://spreadsheets.google.com/feeds/list/1FAbcKDkDUTjM3s78xyUn0G7U5LiNKOxBC-3f92PPGXc/od6/public/values?alt=json";
 
-    document.getElementById("productDetails").innerHTML = productHTML;
+    fetch(sheetURL)
+      .then(response => response.json())
+      .then(data => {
+        const products = data.feed.entry.map(entry => ({
+          name: entry.gsx$name.$t,
+          price: entry.gsx$price.$t,
+          oldPrice: entry.gsx$oldprice.$t,
+          img: entry.gsx$imageurl.$t,
+          desc: entry.gsx$description.$t
+        }));
 
-    document.getElementById("addToCartBtn").addEventListener("click", () => {
-      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const existingIndex = cart.findIndex(item => item.name === name);
+        // Filter out the current product from the list
+        const filteredProducts = products.filter(product => product.name !== currentProductName);
 
-      if (existingIndex !== -1) {
-        cart[existingIndex].quantity += 1;
-      } else {
-        cart.push({ name, price, oldPrice, quantity: 1, desc, img });
-      }
+        // Generate HTML for the related products
+        const relatedHTML = filteredProducts.map(item => `
+          <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
+            <div class="border p-4 rounded shadow hover:shadow-lg transition">
+              <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
+              <h3 class="font-medium">${item.name}</h3>
+              <p>
+                <span class="old-price mr-2">₹${item.oldPrice}</span>
+                <span class="text-red-600 font-semibold">₹${item.price}</span>
+                <span class="ml-2 discount">(${Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)}% OFF)</span>
+              </p>
+            </div>
+          </a>
+        `).join("");
 
-      localStorage.setItem("cart", JSON.stringify(cart));
-      document.getElementById("cartMsg").classList.remove("hidden");
-    });
-
-    // Reviews
-    const reviewInput = document.getElementById("reviewInput");
-    const submitReview = document.getElementById("submitReview");
-    const reviewsContainer = document.getElementById("reviewsContainer");
-    const ratingStars = document.querySelectorAll(".star");
-    const reviewKey = `reviews_${name}`;
-    let selectedRating = 0;
-
-    ratingStars.forEach(star => {
-      star.addEventListener("click", () => {
-        selectedRating = parseInt(star.getAttribute("data-star"));
-        updateStarDisplay(selectedRating);
+        // Display related products
+        document.getElementById("relatedProducts").innerHTML = relatedHTML;
+      })
+      .catch(error => {
+        console.error("Error fetching products:", error);
+        document.getElementById("relatedProducts").innerHTML = "<p>Unable to load related products at the moment.</p>";
       });
-    });
-
-    function updateStarDisplay(rating) {
-      ratingStars.forEach(star => {
-        const starValue = parseInt(star.getAttribute("data-star"));
-        star.classList.toggle("selected", starValue <= rating);
-      });
-    }
-
-    function renderStars(rating) {
-      return Array.from({ length: 5 }, (_, i) => i < rating ? "&#9733;" : "&#9734;").join("");
-    }
-
-    function loadReviews() {
-      const reviews = JSON.parse(localStorage.getItem(reviewKey) || "[]");
-      reviewsContainer.innerHTML = reviews.map(({ text, rating }) => `
-        <div class="border p-4 rounded shadow">
-          <div class="text-yellow-500 mb-1" style="font-size: 1.25rem;">${renderStars(rating)}</div>
-          <p class="text-sm text-gray-700">"${text}"</p>
-        </div>
-      `).join('');
-    }
-
-    submitReview.addEventListener("click", () => {
-      const text = reviewInput.value.trim();
-      if (text && selectedRating > 0) {
-        const reviews = JSON.parse(localStorage.getItem(reviewKey) || "[]");
-        reviews.unshift({ text, rating: selectedRating });
-        localStorage.setItem(reviewKey, JSON.stringify(reviews));
-        reviewInput.value = "";
-        selectedRating = 0;
-        updateStarDisplay(0);
-        loadReviews();
-      } else {
-        alert("Please write a review and select a rating.");
-      }
-    });
-
-    loadReviews();
-
-    // Related Products (oldPrice added)
-    const relatedHTML = [
-      {
-        name: "Casual Sneakers",
-        price: "999",
-        oldPrice: "1499",
-        img: "https://via.placeholder.com/300x200?text=Sneakers"
-      },
-      {
-        name: "Formal Shoes",
-        price: "1299",
-        oldPrice: "1599",
-        img: "https://via.placeholder.com/300x200?text=Formal"
-      },
-      {
-        name: "Sporty Runners",
-        price: "1499",
-        oldPrice: "1899",
-        img: "https://via.placeholder.com/300x200?text=Runners"
-      }
-    ].map(item => `
-      <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent("Great choice of " + item.name)}&img=${encodeURIComponent(item.img)}">
-        <div class="border p-4 rounded shadow hover:shadow-lg transition">
-          <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
-          <h3 class="font-medium">${item.name}</h3>
-          <p>
-            <span class="old-price mr-2">₹${item.oldPrice}</span>
-            <span class="text-red-600 font-semibold">₹${item.price}</span>
-            <span class="ml-2 discount">(${Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)}% OFF)</span>
-          </p>
-        </div>
-      </a>
-    `).join("");
-
-    document.getElementById("relatedProducts").innerHTML = relatedHTML;
   </script>
 </body>
 </html>
