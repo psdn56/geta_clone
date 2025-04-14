@@ -140,7 +140,8 @@
           };
         });
 
-        const related = products.filter(p => p.name !== currentName);
+        const related = products.filter(p => p.name.trim().toLowerCase() !== currentName?.trim().toLowerCase());
+
 
         const relatedHTML = related.map(item => {
           const allImages = item.img.split(/[,|\n|\s]+/).filter(url => url.trim() !== "");
