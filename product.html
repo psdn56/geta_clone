@@ -71,11 +71,30 @@
   </div>
 
   <script>
-    // Fetching the current product details from URL
     const params = new URLSearchParams(window.location.search);
-    const currentProductName = params.get("name");
+    const currentName = params.get("name");
+    const currentPrice = params.get("price");
+    const currentOldPrice = params.get("oldPrice");
+    const currentDesc = params.get("desc");
+    const currentImg = params.get("img");
 
-    // Google Sheets API URL
+    // Load current product info
+    if (currentName && currentPrice && currentImg) {
+      document.getElementById("productDetails").innerHTML = `
+        <img src="${currentImg}" alt="${currentName}" class="w-full h-96 object-cover rounded shadow">
+        <div>
+          <h1 class="text-2xl font-semibold mb-2">${currentName}</h1>
+          <p class="mb-2">${currentDesc || ""}</p>
+          <p class="text-lg mb-4">
+            <span class="old-price mr-2">₹${currentOldPrice}</span>
+            <span class="text-red-600 font-semibold">₹${currentPrice}</span>
+            <span class="ml-2 discount">(${Math.round(((currentOldPrice - currentPrice) / currentOldPrice) * 100)}% OFF)</span>
+          </p>
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Add to Cart</button>
+        </div>
+      `;
+    }
+
     const sheetURL = "https://spreadsheets.google.com/feeds/list/1FAbcKDkDUTjM3s78xyUn0G7U5LiNKOxBC-3f92PPGXc/od6/public/values?alt=json";
 
     fetch(sheetURL)
@@ -83,16 +102,14 @@
       .then(data => {
         const products = data.feed.entry.map(entry => ({
           name: entry.gsx$name.$t,
-          price: entry.gsx$price.$t,
-          oldPrice: entry.gsx$oldprice.$t,
+          price: parseFloat(entry.gsx$price.$t),
+          oldPrice: parseFloat(entry.gsx$oldprice.$t),
           img: entry.gsx$imageurl.$t,
           desc: entry.gsx$description.$t
         }));
 
-        // Filter out the current product from the list
-        const filteredProducts = products.filter(product => product.name !== currentProductName);
+        const filteredProducts = products.filter(product => product.name !== currentName);
 
-        // Generate HTML for the related products
         const relatedHTML = filteredProducts.map(item => `
           <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
             <div class="border p-4 rounded shadow hover:shadow-lg transition">
@@ -107,12 +124,11 @@
           </a>
         `).join("");
 
-        // Display related products
         document.getElementById("relatedProducts").innerHTML = relatedHTML;
       })
       .catch(error => {
-        console.error("Error fetching products:", error);
-        document.getElementById("relatedProducts").innerHTML = "<p>Unable to load related products at the moment.</p>";
+        console.error("Error loading products:", error);
+        document.getElementById("relatedProducts").innerHTML = "<p>Error loading related products.</p>";
       });
   </script>
 </body>
