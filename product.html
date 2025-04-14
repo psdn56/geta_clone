@@ -30,7 +30,7 @@
 
 <body class="bg-white text-gray-800 font-sans p-6">
 
-  <!-- Header Start -->
+  <!-- Header -->
   <header class="bg-white shadow mb-6">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
       <a href="index.html" class="text-xl font-bold text-blue-600">Pankaj Footwear</a>
@@ -47,12 +47,12 @@
       </div>
     </div>
   </header>
-  <!-- Header End -->
 
+  <!-- Product Detail -->
   <div class="max-w-4xl mx-auto">
     <div id="productDetails" class="grid md:grid-cols-2 gap-8 mb-10"></div>
 
-    <!-- Reviews Section -->
+    <!-- Reviews -->
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
       <div id="reviewsContainer" class="space-y-4 mb-6"></div>
@@ -80,7 +80,8 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const name = params.get("name");
-    const price = params.get("price");
+    const price = parseFloat(params.get("price"));
+    const oldPrice = parseFloat(params.get("oldPrice")); // 👈 NEW
     const desc = decodeURIComponent(params.get("desc") || "");
     const img = params.get("img");
 
@@ -88,7 +89,15 @@
       <img src="${img}" alt="${name}" class="w-full rounded shadow" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Not+Found'" />
       <div>
         <h1 class="text-2xl font-bold mb-2">${name}</h1>
-        <p class="text-red-600 text-xl font-semibold mb-4">₹${price}</p>
+        ${
+          oldPrice && oldPrice > price
+            ? `<p class="text-xl mb-4">
+                <span class="old-price mr-2">₹${oldPrice}</span>
+                <span class="text-red-600 font-semibold">₹${price}</span>
+                <span class="ml-2 discount">(${Math.round(((oldPrice - price) / oldPrice) * 100)}% OFF)</span>
+              </p>`
+            : `<p class="text-red-600 text-xl font-semibold mb-4">₹${price}</p>`
+        }
         <p class="mb-6">${desc}</p>
         <button id="addToCartBtn" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">Add to Cart</button>
         <p id="cartMsg" class="text-green-600 mt-4 hidden">Added to cart!</p>
@@ -99,13 +108,12 @@
 
     document.getElementById("addToCartBtn").addEventListener("click", () => {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const parsedPrice = parseFloat(price);
       const existingIndex = cart.findIndex(item => item.name === name);
 
       if (existingIndex !== -1) {
         cart[existingIndex].quantity += 1;
       } else {
-        cart.push({ name, price: parsedPrice, quantity: 1, desc, img });
+        cart.push({ name, price, quantity: 1, desc, img });
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
