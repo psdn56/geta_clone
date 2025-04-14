@@ -22,17 +22,6 @@
       <input type="text" name="street" placeholder="Street Name" class="w-full border p-2 rounded" required>
       <input type="text" name="area" placeholder="Area / Landmark" class="w-full border p-2 rounded" required>
 
-      <h3 class="text-lg font-semibold mt-4">Make UPI Payment</h3>
-      <p>Pay via UPI to <strong>psdn56@oksbi</strong> using your preferred UPI app.</p>
-      <p class="text-sm text-gray-500">Use this payment link: <br><a href="upi://pay?pa=psdn56@oksbi&pn=PankajFootwear&cu=INR" class="text-blue-500 underline">upi://pay?pa=psdn56@oksbi&pn=PankajFootwear</a></p>
-
-      <select name="paymentStatus" class="w-full border p-2 rounded mt-2" required>
-        <option value="">Select Payment Status</option>
-        <option value="Success">Success</option>
-        <option value="Failed">Failed</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-
       <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Submit Order</button>
     </form>
     <p id="responseMsg" class="mt-4 text-center text-sm text-gray-700"></p>
@@ -109,8 +98,7 @@
         "Street Name": formData.get("street"),
         "Area/Landmark": formData.get("area"),
         "Item Purchased": JSON.stringify(itemsFormatted),
-        "Total": totalAmount,
-        "Payment Status": formData.get("paymentStatus")
+        "Total": totalAmount
       };
 
       try {
