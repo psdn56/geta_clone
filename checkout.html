@@ -81,7 +81,8 @@
 
     const form = document.getElementById("checkoutForm");
     const responseMsg = document.getElementById("responseMsg");
-    const sheetURL = "https://script.google.com/macros/s/AKfycbwvVL0D18NE-7d71fkex-JHuA8SHSxIs94oJmWc-tEUjnyGH8ZrQTNyY_mHDnBcSDBY/exec";  // Your deployed Apps Script URL
+
+    const sheetURL = "https://script.google.com/macros/s/AKfycbz25z_vw4WCDtOjnGl-nQY12efrBVXGxa03M6FKLWKv9BpCUcuOiKzBE9FucliX-kgt/exec";  // Your deployed Apps Script URL
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -90,71 +91,48 @@
       const phone = formData.get("phone");
 
       // Generate the Order ID
-      <script>
-  function generateOrderId(phone) {
-    const now = new Date();
-    const year = now.getFullYear().toString().slice(-2);
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const time = now.toTimeString().slice(0, 8).replaceAll(":", "");
-    const last4PhoneDigits = phone.slice(-4);
-    return `OID${year}${day}${month}${last4PhoneDigits}${time}`;
-  }
+      const orderId = generateOrderId(phone);
 
-  const form = document.getElementById("checkoutForm");
-  const responseMsg = document.getElementById("responseMsg");
+      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+      const itemsFormatted = cartItems.map(item => `${item.name} x${item.quantity}`);
+      const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const sheetURL = "https://script.google.com/macros/s/AKfycbyAX4fgVlmrjF72P8qmUsMrPtnYYg_giZypYJQ2-4I/exec"; // Replace with your deployment URL
+      const data = {
+        "Order ID": orderId,
+        "Name": formData.get("name"),
+        "Email": formData.get("email"),
+        "Phone": formData.get("phone"),
+        "Pincode": formData.get("pincode"),
+        "City": formData.get("city"),
+        "State": formData.get("state"),
+        "Floor/Flat No.": formData.get("floor"),
+        "Street Name": formData.get("street"),
+        "Area/Landmark": formData.get("area"),
+        "Item Purchased": JSON.stringify(itemsFormatted),
+        "Total": totalAmount,
+        "Payment Status": formData.get("paymentStatus")
+      };
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+      try {
+        const res = await fetch(sheetURL, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
 
-    const formData = new FormData(form);
-    const phone = formData.get("phone");
-    const orderId = generateOrderId(phone);
-
-    const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-    const itemsFormatted = cartItems.map(item => `${item.name} x${item.quantity}`);
-    const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    const data = {
-      "Order ID": orderId,
-      "Name": formData.get("name"),
-      "Email": formData.get("email"),
-      "Phone": formData.get("phone"),
-      "Pincode": formData.get("pincode"),
-      "City": formData.get("city"),
-      "State": formData.get("state"),
-      "Floor/Flat No.": formData.get("floor"),
-      "Street Name": formData.get("street"),
-      "Area/Landmark": formData.get("area"),
-      "Item Purchased": JSON.stringify(itemsFormatted),
-      "Total": totalAmount,
-      "Payment Status": formData.get("paymentStatus")
-    };
-
-    try {
-      const res = await fetch(sheetURL, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
+        if (res.ok) {
+          responseMsg.textContent = "✅ Order submitted successfully!";
+          form.reset();
+          localStorage.removeItem("cart");
+        } else {
+          responseMsg.textContent = "❌ Failed to submit order. Please try again.";
         }
-      });
-
-      if (res.ok) {
-        responseMsg.textContent = "✅ Order submitted successfully!";
-        form.reset();
-        localStorage.removeItem("cart");
-      } else {
-        responseMsg.textContent = "❌ Failed to submit order. Please try again.";
+      } catch (err) {
+        responseMsg.textContent = "⚠️ Error connecting to server. Please check your internet.";
       }
-    } catch (err) {
-      responseMsg.textContent = "⚠️ Error connecting to server. Please check your internet.";
-    }
-  });
-</script>
-
+    });
   </script>
 </body>
 </html>
