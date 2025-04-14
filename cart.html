@@ -7,6 +7,22 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-white text-gray-800 font-sans">
+
+  <!-- Header with cart icon -->
+  <header class="bg-white shadow p-4 mb-6">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold text-blue-600">Pankaj Footwear</a>
+      <a href="cart.html" class="relative">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.293 2.293A1 1 0 007 17h10a1 1 0 00.894-.553L20 13M9 21h.01M15 21h.01" />
+        </svg>
+        <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">0</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Cart content -->
   <div class="max-w-4xl mx-auto px-4 py-10">
     <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
     <div id="cartItems" class="space-y-4"></div>
@@ -16,13 +32,23 @@
     </div>
   </div>
 
+  <!-- Script -->
   <script>
+    const cartKey = "pankaj_cart";
     const cartItemsContainer = document.getElementById('cartItems');
     const cartTotalEl = document.getElementById('cartTotal');
     const checkoutButton = document.getElementById('checkoutBtn');
 
+    function getCart() {
+      return JSON.parse(localStorage.getItem(cartKey)) || [];
+    }
+
+    function setCart(cart) {
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+    }
+
     function renderCart() {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let cart = getCart();
       cartItemsContainer.innerHTML = '';
       let total = 0;
 
@@ -35,7 +61,8 @@
       }
 
       cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
+        const qty = item.quantity || 1;
+        const itemTotal = item.price * qty;
         total += itemTotal;
 
         const div = document.createElement('div');
@@ -47,7 +74,7 @@
             <p>Price: ₹${item.price}</p>
             <div class="flex items-center space-x-2 mt-2">
               <button onclick="updateQty(${index}, -1)" class="px-2 bg-gray-200 rounded hover:bg-gray-300">-</button>
-              <span>${item.quantity}</span>
+              <span>${qty}</span>
               <button onclick="updateQty(${index}, 1)" class="px-2 bg-gray-200 rounded hover:bg-gray-300">+</button>
             </div>
             <p class="mt-1 text-sm text-gray-600">Subtotal: ₹${itemTotal.toFixed(2)}</p>
@@ -59,25 +86,34 @@
       });
 
       cartTotalEl.textContent = total.toFixed(2);
+      updateCartCount();
     }
 
     function updateQty(index, change) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart[index].quantity += change;
+      let cart = getCart();
+      cart[index].quantity = (cart[index].quantity || 1) + change;
       if (cart[index].quantity <= 0) {
         cart.splice(index, 1);
       }
-      localStorage.setItem("cart", JSON.stringify(cart));
+      setCart(cart);
       renderCart();
     }
 
     function removeItem(index) {
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let cart = getCart();
       cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
+      setCart(cart);
       renderCart();
     }
 
+    function updateCartCount() {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      const badge = document.getElementById('cartCount');
+      if (badge) badge.textContent = count;
+    }
+
+    // Initial render
     renderCart();
   </script>
 </body>
