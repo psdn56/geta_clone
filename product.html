@@ -74,8 +74,11 @@
     const currentPrice = parseFloat(params.get("price")?.replace(/,/g, "") || 0);
     const currentOldPrice = parseFloat(params.get("oldPrice")?.replace(/,/g, "") || 0);
     const currentDesc = params.get("desc");
-    const currentImg = params.get("img");
-    const otherImages = params.get("otherImages");
+
+    const rawImg = params.get("img") || "";
+    const imageList = rawImg.split(/[,|\n|\s]+/).filter(url => url.trim() !== "");
+    const currentImg = imageList[0] || "";
+    const otherImages = imageList.slice(1).join(",");
 
     if (currentName && currentPrice && currentImg) {
       let discountHTML = "";
@@ -91,9 +94,8 @@
       }
 
       let otherImagesHTML = "";
-      if (otherImages) {
-        const imageList = otherImages.split(",");
-        otherImagesHTML = imageList.map((imgUrl) => `
+      if (imageList.length > 1) {
+        otherImagesHTML = imageList.slice(1).map((imgUrl) => `
           <img src="${imgUrl.trim()}" class="thumbnail w-20 h-20 object-cover rounded cursor-pointer border-2 border-transparent hover:border-blue-500" onclick="document.getElementById('mainImage').src='${imgUrl.trim()}'" />
         `).join("");
       }
@@ -141,6 +143,9 @@
         const related = products.filter(p => p.name !== currentName);
 
         const relatedHTML = related.map(item => {
+          const allImages = item.img.split(/[,|\n|\s]+/).filter(url => url.trim() !== "");
+          const firstImage = allImages[0] || "";
+
           const showDiscount = !isNaN(item.oldPrice) && item.oldPrice > item.price;
           const discountText = showDiscount
             ? `<p class="discount">Discount: ${Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100)}%</p>
@@ -148,9 +153,9 @@
             : "";
 
           return `
-            <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}&otherImages=${encodeURIComponent(item.otherImages)}">
+            <a href="product.html?name=${encodeURIComponent(item.name)}&price=${item.price}&oldPrice=${item.oldPrice}&desc=${encodeURIComponent(item.desc)}&img=${encodeURIComponent(item.img)}">
               <div class="border p-4 rounded shadow hover:shadow-lg transition product-card">
-                <img src="${item.img}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
+                <img src="${firstImage}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-2" />
                 <h3 class="font-medium">${item.name}</h3>
                 <p class="text-red-600 font-semibold">₹${item.price.toLocaleString("en-IN")}</p>
                 ${discountText}
