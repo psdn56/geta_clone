@@ -16,7 +16,11 @@
       <input type="text" name="pincode" placeholder="Pincode" class="w-full border p-2 rounded" required>
       <input type="text" name="city" placeholder="City" class="w-full border p-2 rounded" required>
       <input type="text" name="state" placeholder="State" class="w-full border p-2 rounded" required>
-      <textarea name="address" placeholder="Full Address" class="w-full border p-2 rounded" required></textarea>
+
+      <!-- Separate address fields -->
+      <input type="text" name="floor" placeholder="Floor / Flat No." class="w-full border p-2 rounded" required>
+      <input type="text" name="street" placeholder="Street Name" class="w-full border p-2 rounded" required>
+      <input type="text" name="area" placeholder="Area / Landmark" class="w-full border p-2 rounded" required>
 
       <h3 class="text-lg font-semibold mt-4">Make UPI Payment</h3>
       <p>Pay via UPI to <strong>psdn56@oksbi</strong> using your preferred UPI app.</p>
@@ -34,15 +38,46 @@
     <p id="responseMsg" class="mt-4 text-center text-sm text-gray-700"></p>
   </div>
 
+  <!-- Auto-detect City/State from Pincode -->
+  <script>
+    const pincodeInput = document.querySelector('input[name="pincode"]');
+    const cityInput = document.querySelector('input[name="city"]');
+    const stateInput = document.querySelector('input[name="state"]');
+
+    pincodeInput.addEventListener("blur", async () => {
+      const pin = pincodeInput.value.trim();
+      if (pin.length === 6) {
+        try {
+          const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+          const data = await res.json();
+          if (data[0].Status === "Success") {
+            const postOffice = data[0].PostOffice[0];
+            cityInput.value = postOffice.District;
+            stateInput.value = postOffice.State;
+          } else {
+            cityInput.value = "";
+            stateInput.value = "";
+            alert("Invalid pincode or data not found.");
+          }
+        } catch (err) {
+          alert("Failed to fetch location. Please check your internet connection.");
+        }
+      }
+    });
+  </script>
+
+  <!-- Submit Form to Google Sheets -->
   <script>
     const form = document.getElementById("checkoutForm");
     const responseMsg = document.getElementById("responseMsg");
-    const sheetURL = "https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec"; // Replace with your deployed Apps Script URL
+    const sheetURL = "https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec"; // Your deployed Apps Script URL
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const formData = new FormData(form);
+      const address = `${formData.get("floor")}, ${formData.get("street")}, ${formData.get("area")}`;
+
       const data = {
         name: formData.get("name"),
         email: formData.get("email"),
@@ -50,7 +85,7 @@
         pincode: formData.get("pincode"),
         city: formData.get("city"),
         state: formData.get("state"),
-        address: formData.get("address"),
+        address: address,
         paymentStatus: formData.get("paymentStatus"),
         items: JSON.parse(localStorage.getItem("cart") || "[]"),
         total: JSON.parse(localStorage.getItem("cart") || "[]").reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -66,6 +101,7 @@
         if (res.ok) {
           responseMsg.textContent = "Order submitted!";
           localStorage.removeItem("cart");
+          form.reset();
         } else {
           responseMsg.textContent = "Error submitting order. Try again.";
         }
