@@ -157,7 +157,7 @@
           <h3 class="text-lg font-semibold">${item["NAME"]}</h3>
           <p class="text-red-600">₹${item["PRICE"]}</p>
           <p class="old-price">₹${item["OLD PRICE"] || ""}</p>
-          <p class="discount">${item["DISCOUNT"] || ""}</p>
+          <p class="discount">%${item["DISCOUNT"] || "DISCOUNT="}</p>
           <div class="sizes">${sizes}</div>
         </a>
       `;
