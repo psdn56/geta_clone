@@ -84,7 +84,7 @@
           </select>
         </div>
       </div>
-      <div id="menContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+      <div id="kidsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
       <div class="flex justify-center mt-6">
         <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Previous</button>
         <span class="mx-4">Page 1 of 192</span>
@@ -132,9 +132,9 @@
   // Pagination
   const itemsPerPage = 16;
   let currentPage = 1;
-  let menItems = [];
+  let kidsItems = [];
 
-  const container = document.getElementById("menContainer");
+  const container = document.getElementById("kidsContainer");
   const productCount = document.getElementById("productCount");
   const pageIndicator = document.querySelector(".mx-4");
   const prevBtn = document.querySelector("button:nth-of-type(1)");
@@ -145,7 +145,7 @@
 
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    const currentItems = menItems.slice(start, end);
+    const currentItems = kidsItems.slice(start, end);
 
     currentItems.forEach(item => {
       const card = document.createElement("div");
@@ -166,9 +166,9 @@
       container.appendChild(card);
     });
 
-    const totalPages = Math.ceil(menItems.length / itemsPerPage);
+    const totalPages = Math.ceil(kidsItems.length / itemsPerPage);
     pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
-    productCount.textContent = `Showing ${currentItems.length > 0 ? `${start + 1} – ${Math.min(end, menItems.length)}` : 0} of ${menItems.length} products`;
+    productCount.textContent = `Showing ${currentItems.length > 0 ? `${start + 1} – ${Math.min(end, kidsItems.length)}` : 0} of ${kidsItems.length} products`;
 
     prevBtn.disabled = currentPage === 1;
     nextBtn.disabled = currentPage === totalPages;
@@ -184,7 +184,7 @@
   });
 
   nextBtn.addEventListener("click", () => {
-    const totalPages = Math.ceil(menItems.length / itemsPerPage);
+    const totalPages = Math.ceil(kidsItems.length / itemsPerPage);
     if (currentPage < totalPages) {
       currentPage++;
       renderPage(currentPage);
@@ -195,9 +195,9 @@
   fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
     .then(res => res.json())
     .then(data => {
-      menItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "men");
-      if (menItems.length === 0) {
-        container.innerHTML = `<p class="text-center text-gray-600 col-span-full">No men's products available.</p>`;
+      kidsItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "kids");
+      if (kidsItems.length === 0) {
+        container.innerHTML = `<p class="text-center text-gray-600 col-span-full">No kids's products available.</p>`;
         return;
       }
       renderPage(currentPage);
