@@ -68,21 +68,20 @@
 
   <!-- Function to Generate Order ID -->
   <script>
-    // Function to generate Order ID
     function generateOrderId(phone) {
       const now = new Date();
-      const year = now.getFullYear().toString().slice(-2); // Last 2 digits of year
-      const day = String(now.getDate()).padStart(2, '0'); // Day (2 digits)
-      const month = String(now.getMonth() + 1).padStart(2, '0'); // Month (2 digits)
-      const time = now.toTimeString().slice(0, 8).replace(":", "").replace(":", ""); // HHMMSS
-      const last4PhoneDigits = phone.slice(-4); // Last 4 digits of phone number
+      const year = now.getFullYear().toString().slice(-2);
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const time = now.toTimeString().slice(0, 8).replace(":", "").replace(":", "");
+      const last4PhoneDigits = phone.slice(-4);
 
       return `OID${year}${day}${month}${last4PhoneDigits}${time}`;
     }
 
     const form = document.getElementById("checkoutForm");
     const responseMsg = document.getElementById("responseMsg");
-    const sheetURL = "https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec"; // Your deployed Apps Script URL
+    const sheetURL = "https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec";  // Your deployed Apps Script URL
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -92,9 +91,6 @@
 
       // Generate the Order ID
       const orderId = generateOrderId(phone);
-
-      // Combine the address fields
-      const address = `${formData.get("floor")}, ${formData.get("street")}, ${formData.get("area")}`;
 
       const data = {
         "Timestamp": new Date().toLocaleString(),
