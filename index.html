@@ -5,13 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pankaj Footwear</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <meta name="description" content="Shop stylish footwear for men, women, and kids. Comfort, quality, and style in every step." />
   <meta property="og:title" content="Footwear" />
   <meta property="og:image" content="link_to_featured_image.jpg" />
   <meta property="og:url" content="https://yourdomain.com" />
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
+  authDomain: "psdn56-493d0.firebaseapp.com",
+  projectId: "psdn56-493d0",
+  storageBucket: "psdn56-493d0.firebasestorage.app",
+  messagingSenderId: "270176732328",
+  appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
+};
+    
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
+  </script>
 </head>
 <body class="font-sans bg-white text-gray-800">
 
@@ -28,15 +46,7 @@
       <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
       <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
     </ul>
-    <div id="loginDropdownContainer" class="hidden md:block">
-      <button id="loginButton" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
-      <div id="userMenu" class="hidden bg-white shadow-md rounded-md absolute top-14 right-0 w-48 p-3 space-y-2">
-        <a href="profile.html" class="block text-gray-700">My Profile</a>
-        <a href="orders.html" class="block text-gray-700">Orders</a>
-        <a href="wishlist.html" class="block text-gray-700">Wishlist</a>
-        <button id="logoutButton" class="w-full bg-red-500 text-white px-4 py-2 rounded">Logout</button>
-      </div>
-    </div>
+    <div id="loginDropdownContainer" class="hidden md:block"></div>
     <div class="md:hidden">
       <button id="menuBtn" class="text-2xl text-gray-700" aria-label="Open Menu">&#9776;</button>
     </div>
@@ -88,66 +98,16 @@
     <div id="visitorCount" class="mt-2 text-sm text-gray-300"></div>
   </footer>
 
-  <!-- Firebase and JavaScript -->
+  <!-- Scripts -->
   <script>
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID",
-      measurementId: "YOUR_MEASUREMENT_ID"
-    };
-
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const firestore = firebase.firestore();
-
-    // Login Button Click
-    document.getElementById('loginButton').addEventListener('click', () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          document.getElementById('loginDropdownContainer').innerHTML = `
-            <button id="logoutButton" class="bg-blue-500 text-white px-4 py-2 rounded">Logout</button>
-          `;
-          document.getElementById('userMenu').classList.remove('hidden');
-          updateUI(user);
-        })
-        .catch((error) => {
-          console.error("Login error:", error);
-        });
+    // Mobile Menu Toggle
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
     });
 
-    // Logout Button Click
-    document.getElementById('logoutButton').addEventListener('click', () => {
-      auth.signOut().then(() => {
-        document.getElementById('loginDropdownContainer').innerHTML = `
-          <button id="loginButton" class="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
-        `;
-        document.getElementById('userMenu').classList.add('hidden');
-        updateUI(null);
-      });
-    });
-
-    // Update UI Based on User Status
-    function updateUI(user) {
-      if (user) {
-        document.getElementById('loginButton').innerText = 'Welcome, ' + user.displayName;
-      } else {
-        document.getElementById('loginButton').innerText = 'Login';
-      }
-    }
-
-    // Initially check user status
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        updateUI(user);
-      }
+    // WhatsApp Toggle
+    document.getElementById("whatsappToggle").addEventListener("click", () => {
+      document.getElementById("whatsappOptions").classList.toggle("hidden");
     });
 
     // DateTime
@@ -160,11 +120,10 @@
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
-    // Fetch Data from Google Sheets (as before)
+    // Fetch Data from Google Sheets
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
       .then(res => res.json())
       .then(data => {
-        console.log(data); // Log the data to check if it’s correctly fetched
         const heroSlider = document.getElementById("heroSlider");
         const imageContainer = document.getElementById("imageContainer");
         const dotsContainer = document.querySelector(".dot-container");
@@ -175,7 +134,6 @@
           featuredItems.find(item => item["NAME"] === name)
         );
 
-        // Clear previous content
         heroSlider.innerHTML = "";
         imageContainer.innerHTML = "";
         dotsContainer.innerHTML = "";
@@ -184,12 +142,6 @@
           const imageUrl = item["WEB URL"];
           const imageAlt = item["NAME"];
 
-          if (!imageUrl) {
-            console.error('Missing image URL for item:', item); // Log error if image URL is missing
-            return;
-          }
-
-          // === Hero Slider ===
           const slideDiv = document.createElement("div");
           slideDiv.className = "relative w-full h-full flex-shrink-0 group transition-transform duration-500 ease-in-out";
           slideDiv.innerHTML = `
@@ -198,13 +150,11 @@
           `;
           heroSlider.appendChild(slideDiv);
 
-          // === Dots ===
           const dot = document.createElement("span");
           dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer mx-1";
           dot.dataset.index = index;
           dotsContainer.appendChild(dot);
 
-          // === Featured Products Section ===
           const productDiv = document.createElement("div");
           productDiv.className = "bg-gray-200 p-4 rounded-lg";
 
@@ -232,7 +182,7 @@
           imageContainer.appendChild(productDiv);
         });
 
-        // Slider logic (same as before)
+        // Slider logic
         let index = 0;
         const slides = document.querySelectorAll("#heroSlider .group");
         const dots = document.querySelectorAll(".dot");
