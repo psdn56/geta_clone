@@ -2,131 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout - Pankaj Footwear</title>
-  <!-- Link to Tailwind CSS -->
-  <link href="dist/styles.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout</title>
+  <!-- ✅ TailwindCSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 p-6 font-sans">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow-lg">
-    <h2 class="text-2xl font-semibold mb-6 text-center">Checkout</h2>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4">Checkout</h2>
     <form id="checkoutForm" class="space-y-4">
-      <input type="text" name="name" placeholder="Full Name" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="email" name="email" placeholder="Email" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="text" name="phone" placeholder="Phone Number" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="text" name="pincode" placeholder="Pincode" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="text" name="city" placeholder="City" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="text" name="state" placeholder="State" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <input type="text" name="Name" placeholder="Full Name" required class="w-full border p-2 rounded" />
+      <input type="email" name="Email" placeholder="Email" required class="w-full border p-2 rounded" />
+      <input type="tel" name="Phone" placeholder="Phone" required class="w-full border p-2 rounded" />
+      <input type="text" name="Pincode" placeholder="Pincode" required class="w-full border p-2 rounded" />
+      <input type="text" name="City" placeholder="City" required class="w-full border p-2 rounded" />
+      <input type="text" name="State" placeholder="State" required class="w-full border p-2 rounded" />
+      <input type="text" name="Floor/Flat No." placeholder="Floor/Flat No." class="w-full border p-2 rounded" />
+      <input type="text" name="Street Name" placeholder="Street Name" class="w-full border p-2 rounded" />
+      <input type="text" name="Area/Landmark" placeholder="Area/Landmark" class="w-full border p-2 rounded" />
+      <input type="text" name="Item Purchased" placeholder="Items" required class="w-full border p-2 rounded" />
+      <input type="number" name="Total" placeholder="Total Amount" required class="w-full border p-2 rounded" />
 
-      <!-- Separate address fields -->
-      <input type="text" name="floor" placeholder="Floor / Flat No." class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="text" name="street" placeholder="Street Name" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-      <input type="text" name="area" placeholder="Area / Landmark" class="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-
-      <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">Submit Order</button>
+      <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">Place Order</button>
     </form>
-    <p id="responseMsg" class="mt-4 text-center text-sm text-gray-700"></p>
   </div>
 
-  <!-- Auto-detect City/State from Pincode -->
   <script>
-    const pincodeInput = document.querySelector('input[name="pincode"]');
-    const cityInput = document.querySelector('input[name="city"]');
-    const stateInput = document.querySelector('input[name="state"]');
+    const checkoutForm = document.getElementById("checkoutForm");
 
-    pincodeInput.addEventListener("blur", async () => {
-      const pin = pincodeInput.value.trim();
-      if (pin.length === 6) {
-        try {
-          const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
-          const data = await res.json();
-          if (data[0].Status === "Success") {
-            const postOffice = data[0].PostOffice[0];
-            cityInput.value = postOffice.District;
-            stateInput.value = postOffice.State;
-          } else {
-            cityInput.value = "";
-            stateInput.value = "";
-            alert("Invalid pincode or data not found.");
-          }
-        } catch (err) {
-          alert("Failed to fetch location. Please check your internet connection.");
-        }
-      }
-    });
-
-    // Function to Generate Order ID
-    function generateOrderId(phone) {
-      const now = new Date();
-      const year = now.getFullYear().toString().slice(-2);
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const time = now.toTimeString().slice(0, 8).replace(":", "").replace(":", "");
-      const last4PhoneDigits = phone.slice(-4);
-
-      return `OID${year}${day}${month}${last4PhoneDigits}${time}`;
-    }
-
-    const form = document.getElementById("checkoutForm");
-    const responseMsg = document.getElementById("responseMsg");
-
-    const sheetURL = "https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec";  // Your deployed Apps Script URL
-
-    form.addEventListener("submit", async (e) => {
+    checkoutForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const formData = new FormData(form);
-      const phone = formData.get("phone");
+      const formData = new FormData(checkoutForm);
+      const orderData = {};
 
-      // Generate the Order ID
-      const orderId = generateOrderId(phone);
+      formData.forEach((value, key) => {
+        orderData[key] = value;
+      });
 
-      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-      const itemsFormatted = cartItems.map(item => `${item.name} x${item.quantity}`);
-      const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      // Add a timestamp and order ID
+      orderData["Order ID"] = "OID-" + Date.now();
 
-      const data = {
-        "Order ID": orderId,
-        "Name": formData.get("name"),
-        "Email": formData.get("email"),
-        "Phone": formData.get("phone"),
-        "Pincode": formData.get("pincode"),
-        "City": formData.get("city"),
-        "State": formData.get("state"),
-        "Floor/Flat No.": formData.get("floor"),
-        "Street Name": formData.get("street"),
-        "Area/Landmark": formData.get("area"),
-        "Item Purchased": JSON.stringify(itemsFormatted),
-        "Total": totalAmount
-      };
+      console.log("Sending data to Google Apps Script:", orderData);
 
-      try {
-        // Log the data being sent
-        console.log("Sending data to Google Apps Script:", data);
-
-        // Send data to Google Apps Script
-        const res = await fetch(sheetURL, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json"
-          }
+      fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      })
+        .then(() => {
+          alert("Order submitted successfully!");
+          checkoutForm.reset();
+        })
+        .catch((error) => {
+          console.error("Error submitting order:", error);
+          alert("There was a problem submitting your order.");
         });
-
-        console.log("Response from server:", res);
-
-        if (res.ok) {
-          // Redirect to the thank you page with order details
-          const thankYouUrl = `thank-you.html?orderId=${orderId}&name=${encodeURIComponent(formData.get("name"))}&total=${totalAmount}&items=${encodeURIComponent(JSON.stringify(itemsFormatted))}`;
-          window.location.href = thankYouUrl;
-        } else {
-          responseMsg.textContent = "❌ Failed to submit order. Please try again.";
-        }
-      } catch (err) {
-        // Log the error for debugging
-        console.error("Error submitting order:", err);
-        responseMsg.textContent = "⚠️ Error connecting to server. Please check your internet.";
-      }
     });
   </script>
 </body>
