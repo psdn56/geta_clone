@@ -9,12 +9,11 @@
 <body class="bg-gray-100 p-6 font-sans">
   <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
     <h2 class="text-2xl font-bold mb-4">Checkout</h2>
-    
     <form id="checkoutForm" class="space-y-4">
       <input type="text" name="name" placeholder="Full Name" class="w-full border p-2 rounded" required>
       <input type="email" name="email" placeholder="Email" class="w-full border p-2 rounded" required>
-      <input type="text" name="phone" placeholder="Phone Number" pattern="[6-9]\\d{9}" title="Enter a valid 10-digit Indian number" class="w-full border p-2 rounded" required>
-      <input type="text" name="pincode" placeholder="Pincode" pattern="\\d{6}" title="Enter a 6-digit pincode" class="w-full border p-2 rounded" required>
+      <input type="text" name="phone" placeholder="Phone Number" class="w-full border p-2 rounded" required>
+      <input type="text" name="pincode" placeholder="Pincode" class="w-full border p-2 rounded" required>
       <input type="text" name="city" placeholder="City" class="w-full border p-2 rounded" required>
       <input type="text" name="state" placeholder="State" class="w-full border p-2 rounded" required>
 
@@ -22,16 +21,16 @@
       <input type="text" name="street" placeholder="Street Name" class="w-full border p-2 rounded" required>
       <input type="text" name="area" placeholder="Area / Landmark" class="w-full border p-2 rounded" required>
 
-      <!-- Cart Summary -->
-      <div id="cartSummary" class="mt-6 p-4 border rounded bg-gray-50">
-        <h3 class="font-semibold mb-2">Your Cart:</h3>
-        <ul id="itemList" class="list-disc list-inside text-sm text-gray-700"></ul>
-        <p class="font-semibold mt-2">Total: ₹<span id="cartTotal">0</span></p>
-      </div>
-
-      <button type="submit" id="submitBtn" class="bg-green-600 text-white px-4 py-2 rounded">Submit Order</button>
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Submit Order</button>
     </form>
+
     <p id="responseMsg" class="mt-4 text-center text-sm text-gray-700"></p>
+
+    <!-- Google Pay Button -->
+    <a id="gpayBtn" target="_blank"
+       class="hidden bg-black text-white px-6 py-3 rounded text-center mt-4 block w-full text-lg font-medium hover:bg-gray-900 transition">
+      Pay with Google Pay
+    </a>
   </div>
 
   <!-- Auto-detect City/State from Pincode -->
@@ -62,52 +61,32 @@
     });
   </script>
 
-  <!-- Display Cart Items -->
-  <script>
-    const itemList = document.getElementById("itemList");
-    const cartTotal = document.getElementById("cartTotal");
-
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    let total = 0;
-
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} x${item.quantity}`;
-      itemList.appendChild(li);
-      total += item.price * item.quantity;
-    });
-
-    cartTotal.textContent = total;
-  </script>
-
-  <!-- Order Submission Script -->
+  <!-- Checkout Submission & GPay Logic -->
   <script>
     function generateOrderId(phone) {
       const now = new Date();
       const year = now.getFullYear().toString().slice(-2);
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0');
-      const time = now.toISOString().replace(/[-T:.Z]/g, "").slice(8, 14); // HHMMSS
+      const time = now.toTimeString().slice(0, 8).replaceAll(":", "");
       const last4PhoneDigits = phone.slice(-4);
       return `OID${year}${day}${month}${last4PhoneDigits}${time}`;
     }
 
     const form = document.getElementById("checkoutForm");
     const responseMsg = document.getElementById("responseMsg");
-    const submitBtn = document.getElementById("submitBtn");
+    const gpayBtn = document.getElementById("gpayBtn");
 
-    const sheetURL = "https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec";
+    const sheetURL = "https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec"; // Replace with your actual URL
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
 
       const formData = new FormData(form);
       const phone = formData.get("phone");
 
       const orderId = generateOrderId(phone);
+
       const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
       const itemsFormatted = cartItems.map(item => `${item.name} x${item.quantity}`);
       const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -116,7 +95,7 @@
         "Order ID": orderId,
         "Name": formData.get("name"),
         "Email": formData.get("email"),
-        "Phone": phone,
+        "Phone": formData.get("phone"),
         "Pincode": formData.get("pincode"),
         "City": formData.get("city"),
         "State": formData.get("state"),
@@ -142,18 +121,16 @@
           form.reset();
           localStorage.removeItem("cart");
 
-          setTimeout(() => {
-            window.location.href = "/thank-you.html";
-          }, 2000);
+          // Show GPay Button
+          const upiId = "psdn56@oksbi";  // 🔁 Replace with your UPI ID
+          gpayBtn.href = `upi://pay?pa=${upiId}&pn=PankajFootwear&am=${totalAmount}&cu=INR&tn=Order%20${orderId}`;
+          gpayBtn.classList.remove("hidden");
         } else {
           responseMsg.textContent = "❌ Failed to submit order. Please try again.";
         }
       } catch (err) {
         responseMsg.textContent = "⚠️ Error connecting to server. Please check your internet.";
       }
-
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Order";
     });
   </script>
 </body>
