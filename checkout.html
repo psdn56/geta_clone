@@ -70,7 +70,7 @@
     const form = document.getElementById("checkoutForm");
     const responseMsg = document.getElementById("responseMsg");
 
-    const sheetURL = "https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec";  // Your deployed Apps Script URL
+    const sheetURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";  // Your deployed Apps Script URL
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -101,6 +101,9 @@
       };
 
       try {
+        // Log the data being sent
+        console.log("Sending data to Google Apps Script:", data);
+
         // Send data to Google Apps Script
         const res = await fetch(sheetURL, {
           method: "POST",
@@ -110,6 +113,8 @@
           }
         });
 
+        console.log("Response from server:", res);
+
         if (res.ok) {
           // Redirect to the thank you page with order details
           const thankYouUrl = `thank-you.html?orderId=${orderId}&name=${encodeURIComponent(formData.get("name"))}&total=${totalAmount}&items=${encodeURIComponent(JSON.stringify(itemsFormatted))}`;
@@ -118,6 +123,8 @@
           responseMsg.textContent = "❌ Failed to submit order. Please try again.";
         }
       } catch (err) {
+        // Log the error for debugging
+        console.error("Error submitting order:", err);
         responseMsg.textContent = "⚠️ Error connecting to server. Please check your internet.";
       }
     });
