@@ -46,13 +46,21 @@
         <h3 class="text-xl font-semibold mt-4">Payment Options</h3>
         <div class="space-y-2 mt-2">
           <label class="flex items-center space-x-2">
-            <input type="radio" name="paymentMethod" value="UPI" class="form-radio" />
+            <input type="radio" name="paymentMethod" value="UPI" class="form-radio" id="upiPayment" />
             <span>UPI (Google Pay)</span>
           </label>
           <label class="flex items-center space-x-2">
             <input type="radio" name="paymentMethod" value="COD" class="form-radio" />
             <span>Cash on Delivery</span>
           </label>
+        </div>
+
+        <!-- UPI Payment Section (Hidden initially) -->
+        <div id="upiPaymentSection" class="mt-4 hidden">
+          <p class="text-sm text-gray-600 mb-2">Click below to pay via Google Pay (UPI):</p>
+          <button id="upiPayButton" class="w-full bg-blue-600 text-white p-2 rounded mt-4">
+            Pay Now via Google Pay (UPI)
+          </button>
         </div>
 
         <!-- Place Order Button -->
@@ -62,11 +70,11 @@
   </div>
 
   <script>
-    // Fetch cart data from localStorage (or sessionStorage)
+    // Fetch cart data from localStorage
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-
-    // Calculate total price
     let totalAmount = 0;
+
+    // Display cart items in the order summary and calculate total amount
     const orderSummary = document.getElementById('orderSummary');
     cartItems.forEach(item => {
       totalAmount += item.price * item.quantity;
@@ -105,6 +113,30 @@
           alert("Failed to fetch location. Please check your internet connection.");
         }
       }
+    });
+
+    // Handle Payment Method Selection
+    const upiPaymentRadio = document.getElementById('upiPayment');
+    const upiPaymentSection = document.getElementById('upiPaymentSection');
+
+    upiPaymentRadio.addEventListener('change', () => {
+      if (upiPaymentRadio.checked) {
+        upiPaymentSection.style.display = 'block';
+      } else {
+        upiPaymentSection.style.display = 'none';
+      }
+    });
+
+    // Google Pay UPI Integration
+    const upiPayButton = document.getElementById('upiPayButton');
+    const vendorUpiId = 'yourvendorupi@upi'; // Replace with your actual UPI ID
+
+    upiPayButton.addEventListener('click', () => {
+      // Construct the UPI payment URL
+      const upiUrl = `upi://pay?pa=${vendorUpiId}&pn=YourStoreName&mc=1234&tid=TXN1234567890&txnref=TXN1234567890&am=${totalAmount}&cu=INR&url=https://yourstore.com`;
+
+      // Open UPI payment
+      window.location.href = upiUrl;
     });
 
     // Handle Form Submission
