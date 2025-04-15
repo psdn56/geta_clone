@@ -11,19 +11,26 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
+    // Firebase Configuration
     const firebaseConfig = {
-  apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
-  authDomain: "psdn56-493d0.firebaseapp.com",
-  projectId: "psdn56-493d0",
-  storageBucket: "psdn56-493d0.firebasestorage.app",
-  messagingSenderId: "270176732328",
-  appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
-};
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
   </script>
 
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="Shop stylish footwear for men, women, and kids. Comfort, quality, and style in every step." />
+  <meta property="og:title" content="Footwear" />
+  <meta property="og:image" content="link_to_featured_image.jpg" />
+  <meta property="og:url" content="https://yourdomain.com" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -63,22 +70,174 @@
     }
   </style>
 </head>
-<body>
+<body class="font-sans bg-white text-gray-800">
 
-  <!-- Login Button / User Info -->
-  <div id="loginDropdownContainer">
-    <button id="loginBtn">Login</button>
-    <div id="userMenu">
-      <p id="userName"></p>
-      <button id="logoutBtn">Logout</button>
+  <!-- Navbar -->
+  <nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <img src="your-logo.png" alt="Pankaj Footwear Logo" class="h-20 w-auto">
+      <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
+    </div>
+    <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
+      <li><a href="men.html" class="hover:text-red-500">Men</a></li>
+      <li><a href="women.html" class="hover:text-red-500">Women</a></li>
+      <li><a href="kids.html" class="hover:text-red-500">Kids</a></li>
+      <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
+      <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
+    </ul>
+    <div id="loginDropdownContainer" class="hidden md:block"></div>
+    <div class="md:hidden">
+      <button id="menuBtn" class="text-2xl text-gray-700" aria-label="Open Menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
+    <a href="men.html" class="block py-2 hover:text-red-500">Men</a>
+    <a href="women.html" class="block py-2 hover:text-red-500">Women</a>
+    <a href="kids.html" class="block py-2 hover:text-red-500">Kids</a>
+    <a href="sale.html" class="block py-2 hover:text-red-500">Sale</a>
+  </div>
+
+  <!-- Hero Slider -->
+  <section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
+    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
+      <!-- Slides will be added here dynamically -->
+    </div>
+    <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
+      <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
+    </div>
+    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
+    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
+    <div class="dot-container absolute bottom-4 w-full flex justify-center space-x-2 z-10"></div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="px-4 sm:px-6 py-10">
+    <h2 class="text-xl sm:text-2xl font-bold mb-6">Featured</h2>
+    <div id="imageContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+  </section>
+
+  <!-- WhatsApp Toggle -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <button id="whatsappToggle" class="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2">
+      <img src="iconwhatsapp.gif" alt="WhatsApp" class="w-6 h-6" />
+      <span class="hidden sm:inline">Chat with us</span>
+    </button>
+    <div id="whatsappOptions" class="hidden mt-2 space-y-2">
+      <a href="https://wa.me/917704915695?text=Hi%20I%20have%20a%20query%20about%20Orders" target="_blank" class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">Orders Support</a>
+      <a href="https://wa.me/97619892263?text=Hi%20I%20have%20a%20query%20about%20Returns" target="_blank" class="block bg-white text-black px-4 py-2 rounded shadow hover:bg-gray-100">Other Support</a>
     </div>
   </div>
 
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 mt-10">
+    <div class="container mx-auto text-center px-4" id="datetime">
+      &copy; 2025 Pankaj Footwear. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
   <script>
-    // Handle login
-    document.getElementById("loginBtn").addEventListener("click", () => {
+    // Mobile Menu Toggle
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    // WhatsApp Toggle
+    document.getElementById("whatsappToggle").addEventListener("click", () => {
+      document.getElementById("whatsappOptions").classList.toggle("hidden");
+    });
+
+    // DateTime
+    function updateDateTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const formatted = now.toLocaleString();
+      document.getElementById('datetime').innerHTML = `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    // Fetch Data from Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
+      .then(res => res.json())
+      .then(data => {
+        console.log(data); // Log the data to check if it’s correctly fetched
+        const heroSlider = document.getElementById("heroSlider");
+        const imageContainer = document.getElementById("imageContainer");
+        const dotsContainer = document.querySelector(".dot-container");
+
+        const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
+
+        const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"]))).map(name =>
+          featuredItems.find(item => item["NAME"] === name)
+        );
+
+        // Clear previous content
+        heroSlider.innerHTML = "";
+        imageContainer.innerHTML = "";
+        dotsContainer.innerHTML = "";
+
+        uniqueFeaturedItems.forEach((item, index) => {
+          const imageUrl = item["WEB URL"];
+          const imageAlt = item["NAME"];
+
+          if (!imageUrl) {
+            console.error('Missing image URL for item:', item); // Log error if image URL is missing
+            return;
+          }
+
+          // === Hero Slider
+          const slide = document.createElement("div");
+          slide.classList.add("w-full");
+          slide.innerHTML = `
+            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover">
+          `;
+          heroSlider.appendChild(slide);
+
+          // === Product Image Grid
+          const productDiv = document.createElement("div");
+          productDiv.classList.add("border", "p-4", "rounded-lg", "shadow-lg", "hover:shadow-xl", "transition");
+          productDiv.innerHTML = `
+            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-48 object-cover mb-4 rounded-md">
+            <p class="text-center font-semibold">${item["NAME"]}</p>
+          `;
+          imageContainer.appendChild(productDiv);
+
+          // === Dots
+          const dot = document.createElement("div");
+          dot.classList.add("w-4", "h-4", "bg-white", "rounded-full", "cursor-pointer");
+          dot.addEventListener("click", () => {
+            document.getElementById("heroSlider").style.transform = `translateX(-${index * 100}%)`;
+          });
+          dotsContainer.appendChild(dot);
+        });
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll("#heroSlider > div");
+        const dots = document.querySelectorAll(".dot-container > div");
+
+        function changeSlide() {
+          currentSlide = (currentSlide + 1) % slides.length;
+          document.getElementById("heroSlider").style.transform = `translateX(-${currentSlide * 100}%)`;
+          dots.forEach((dot, index) => {
+            dot.classList.toggle("bg-gray-500", index !== currentSlide);
+          });
+        }
+
+        // Auto slide every 5 seconds
+        setInterval(changeSlide, 5000);
+      });
+
+    // Firebase Login/Logout
+    const loginBtn = document.getElementById("loginDropdownContainer");
+    const userMenu = document.getElementById("userMenu");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    loginBtn.addEventListener("click", () => {
       if (auth.currentUser) {
-        document.getElementById("userMenu").classList.toggle("hidden");
+        userMenu.classList.toggle("hidden");
       } else {
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithPopup(provider)
@@ -92,7 +251,7 @@
               lastLogin: new Date().toISOString()
             };
             db.collection("users").doc(user.uid).set(userData, { merge: true });
-            renderUser(userData.name);
+            loginBtn.textContent = userData.name;
           })
           .catch((error) => {
             console.error("Login failed", error);
@@ -100,39 +259,20 @@
       }
     });
 
-    // Handle logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
+    logoutBtn.addEventListener("click", () => {
       auth.signOut().then(() => {
-        renderUser(null);
+        loginBtn.textContent = "Login";
+        userMenu.classList.add("hidden");
       });
     });
 
-    // Update UI
-    function renderUser(name) {
-      const loginBtn = document.getElementById("loginBtn");
-      const userMenu = document.getElementById("userMenu");
-      const userName = document.getElementById("userName");
-
-      if (name) {
-        loginBtn.textContent = name.split(" ")[0];
-        userName.textContent = name;
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        loginBtn.textContent = user.displayName;
         userMenu.style.display = "block";
-
-        loginBtn.addEventListener("click", () => {
-          userMenu.style.display = userMenu.style.display === "block" ? "none" : "block";
-        });
       } else {
         loginBtn.textContent = "Login";
         userMenu.style.display = "none";
-      }
-    }
-
-    // Check login state on load
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        renderUser(user.displayName);
-      } else {
-        renderUser(null);
       }
     });
   </script>
