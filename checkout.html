@@ -2,21 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout - Flipkart Style</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - Pankaj Footwear</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
   <style>
-    .sticky-summary {
-      position: sticky;
-      top: 20px;
-    }
+    .sticky-summary { position: sticky; top: 20px; }
   </style>
 </head>
 <body class="bg-gray-100">
-
   <div class="max-w-7xl mx-auto p-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Left Column: Delivery Address Form -->
+      
+      <!-- Delivery Address Form -->
       <div class="bg-white p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold mb-4">Delivery Address</h2>
         <form id="checkoutForm" class="space-y-4">
@@ -31,13 +28,10 @@
         </form>
       </div>
 
-      <!-- Right Column: Order Summary -->
+      <!-- Order Summary -->
       <div class="bg-white p-6 rounded-lg shadow-lg sticky-summary">
         <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
-        <div id="orderSummary">
-          <!-- Order items will be listed here dynamically -->
-        </div>
-
+        <div id="orderSummary"></div>
         <div class="border-t mt-4 pt-4">
           <p class="text-lg font-bold">Total: ₹<span id="totalAmount">0</span></p>
         </div>
@@ -55,122 +49,127 @@
           </label>
         </div>
 
-        <!-- UPI Payment Section (Hidden initially) -->
+        <!-- UPI Payment Section -->
         <div id="upiPaymentSection" class="mt-4 hidden">
           <p class="text-sm text-gray-600 mb-2">Click below to pay via Google Pay (UPI):</p>
-          <button id="upiPayButton" class="w-full bg-blue-600 text-white p-2 rounded mt-4">
-            Pay Now via Google Pay (UPI)
-          </button>
         </div>
 
-        <!-- Place Order Button -->
-        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded mt-4" id="placeOrderBtn">Place Order</button>
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded mt-4" id="placeOrderBtn">
+          Place Order
+        </button>
       </div>
     </div>
   </div>
 
   <script>
-    // Fetch cart data from localStorage
+    // Show order summary and total
     const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const orderSummary = document.getElementById('orderSummary');
     let totalAmount = 0;
 
-    // Display cart items in the order summary and calculate total amount
-    const orderSummary = document.getElementById('orderSummary');
     cartItems.forEach(item => {
       totalAmount += item.price * item.quantity;
-
-      // Display each item in the order summary
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'flex justify-between mb-2';
-      itemDiv.innerHTML = `${item.name} x ${item.quantity} <span>₹${item.price * item.quantity}</span>`;
-      orderSummary.appendChild(itemDiv);
+      const div = document.createElement('div');
+      div.className = 'flex justify-between mb-2';
+      div.innerHTML = `${item.name} x ${item.quantity} <span>₹${item.price * item.quantity}</span>`;
+      orderSummary.appendChild(div);
     });
-
-    // Update total amount in the summary
     document.getElementById('totalAmount').innerText = totalAmount;
 
-    // Auto-pickup City & State when user enters Pincode
-    const pincodeInput = document.getElementById('pincode');
-    const cityInput = document.getElementById('city');
-    const stateInput = document.getElementById('state');
-
-    pincodeInput.addEventListener("blur", async () => {
-      const pin = pincodeInput.value.trim();
+    // Pincode auto-fill
+    document.getElementById('pincode').addEventListener("blur", async () => {
+      const pin = document.getElementById('pincode').value.trim();
       if (pin.length === 6) {
         try {
           const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
           const data = await res.json();
           if (data[0].Status === "Success") {
-            const postOffice = data[0].PostOffice[0];
-            cityInput.value = postOffice.District;
-            stateInput.value = postOffice.State;
+            document.getElementById('city').value = data[0].PostOffice[0].District;
+            document.getElementById('state').value = data[0].PostOffice[0].State;
           } else {
-            cityInput.value = "";
-            stateInput.value = "";
-            alert("Invalid pincode or data not found.");
+            alert("Invalid pincode.");
           }
-        } catch (err) {
-          alert("Failed to fetch location. Please check your internet connection.");
+        } catch {
+          alert("Network error while fetching pincode info.");
         }
       }
     });
 
-    // Handle Payment Method Selection
-    const upiPaymentRadio = document.getElementById('upiPayment');
-    const upiPaymentSection = document.getElementById('upiPaymentSection');
+    // Show UPI section when selected
+    const upiRadio = document.getElementById('upiPayment');
+    upiRadio.addEventListener('change', () => {
+      document.getElementById('upiPaymentSection').style.display = 'block';
+    });
+    document.querySelector('input[value="COD"]').addEventListener('change', () => {
+      document.getElementById('upiPaymentSection').style.display = 'none';
+    });
 
-    upiPaymentRadio.addEventListener('change', () => {
-      if (upiPaymentRadio.checked) {
-        upiPaymentSection.style.display = 'block';
-      } else {
-        upiPaymentSection.style.display = 'none';
+    // Collect Order Data
+    function collectOrderData() {
+      const formData = new FormData(document.getElementById("checkoutForm"));
+      const orderData = {};
+      formData.forEach((value, key) => { orderData[key] = value });
+      orderData["Items"] = cartItems;
+      orderData["Total"] = totalAmount;
+      return orderData;
+    }
+
+    // Place Order Handler
+    document.getElementById('placeOrderBtn').addEventListener("click", (e) => {
+      e.preventDefault();
+      const selected = document.querySelector('input[name="paymentMethod"]:checked');
+      if (!selected) return alert("Please select a payment method.");
+      const method = selected.value;
+
+      if (method === "COD") {
+        const orderData = collectOrderData();
+        orderData["Payment Status"] = "Cash on Delivery";
+
+        fetch("https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderData)
+        }).then(() => {
+          alert("Order placed successfully with Cash on Delivery!");
+          document.getElementById("checkoutForm").reset();
+          localStorage.removeItem("cartItems");
+          window.location.href = "thankyou.html";
+        }).catch(err => {
+          console.error(err);
+          alert("Error placing COD order.");
+        });
+
+      } else if (method === "UPI") {
+        const orderData = collectOrderData();
+        sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
+        const upiUrl = `upi://pay?pa=psdn56@oksbi&pn=Pankaj Footwear&am=${totalAmount}&cu=INR&url=https://psdn56.github.io/geta_clone/checkout.html?paid=true`;
+        window.location.href = upiUrl;
       }
     });
 
-    // Google Pay UPI Integration
-    const upiPayButton = document.getElementById('upiPayButton');
-    const vendorUpiId = 'yourvendorupi@upi'; // Replace with your actual UPI ID
-
-    upiPayButton.addEventListener('click', () => {
-      // Construct the UPI payment URL
-      const upiUrl = `upi://pay?pa=psdn56@oksbi&pn=Pankaj Footwear&mc=1234&tid=TXN1234567890&txnref=TXN1234567890&am=${totalAmount}&cu=INR&url=https://psdn56.github.io/geta_clone/index.html`;
-
-      // Open UPI payment
-      window.location.href = upiUrl;
-    });
-
-    // Handle Form Submission
-    document.getElementById('placeOrderBtn').addEventListener("click", function(e) {
-      e.preventDefault();
-      const formData = new FormData(document.getElementById("checkoutForm"));
-      const orderData = {};
-
-      formData.forEach((value, key) => {
-        orderData[key] = value;
-      });
-
-      // Add cart items and total amount to order data
-      orderData["Items"] = cartItems;
-      orderData["Total Amount"] = totalAmount;
-
-      console.log("Sending order data:", orderData);
-
-      // Send order data to your server or Google Apps Script (adjust as needed)
-      fetch("https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      })
-        .then(() => {
-          alert("Order placed successfully!");
-          document.getElementById("checkoutForm").reset();
-        })
-        .catch((error) => {
-          console.error("Error placing order:", error);
-          alert("There was an error placing your order.");
-        });
+    // On UPI success return
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isPaid = urlParams.get("paid");
+      if (isPaid === "true") {
+        const orderData = JSON.parse(sessionStorage.getItem("pendingOrder") || "{}");
+        if (orderData && orderData.Items) {
+          orderData["Payment Status"] = "Paid via UPI";
+          fetch("https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orderData)
+          }).then(() => {
+            alert("UPI payment successful. Order placed!");
+            sessionStorage.removeItem("pendingOrder");
+            localStorage.removeItem("cartItems");
+            window.location.href = "thankyou.html";
+          }).catch(err => {
+            console.error(err);
+            alert("Failed to place order after UPI payment.");
+          });
+        }
+      }
     });
   </script>
 </body>
