@@ -159,6 +159,45 @@
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
+    // Firebase Authentication & Firestore logic
+    const loginDropdownContainer = document.getElementById('loginDropdownContainer');
+
+    // Check if user is logged in and display the appropriate options
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const userName = user.displayName || user.email;
+        loginDropdownContainer.innerHTML = `
+          <button id="logoutBtn" class="text-gray-700">Logout (${userName})</button>
+          <div id="userMenu" class="hidden">
+            <p>Welcome, ${userName}</p>
+            <button id="logoutBtn" class="text-gray-700">Logout</button>
+          </div>
+        `;
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          auth.signOut().then(() => {
+            loginDropdownContainer.innerHTML = `<button id="loginBtn" class="text-gray-700">Login</button>`;
+          });
+        });
+      } else {
+        loginDropdownContainer.innerHTML = `<button id="loginBtn" class="text-gray-700">Login</button>`;
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          auth.signInWithPopup(provider).then(result => {
+            const user = result.user;
+            db.collection("users").doc(user.uid).set({
+              name: user.displayName,
+              email: user.email,
+              lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+              loginDropdownContainer.innerHTML = `
+                <button id="logoutBtn" class="text-gray-700">Logout (${user.displayName || user.email})</button>
+              `;
+            });
+          });
+        });
+      }
+    });
+
     // Fetch Data from Google Sheets
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
       .then(res => res.json())
@@ -182,99 +221,66 @@
         uniqueFeaturedItems.forEach((item, index) => {
           const imageUrl = item["WEB URL"];
           const imageAlt = item["NAME"];
+          const productUrl = item["WEB URL"]; // Assuming you have the product URL in the sheet
 
           if (!imageUrl) {
             console.error('Missing image URL for item:', item); // Log error if image URL is missing
             return;
           }
 
-          // === Hero Slider
-          const slide = document.createElement("div");
-          slide.classList.add("w-full");
-          slide.innerHTML = `
-            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover">
-          `;
-          heroSlider.appendChild(slide);
+          // === Hero Slider Image ===
+          const heroImage = document.createElement("div");
+          heroImage.classList.add("flex-none", "w-full", "h-full", "bg-cover", "bg-center");
+          heroImage.style.backgroundImage = `url(${imageUrl})`;
+          heroSlider.appendChild(heroImage);
 
-          // === Product Image Grid
-          const productDiv = document.createElement("div");
-          productDiv.classList.add("border", "p-4", "rounded-lg", "shadow-lg", "hover:shadow-xl", "transition");
-          productDiv.innerHTML = `
-            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-48 object-cover mb-4 rounded-md">
-            <p class="text-center font-semibold">${item["NAME"]}</p>
-          `;
-          imageContainer.appendChild(productDiv);
+          // === Featured Image ===
+          const productImage = document.createElement("a");
+          productImage.href = productUrl;
+          productImage.classList.add("relative", "h-full", "w-full", "cursor-pointer", "overflow-hidden", "group");
 
-          // === Dots
-          const dot = document.createElement("div");
-          dot.classList.add("w-4", "h-4", "bg-white", "rounded-full", "cursor-pointer");
-          dot.addEventListener("click", () => {
-            document.getElementById("heroSlider").style.transform = `translateX(-${index * 100}%)`;
-          });
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          img.alt = imageAlt;
+          img.classList.add("w-full", "h-full", "object-cover", "transition-transform", "duration-300", "group-hover:scale-110");
+          productImage.appendChild(img);
+          imageContainer.appendChild(productImage);
+
+          // === Dot Navigation for Hero Slider ===
+          const dot = document.createElement("button");
+          dot.classList.add("w-2", "h-2", "bg-white", "rounded-full", "cursor-pointer", "transition", "opacity-50");
+          dot.setAttribute("data-index", index);
           dotsContainer.appendChild(dot);
         });
 
-        let currentSlide = 0;
-        const slides = document.querySelectorAll("#heroSlider > div");
-        const dots = document.querySelectorAll(".dot-container > div");
+        let slideIndex = 0;
+        const slides = heroSlider.children;
+        const dots = dotsContainer.children;
 
-        function changeSlide() {
-          currentSlide = (currentSlide + 1) % slides.length;
-          document.getElementById("heroSlider").style.transform = `translateX(-${currentSlide * 100}%)`;
-          dots.forEach((dot, index) => {
-            dot.classList.toggle("bg-gray-500", index !== currentSlide);
+        // Show slide function
+        function showSlide() {
+          Array.from(slides).forEach((slide, index) => {
+            slide.style.transform = `translateX(-${slideIndex * 100}%)`;
+          });
+          Array.from(dots).forEach((dot, index) => {
+            dot.style.opacity = index === slideIndex ? "1" : "0.5";
           });
         }
 
-        // Auto slide every 5 seconds
-        setInterval(changeSlide, 5000);
+        // Next and Previous Buttons
+        document.getElementById("nextBtn").addEventListener("click", () => {
+          slideIndex = (slideIndex + 1) % slides.length;
+          showSlide();
+        });
+
+        document.getElementById("prevBtn").addEventListener("click", () => {
+          slideIndex = (slideIndex - 1 + slides.length) % slides.length;
+          showSlide();
+        });
+
+        // Initialize first slide
+        showSlide();
       });
-
-    // Firebase Login/Logout
-    const loginBtn = document.getElementById("loginDropdownContainer");
-    const userMenu = document.getElementById("userMenu");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    loginBtn.addEventListener("click", () => {
-      if (auth.currentUser) {
-        userMenu.classList.toggle("hidden");
-      } else {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithPopup(provider)
-          .then((result) => {
-            const user = result.user;
-            const userData = {
-              name: user.displayName,
-              email: user.email,
-              uid: user.uid,
-              photoURL: user.photoURL,
-              lastLogin: new Date().toISOString()
-            };
-            db.collection("users").doc(user.uid).set(userData, { merge: true });
-            loginBtn.textContent = userData.name;
-          })
-          .catch((error) => {
-            console.error("Login failed", error);
-          });
-      }
-    });
-
-    logoutBtn.addEventListener("click", () => {
-      auth.signOut().then(() => {
-        loginBtn.textContent = "Login";
-        userMenu.classList.add("hidden");
-      });
-    });
-
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        loginBtn.textContent = user.displayName;
-        userMenu.style.display = "block";
-      } else {
-        loginBtn.textContent = "Login";
-        userMenu.style.display = "none";
-      }
-    });
   </script>
 </body>
 </html>
