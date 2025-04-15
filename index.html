@@ -13,24 +13,26 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+<!-- Your Firebase config object -->
 <script>
-  // Your Firebase config object
   const firebaseConfig = {
-  apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
-  authDomain: "psdn56-493d0.firebaseapp.com",
-  projectId: "psdn56-493d0",
-  storageBucket: "psdn56-493d0.firebasestorage.app",
-  messagingSenderId: "270176732328",
-  appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
-};
+    apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
+    authDomain: "psdn56-493d0.firebaseapp.com",
+    projectId: "psdn56-493d0",
+    storageBucket: "psdn56-493d0.firebasestorage.app",
+    messagingSenderId: "270176732328",
+    appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
+  };
 
   // Initialize Firebase
   const app = firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const firestore = firebase.firestore();
 </script>
-
 </head>
 <body class="font-sans bg-white text-gray-800">
 
