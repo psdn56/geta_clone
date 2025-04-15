@@ -14,20 +14,94 @@
       <input type="text" name="Name" placeholder="Full Name" required class="w-full border p-2 rounded" />
       <input type="email" name="Email" placeholder="Email" required class="w-full border p-2 rounded" />
       <input type="tel" name="Phone" placeholder="Phone" required class="w-full border p-2 rounded" />
-      <input type="text" name="Pincode" placeholder="Pincode" required class="w-full border p-2 rounded" />
-      <input type="text" name="City" placeholder="City" required class="w-full border p-2 rounded" />
-      <input type="text" name="State" placeholder="State" required class="w-full border p-2 rounded" />
+      <input type="text" name="Pincode" placeholder="Pincode" required class="w-full border p-2 rounded" id="pincode" />
+      <input type="text" name="City" placeholder="City" required class="w-full border p-2 rounded" id="city" readonly />
+      <input type="text" name="State" placeholder="State" required class="w-full border p-2 rounded" id="state" readonly />
       <input type="text" name="Floor/Flat No." placeholder="Floor/Flat No." class="w-full border p-2 rounded" />
       <input type="text" name="Street Name" placeholder="Street Name" class="w-full border p-2 rounded" />
       <input type="text" name="Area/Landmark" placeholder="Area/Landmark" class="w-full border p-2 rounded" />
-      <input type="text" name="Item Purchased" placeholder="Items" required class="w-full border p-2 rounded" />
-      <input type="number" name="Total" placeholder="Total Amount" required class="w-full border p-2 rounded" />
+      
+      <!-- Auto-pickup Item Name and Total -->
+      <input type="text" name="Item Purchased" id="itemPurchased" placeholder="Items" required class="w-full border p-2 rounded" readonly />
+      <input type="number" name="Total" id="totalAmount" placeholder="Total Amount" required class="w-full border p-2 rounded" readonly />
+
+      <!-- Google Pay Button -->
+      <div id="googlePayButton"></div>
 
       <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">Place Order</button>
     </form>
   </div>
 
   <script>
+    // Fetch cart data from localStorage (or sessionStorage)
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    // Calculate total price
+    let totalAmount = 0;
+    const itemNames = cartItems.map(item => item.name).join(', '); // Join all item names into one string
+    cartItems.forEach(item => {
+      totalAmount += item.price * item.quantity; // Calculate the total price
+    });
+
+    // Auto-fill Item Purchased and Total Amount fields
+    document.getElementById('itemPurchased').value = itemNames;
+    document.getElementById('totalAmount').value = totalAmount;
+
+    // Auto-pickup City & State when user enters Pincode
+    const pincodeInput = document.getElementById('pincode');
+    const cityInput = document.getElementById('city');
+    const stateInput = document.getElementById('state');
+
+    pincodeInput.addEventListener("blur", async () => {
+      const pin = pincodeInput.value.trim();
+      if (pin.length === 6) {
+        try {
+          const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+          const data = await res.json();
+          if (data[0].Status === "Success") {
+            const postOffice = data[0].PostOffice[0];
+            cityInput.value = postOffice.District;
+            stateInput.value = postOffice.State;
+          } else {
+            cityInput.value = "";
+            stateInput.value = "";
+            alert("Invalid pincode or data not found.");
+          }
+        } catch (err) {
+          alert("Failed to fetch location. Please check your internet connection.");
+        }
+      }
+    });
+
+    // Google Pay Button Setup
+    function onGooglePayLoaded() {
+      const paymentsClient = new google.payments.api.PaymentsClient({
+        environment: 'TEST', // Change to 'PRODUCTION' in real use
+      });
+
+      const googlePayButton = paymentsClient.createButton({
+        onClick: onGooglePaymentDataLoaded,
+        buttonColor: 'black',
+        buttonType: 'long',
+      });
+
+      document.getElementById('googlePayButton').appendChild(googlePayButton);
+    }
+
+    function onGooglePaymentDataLoaded(paymentData) {
+      console.log("Payment Data: ", paymentData);
+      // You would send payment data to your backend here for further processing
+    }
+
+    // Load Google Pay
+    window.onload = function() {
+      const script = document.createElement('script');
+      script.src = 'https://pay.google.com/gp/p/js/pay.js';
+      script.onload = onGooglePayLoaded;
+      document.body.appendChild(script);
+    };
+
+    // Handle Form Submission
     const checkoutForm = document.getElementById("checkoutForm");
 
     checkoutForm.addEventListener("submit", function (e) {
