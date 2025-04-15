@@ -63,5 +63,24 @@
         });
     });
   </script>
+  <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // Your Firebase configuration (replace with your own)
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
+    authDomain: "psdn56-493d0.firebaseapp.com",
+    projectId: "psdn56-493d0",
+    storageBucket: "psdn56-493d0.firebasestorage.app",
+    messagingSenderId: "270176732328",
+    appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
 </body>
 </html>
