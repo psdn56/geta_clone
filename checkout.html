@@ -2,174 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout - Pankaj Footwear</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-  <style>
-    .sticky-summary { position: sticky; top: 20px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout</title>
+  <!-- ✅ TailwindCSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-  <div class="max-w-7xl mx-auto p-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      
-      <!-- Delivery Address Form -->
-      <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-bold mb-4">Delivery Address</h2>
-        <form id="checkoutForm" class="space-y-4">
-          <input type="text" name="Name" placeholder="Full Name" required class="w-full border p-2 rounded" />
-          <input type="email" name="Email" placeholder="Email" required class="w-full border p-2 rounded" />
-          <input type="tel" name="Phone" placeholder="Phone" required class="w-full border p-2 rounded" />
-          <input type="text" name="Pincode" placeholder="Pincode" required class="w-full border p-2 rounded" id="pincode" />
-          <input type="text" name="City" placeholder="City" required class="w-full border p-2 rounded" id="city" readonly />
-          <input type="text" name="State" placeholder="State" required class="w-full border p-2 rounded" id="state" readonly />
-          <input type="text" name="Street Name" placeholder="Street Name" class="w-full border p-2 rounded" />
-          <input type="text" name="Area/Landmark" placeholder="Area/Landmark" class="w-full border p-2 rounded" />
-        </form>
-      </div>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-4">Checkout</h2>
+    <form id="checkoutForm" class="space-y-4">
+      <input type="text" name="Name" placeholder="Full Name" required class="w-full border p-2 rounded" />
+      <input type="email" name="Email" placeholder="Email" required class="w-full border p-2 rounded" />
+      <input type="tel" name="Phone" placeholder="Phone" required class="w-full border p-2 rounded" />
+      <input type="text" name="Pincode" placeholder="Pincode" required class="w-full border p-2 rounded" />
+      <input type="text" name="City" placeholder="City" required class="w-full border p-2 rounded" />
+      <input type="text" name="State" placeholder="State" required class="w-full border p-2 rounded" />
+      <input type="text" name="Floor/Flat No." placeholder="Floor/Flat No." class="w-full border p-2 rounded" />
+      <input type="text" name="Street Name" placeholder="Street Name" class="w-full border p-2 rounded" />
+      <input type="text" name="Area/Landmark" placeholder="Area/Landmark" class="w-full border p-2 rounded" />
+      <input type="text" name="Item Purchased" placeholder="Items" required class="w-full border p-2 rounded" />
+      <input type="number" name="Total" placeholder="Total Amount" required class="w-full border p-2 rounded" />
 
-      <!-- Order Summary -->
-      <div class="bg-white p-6 rounded-lg shadow-lg sticky-summary">
-        <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
-        <div id="orderSummary"></div>
-        <div class="border-t mt-4 pt-4">
-          <p class="text-lg font-bold">Total: ₹<span id="totalAmount">0</span></p>
-        </div>
-
-        <!-- Payment Options -->
-        <h3 class="text-xl font-semibold mt-4">Payment Options</h3>
-        <div class="space-y-2 mt-2">
-          <label class="flex items-center space-x-2">
-            <input type="radio" name="paymentMethod" value="UPI" class="form-radio" id="upiPayment" />
-            <span>UPI (Google Pay)</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input type="radio" name="paymentMethod" value="COD" class="form-radio" />
-            <span>Cash on Delivery</span>
-          </label>
-        </div>
-
-        <!-- UPI Payment Section -->
-        <div id="upiPaymentSection" class="mt-4 hidden">
-          <p class="text-sm text-gray-600 mb-2">Click below to pay via Google Pay (UPI):</p>
-        </div>
-
-        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded mt-4" id="placeOrderBtn">
-          Place Order
-        </button>
-      </div>
-    </div>
+      <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">Place Order</button>
+    </form>
   </div>
 
   <script>
-    // Show order summary and total
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    const orderSummary = document.getElementById('orderSummary');
-    let totalAmount = 0;
+    const checkoutForm = document.getElementById("checkoutForm");
 
-    cartItems.forEach(item => {
-      totalAmount += item.price * item.quantity;
-      const div = document.createElement('div');
-      div.className = 'flex justify-between mb-2';
-      div.innerHTML = `${item.name} x ${item.quantity} <span>₹${item.price * item.quantity}</span>`;
-      orderSummary.appendChild(div);
-    });
-    document.getElementById('totalAmount').innerText = totalAmount;
-
-    // Pincode auto-fill
-    document.getElementById('pincode').addEventListener("blur", async () => {
-      const pin = document.getElementById('pincode').value.trim();
-      if (pin.length === 6) {
-        try {
-          const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
-          const data = await res.json();
-          if (data[0].Status === "Success") {
-            document.getElementById('city').value = data[0].PostOffice[0].District;
-            document.getElementById('state').value = data[0].PostOffice[0].State;
-          } else {
-            alert("Invalid pincode.");
-          }
-        } catch {
-          alert("Network error while fetching pincode info.");
-        }
-      }
-    });
-
-    // Show UPI section when selected
-    const upiRadio = document.getElementById('upiPayment');
-    upiRadio.addEventListener('change', () => {
-      document.getElementById('upiPaymentSection').style.display = 'block';
-    });
-    document.querySelector('input[value="COD"]').addEventListener('change', () => {
-      document.getElementById('upiPaymentSection').style.display = 'none';
-    });
-
-    // Collect Order Data
-    function collectOrderData() {
-      const formData = new FormData(document.getElementById("checkoutForm"));
-      const orderData = {};
-      formData.forEach((value, key) => { orderData[key] = value });
-      orderData["Items"] = cartItems;
-      orderData["Total"] = totalAmount;
-      return orderData;
-    }
-
-    // Place Order Handler
-    document.getElementById('placeOrderBtn').addEventListener("click", (e) => {
+    checkoutForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      const selected = document.querySelector('input[name="paymentMethod"]:checked');
-      if (!selected) return alert("Please select a payment method.");
-      const method = selected.value;
 
-      if (method === "COD") {
-        const orderData = collectOrderData();
-        orderData["Payment Status"] = "Cash on Delivery";
+      const formData = new FormData(checkoutForm);
+      const orderData = {};
 
-        fetch("https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData)
-        }).then(() => {
-          alert("Order placed successfully with Cash on Delivery!");
-          document.getElementById("checkoutForm").reset();
-          localStorage.removeItem("cartItems");
-          window.location.href = "thankyou.html";
-        }).catch(err => {
-          console.error(err);
-          alert("Error placing COD order.");
+      formData.forEach((value, key) => {
+        orderData[key] = value;
+      });
+
+      // Add a timestamp and order ID
+      orderData["Order ID"] = "OID-" + Date.now();
+
+      console.log("Sending data to Google Apps Script:", orderData);
+
+      fetch("https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      })
+        .then(() => {
+          alert("Order submitted successfully!");
+          checkoutForm.reset();
+        })
+        .catch((error) => {
+          console.error("Error submitting order:", error);
+          alert("There was a problem submitting your order.");
         });
-
-      } else if (method === "UPI") {
-        const orderData = collectOrderData();
-        sessionStorage.setItem("pendingOrder", JSON.stringify(orderData));
-        const upiUrl = `upi://pay?pa=psdn56@oksbi&pn=Pankaj Footwear&am=${totalAmount}&cu=INR&url=https://psdn56.github.io/geta_clone/checkout.html?paid=true`;
-        window.location.href = upiUrl;
-      }
-    });
-
-    // On UPI success return
-    window.addEventListener("DOMContentLoaded", () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isPaid = urlParams.get("paid");
-      if (isPaid === "true") {
-        const orderData = JSON.parse(sessionStorage.getItem("pendingOrder") || "{}");
-        if (orderData && orderData.Items) {
-          orderData["Payment Status"] = "Paid via UPI";
-          fetch("https://script.google.com/macros/s/AKfycbyfyYgjlPeIgxnNvbC0EKcCdxWmlAACeBp0_gH3Z7fF31Lsnfcrdsq_7EGdPVgGwZM/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(orderData)
-          }).then(() => {
-            alert("UPI payment successful. Order placed!");
-            sessionStorage.removeItem("pendingOrder");
-            localStorage.removeItem("cartItems");
-            window.location.href = "thankyou.html";
-          }).catch(err => {
-            console.error(err);
-            alert("Failed to place order after UPI payment.");
-          });
-        }
-      }
     });
   </script>
 </body>
