@@ -9,55 +9,51 @@
   <meta property="og:title" content="Footwear" />
   <meta property="og:image" content="link_to_featured_image.jpg" />
   <meta property="og:url" content="https://yourdomain.com" />
-  <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-<!-- Your Firebase config object -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
-    authDomain: "psdn56-493d0.firebaseapp.com",
-    projectId: "psdn56-493d0",
-    storageBucket: "psdn56-493d0.firebasestorage.app",
-    messagingSenderId: "270176732328",
-    appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
-  };
 
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const firestore = firebase.firestore();
-</script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+  <!-- Firebase Config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3QlxpKCed-3qhHOUwrCtf7ae8sfKI6Fs",
+      authDomain: "psdn56-493d0.firebaseapp.com",
+      projectId: "psdn56-493d0",
+      storageBucket: "psdn56-493d0.firebasestorage.app",
+      messagingSenderId: "270176732328",
+      appId: "1:270176732328:web:cd4cb4be6b27a1df14ae9d"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
+  </script>
 </head>
 <body class="font-sans bg-white text-gray-800">
 
-  <!-- Navbar (with login/logout functionality) -->
-<nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
-  <div class="flex items-center space-x-2">
-    <img src="your-logo.png" alt="Pankaj Footwear Logo" class="h-20 w-auto">
-    <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
-  </div>
-  <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
-    <li><a href="men.html" class="hover:text-red-500">Men</a></li>
-    <li><a href="women.html" class="hover:text-red-500">Women</a></li>
-    <li><a href="kids.html" class="hover:text-red-500">Kids</a></li>
-    <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
-    <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
-  </ul>
-  <div id="loginDropdownContainer" class="hidden md:block">
-    <button id="loginButton" class="text-sm px-4 py-2 bg-blue-500 text-white rounded">Login</button>
-    <button id="logoutButton" class="text-sm px-4 py-2 bg-red-500 text-white rounded hidden">Logout</button>
-  </div>
-  <div class="md:hidden">
-    <button id="menuBtn" class="text-2xl text-gray-700" aria-label="Open Menu">&#9776;</button>
-  </div>
-</nav>
-
+  <!-- Navbar -->
+  <nav class="bg-white px-6 py-4 shadow flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <img src="your-logo.png" alt="Pankaj Footwear Logo" class="h-20 w-auto">
+      <span class="text-xl font-bold text-gray-800">Pankaj Footwear</span>
+    </div>
+    <ul class="hidden md:flex space-x-6 text-gray-700 font-medium">
+      <li><a href="men.html" class="hover:text-red-500">Men</a></li>
+      <li><a href="women.html" class="hover:text-red-500">Women</a></li>
+      <li><a href="kids.html" class="hover:text-red-500">Kids</a></li>
+      <li><a href="sale.html" class="hover:text-red-500">Sale</a></li>
+      <li><a href="cart.html" class="hover:text-red-500">Cart</a></li>
+    </ul>
+    <div id="loginDropdownContainer" class="hidden md:block">
+      <button id="loginButton" class="text-sm px-4 py-2 bg-blue-500 text-white rounded">Login</button>
+      <button id="logoutButton" class="text-sm px-4 py-2 bg-red-500 text-white rounded hidden">Logout</button>
+    </div>
+    <div class="md:hidden">
+      <button id="menuBtn" class="text-2xl text-gray-700" aria-label="Open Menu">&#9776;</button>
+    </div>
+  </nav>
 
   <!-- Mobile Menu -->
   <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
@@ -69,18 +65,16 @@
 
   <!-- Hero Slider -->
   <section class="relative w-full overflow-hidden h-[300px] sm:h-[400px] md:h-[500px]">
-    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full">
-      <!-- Slides will be added here dynamically -->
-    </div>
+    <div id="heroSlider" class="flex transition-transform duration-1000 ease-in-out h-full"></div>
     <div class="absolute top-1/4 left-5 sm:left-10 text-white z-10">
       <h1 class="text-2xl sm:text-4xl font-bold mb-4">A Legacy In Every Step</h1>
     </div>
-    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Previous Slide">‹</button>
-    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black" aria-label="Next Slide">›</button>
+    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black">‹</button>
+    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 text-white text-2xl z-10 bg-black/50 px-2 rounded hover:bg-black">›</button>
     <div class="dot-container absolute bottom-4 w-full flex justify-center space-x-2 z-10"></div>
   </section>
 
-  <!-- Featured Products -->
+  <!-- Featured Section -->
   <section class="px-4 sm:px-6 py-10">
     <h2 class="text-xl sm:text-2xl font-bold mb-6">Featured</h2>
     <div id="imageContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
@@ -91,7 +85,6 @@
     <div class="container mx-auto text-center px-4" id="datetime">
       &copy; 2025 Pankaj Footwear. All rights reserved.
     </div>
-
     <div class="fixed bottom-6 right-6 z-50">
       <button id="whatsappToggle" class="bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg flex items-center space-x-2">
         <img src="iconwhatsapp.gif" alt="WhatsApp" class="w-6 h-6" />
@@ -127,22 +120,18 @@
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
-    // Fetch Data from Google Sheets
+    // Load Google Sheet Data
     fetch("https://script.google.com/macros/s/AKfycbz8uq41qQOtTiOpJkRrlgl-V_x-VRu8QxJpUdrXgyFHUHlE1ykVUhtVPnnf8HYb-gm_/exec")
       .then(res => res.json())
       .then(data => {
-        console.log(data); // Log the data to check if it’s correctly fetched
         const heroSlider = document.getElementById("heroSlider");
         const imageContainer = document.getElementById("imageContainer");
         const dotsContainer = document.querySelector(".dot-container");
 
         const featuredItems = data.filter(item => item["CATEGORY"]?.toLowerCase() === "featured");
+        const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"])))
+          .map(name => featuredItems.find(item => item["NAME"] === name));
 
-        const uniqueFeaturedItems = Array.from(new Set(featuredItems.map(item => item["NAME"]))).map(name =>
-          featuredItems.find(item => item["NAME"] === name)
-        );
-
-        // Clear previous content
         heroSlider.innerHTML = "";
         imageContainer.innerHTML = "";
         dotsContainer.innerHTML = "";
@@ -151,55 +140,35 @@
           const imageUrl = item["WEB URL"];
           const imageAlt = item["NAME"];
 
-          if (!imageUrl) {
-            console.error('Missing image URL for item:', item); // Log error if image URL is missing
-            return;
-          }
-
-          // === Hero Slider ===
           const slideDiv = document.createElement("div");
-          slideDiv.className = "relative w-full h-full flex-shrink-0 group transition-transform duration-500 ease-in-out";
+          slideDiv.className = "relative w-full h-full flex-shrink-0 group";
           slideDiv.innerHTML = `
-            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
+            <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover" />
+            <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30"></div>
           `;
           heroSlider.appendChild(slideDiv);
 
-          // === Dots ===
           const dot = document.createElement("span");
           dot.className = "dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 cursor-pointer mx-1";
           dot.dataset.index = index;
           dotsContainer.appendChild(dot);
 
-          // === Featured Products Section ===
           const productDiv = document.createElement("div");
           productDiv.className = "bg-gray-200 p-4 rounded-lg";
-
           const productLink = document.createElement("a");
           productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
-          productLink.className = "block";
-
           const productImg = document.createElement("img");
           productImg.src = imageUrl;
-          productImg.alt = imageAlt;
           productImg.className = "w-full h-40 object-cover mb-4";
-
           const productName = document.createElement("h3");
           productName.textContent = item["NAME"];
-          productName.className = "text-lg font-bold text-gray-700";
-
           const productPrice = document.createElement("p");
           productPrice.textContent = `₹${item["PRICE"]}`;
-          productPrice.className = "text-sm text-gray-500";
-
-          productLink.appendChild(productImg);
-          productLink.appendChild(productName);
-          productLink.appendChild(productPrice);
+          productLink.append(productImg, productName, productPrice);
           productDiv.appendChild(productLink);
           imageContainer.appendChild(productDiv);
         });
 
-        // Slider logic (same as before)
         let index = 0;
         const slides = document.querySelectorAll("#heroSlider .group");
         const dots = document.querySelectorAll(".dot");
@@ -210,99 +179,61 @@
           if (dots[index]) dots[index].classList.add("bg-red-500");
         }
 
-        let autoSlideInterval;
-        function startAutoSlide() {
-          autoSlideInterval = setInterval(() => {
-            index = (index + 1) % slides.length;
-            updateSlide();
-          }, 5000);
-        }
-
-        function stopAutoSlide() {
-          clearInterval(autoSlideInterval);
-        }
+        let autoSlideInterval = setInterval(() => {
+          index = (index + 1) % slides.length;
+          updateSlide();
+        }, 5000);
 
         document.getElementById("nextBtn").addEventListener("click", () => {
           index = (index + 1) % slides.length;
           updateSlide();
-          stopAutoSlide();
-          startAutoSlide();
         });
 
         document.getElementById("prevBtn").addEventListener("click", () => {
           index = (index - 1 + slides.length) % slides.length;
           updateSlide();
-          stopAutoSlide();
-          startAutoSlide();
         });
 
         dots.forEach(dot => {
           dot.addEventListener("click", (e) => {
             index = parseInt(e.target.dataset.index);
             updateSlide();
-            stopAutoSlide();
-            startAutoSlide();
           });
         });
 
-        startAutoSlide();
+        updateSlide();
       });
-    // Firebase Authentication - Log In and Log Out
-  const loginButton = document.getElementById("loginButton");
-  const logoutButton = document.getElementById("logoutButton");
 
-  loginButton.addEventListener("click", () => {
-    // Use Firebase Authentication to log in
-    const provider = new firebase.auth.GoogleAuthProvider(); // You can choose other providers too
-    auth.signInWithPopup(provider)
-      .then((result) => {
+    // Firebase Auth - Login / Logout
+    const loginButton = document.getElementById("loginButton");
+    const logoutButton = document.getElementById("logoutButton");
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loginButton.classList.add("hidden");
+        logoutButton.classList.remove("hidden");
+      } else {
+        loginButton.classList.remove("hidden");
+        logoutButton.classList.add("hidden");
+      }
+    });
+
+    loginButton.addEventListener("click", () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then(result => {
         const user = result.user;
-        console.log("User logged in: ", user);
-
-        // Store user data in Firestore (you can create a collection for users if needed)
         firestore.collection("users").doc(user.uid).set({
           name: user.displayName,
           email: user.email,
           photoURL: user.photoURL,
           lastLogin: new Date()
         });
+      }).catch(console.error);
+    });
 
-        // Update UI
-        loginButton.classList.add("hidden");
-        logoutButton.classList.remove("hidden");
-      })
-      .catch((error) => {
-        console.error("Login failed: ", error);
-      });
-  });
-
-  logoutButton.addEventListener("click", () => {
-    auth.signOut()
-      .then(() => {
-        console.log("User logged out");
-        loginButton.classList.remove("hidden");
-        logoutButton.classList.add("hidden");
-      })
-      .catch((error) => {
-        console.error("Logout failed: ", error);
-      });
-  });
-
-  // Firebase Auth State Listener
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      // User is logged in
-      console.log("User is logged in:", user);
-      loginButton.classList.add("hidden");
-      logoutButton.classList.remove("hidden");
-    } else {
-      // User is logged out
-      console.log("User is logged out");
-      loginButton.classList.remove("hidden");
-      logoutButton.classList.add("hidden");
-    }
-  });
+    logoutButton.addEventListener("click", () => {
+      auth.signOut().catch(console.error);
+    });
   </script>
-
 </body>
 </html>
