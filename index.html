@@ -9,6 +9,10 @@
   <meta property="og:title" content="Footwear" />
   <meta property="og:image" content="link_to_featured_image.jpg" />
   <meta property="og:url" content="https://yourdomain.com" />
+  <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
@@ -118,7 +122,7 @@
       const now = new Date();
       const year = now.getFullYear();
       const formatted = now.toLocaleString();
-      document.getElementById('datetime').innerHTML = `&copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted}`;
+      document.getElementById('datetime').innerHTML = &copy; ${year} Pankaj Footwear. All rights reserved. | ${formatted};
     }
     updateDateTime();
     setInterval(updateDateTime, 1000);
@@ -155,10 +159,10 @@
           // === Hero Slider ===
           const slideDiv = document.createElement("div");
           slideDiv.className = "relative w-full h-full flex-shrink-0 group transition-transform duration-500 ease-in-out";
-          slideDiv.innerHTML = `
+          slideDiv.innerHTML = 
             <img src="${imageUrl}" alt="${imageAlt}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             <div class="absolute top-0 left-0 w-full h-full bg-black opacity-30 group-hover:opacity-0 transition-opacity duration-500"></div>
-          `;
+          ;
           heroSlider.appendChild(slideDiv);
 
           // === Dots ===
@@ -172,7 +176,7 @@
           productDiv.className = "bg-gray-200 p-4 rounded-lg";
 
           const productLink = document.createElement("a");
-          productLink.href = `product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])}`;
+          productLink.href = product.html?name=${encodeURIComponent(item["NAME"])}&price=${encodeURIComponent(item["PRICE"])}&desc=${encodeURIComponent(item["DESCRIPTION"])}&img=${encodeURIComponent(item["WEB URL"])};
           productLink.className = "block";
 
           const productImg = document.createElement("img");
@@ -185,7 +189,7 @@
           productName.className = "text-lg font-bold text-gray-700";
 
           const productPrice = document.createElement("p");
-          productPrice.textContent = `₹${item["PRICE"]}`;
+          productPrice.textContent = ₹${item["PRICE"]};
           productPrice.className = "text-sm text-gray-500";
 
           productLink.appendChild(productImg);
@@ -201,7 +205,7 @@
         const dots = document.querySelectorAll(".dot");
 
         function updateSlide() {
-          heroSlider.style.transform = `translateX(-${index * 100}%)`;
+          heroSlider.style.transform = translateX(-${index * 100}%);
           dots.forEach(dot => dot.classList.remove("bg-red-500"));
           if (dots[index]) dots[index].classList.add("bg-red-500");
         }
@@ -292,17 +296,12 @@
       loginButton.classList.add("hidden");
       logoutButton.classList.remove("hidden");
     } else {
-      logoutButton.addEventListener("click", () => {
-  auth.signOut()
-    .then(() => {
-      console.log("User logged out");
+      // User is logged out
+      console.log("User is logged out");
       loginButton.classList.remove("hidden");
       logoutButton.classList.add("hidden");
-    })
-    .catch((error) => {
-      console.error("Logout failed: ", error);
-    });
-});
+    }
+  });
   </script>
 
 </body>
