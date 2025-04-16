@@ -9,10 +9,6 @@
   <meta property="og:title" content="Footwear" />
   <meta property="og:image" content="link_to_featured_image.jpg" />
   <meta property="og:url" content="https://yourdomain.com" />
-  <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
@@ -296,12 +292,17 @@
       loginButton.classList.add("hidden");
       logoutButton.classList.remove("hidden");
     } else {
-      // User is logged out
-      console.log("User is logged out");
+      logoutButton.addEventListener("click", () => {
+  auth.signOut()
+    .then(() => {
+      console.log("User logged out");
       loginButton.classList.remove("hidden");
       logoutButton.classList.add("hidden");
-    }
-  });
+    })
+    .catch((error) => {
+      console.error("Logout failed: ", error);
+    });
+});
   </script>
 
 </body>
